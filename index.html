@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QBO CSV Fixer</title>
+  <meta name="description" content="Local bank/PayPal CSV to QuickBooks Online import. Files never leave your browser." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="app-header">
+      <h1>QBO CSV Fixer</h1>
+      <p class="subhead">Local bank/PayPal CSV to QuickBooks Online import. Files never leave your browser.</p>
+      <ol class="steps" aria-label="How it works">
+        <li><span class="n">1</span> Drop a CSV</li>
+        <li><span class="n">2</span> Pick a preset</li>
+        <li><span class="n">3</span> Preview + reconcile badge</li>
+        <li><span class="n">4</span> Download QBO-ready CSV</li>
+      </ol>
+    </header>
+
+    <div id="errorBanner" class="error-banner hidden" role="alert"></div>
+
+    <section class="card">
+      <h2>1. File</h2>
+      <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop CSV here or browse">
+        <p class="primary-hint">Drag and drop a CSV here</p>
+        <p>Parsing runs entirely in your browser. Nothing is uploaded.</p>
+        <div class="file-row">
+          <button type="button" class="primary" id="browseBtn">Choose file</button>
+          <button type="button" class="secondary" id="loadSampleBtn">Load chase-like sample</button>
+          <input type="file" id="fileInput" accept=".csv,text/csv,text/plain" hidden />
+        </div>
+        <p class="file-name" id="fileName" style="margin-top:0.75rem"></p>
+      </div>
+      <div class="samples" style="margin-top:1rem">
+        <span>Samples:</span>
+        <a href="samples/chase-like-messy.csv" download>before (messy)</a>
+        <a href="samples/chase-like-qbo-ready.csv" download>after (QBO-ready)</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2. Presets</h2>
+      <div class="controls">
+        <label class="field">
+          Processor / bank map
+          <select id="processorPreset"></select>
+          <p class="hint" id="processorHint"></p>
+        </label>
+        <label class="field">
+          QBO Online columns
+          <select id="qboPreset"></select>
+          <p class="hint">One-click layout for QuickBooks Online bank file upload.</p>
+        </label>
+      </div>
+    </section>
+
+    <section id="results" class="card hidden">
+      <h2>3. Preview and reconcile</h2>
+      <div id="badgeRow" class="badge-row" aria-live="polite"></div>
+      <p class="hint" style="margin-bottom:0.75rem">
+        Transaction rows: <strong id="txnCount">0</strong>.
+        Beginning/Ending balance rows are skipped from the export but used for the reconcile badge when present.
+      </p>
+      <div class="table-wrap">
+        <table class="preview" aria-label="Mapped preview">
+          <thead id="previewHead"></thead>
+          <tbody id="previewBody"></tbody>
+        </table>
+      </div>
+      <div class="actions">
+        <button type="button" class="primary" id="downloadBtn">Download QBO CSV</button>
+      </div>
+      <div id="tierNote" class="tier-note"></div>
+    </section>
+
+    <section class="card vs-chat">
+      <h2>Why not just paste into chat?</h2>
+      <ul>
+        <li><strong>Client-data policy risk:</strong> many bookkeepers cannot paste client bank CSVs into a chatbot.</li>
+        <li><strong>Silent reconcile miss:</strong> ChatGPT can return a CSV that looks import-ready while missing an opening/closing balance break (our sample fixture has a built-in $2 gap; chat did not warn).</li>
+        <li><strong>No one-click local UI:</strong> chat offered DIY scripts, not a bookmarkable browser tool that never uploads the file.</li>
+      </ul>
+      <p style="margin:0.75rem 0 0">This demo does not claim that chat drops rows or flips signs. The wedge is the visible reconcile badge plus an offline UI.</p>
+    </section>
+
+    <footer>
+      <p>
+        Free core: 1 file, ≤100 rows, watermarked export.
+        Soft unlock stub: <a href="https://marcocostapadilla.gumroad.com/l/qbo-csv-fixer" target="_blank" rel="noopener noreferrer">CHF 19 lifetime on Gumroad</a>
+        (link only; this demo does not create accounts).
+      </p>
+      <p>CSV only. No PDF. No bank login. No server. See <a href="README.md">README.md</a> for local open instructions and known gaps.</p>
+    </footer>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
