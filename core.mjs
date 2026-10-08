@@ -13,12 +13,9 @@ export { RECONCILE_TOLERANCE, round2, reconcileBalances, fmtMoney } from './reco
 export {
   FREE_ROW_LIMIT,
   WATERMARK_SUFFIX,
-  WATERMARK_DESC_SUFFIX,
-  MAX_DESC_LEN,
   buildExportRows,
   toCsvString,
   safeText,
-  watermarkDescription,
   exportFileName,
   freeTierAllows,
 } from './export.mjs';

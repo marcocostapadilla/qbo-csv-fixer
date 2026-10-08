@@ -140,8 +140,8 @@ function downloadExport() {
   if (!canDownload(r)) return;
   const qboId = els.qboPreset.value || 'date_desc_amount';
   const { header, body } = buildExportRows(r.transactions, qboId);
-  const wm = limitsFor(isProUnlocked()).watermark; // always true until a license check exists
-  const csv = toCsvString(header, body, { watermark: wm });
+  const wm = limitsFor(isProUnlocked()).watermark; // always true until a license check exists; filename only
+  const csv = toCsvString(header, body);
   saveBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), exportFileName(state.fileName, wm ? WATERMARK_SUFFIX : PRO_SUFFIX));
 }
 

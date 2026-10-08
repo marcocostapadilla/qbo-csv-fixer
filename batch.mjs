@@ -62,7 +62,7 @@ export function convertBatch(files, { presetId = 'auto', qboId = 'date_desc_amou
       continue;
     }
     const { header, body } = buildExportRows(r.transactions, qboId);
-    const csv = toCsvString(header, body, { watermark: lim.watermark });
+    const csv = toCsvString(header, body);
     const output = uniqueName(exportFileName(f.name, lim.watermark ? WATERMARK_SUFFIX : PRO_SUFFIX), used);
     entries.push({ name: output, data: csv });
     report.push({
