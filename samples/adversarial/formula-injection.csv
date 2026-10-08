@@ -1,0 +1,4 @@
+Date,Description,Amount
+01/13/2026,"=HYPERLINK(""http://example.invalid"",""click"")",-1.00
+01/14/2026,+SUM(1+1),2.00
+01/15/2026,@cmd,3.00
