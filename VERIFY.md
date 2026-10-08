@@ -52,7 +52,7 @@ Expected: all assertions PASS, including `reconcile status === FAIL` and `delta 
 
 ## Date ambiguity (v1.1)
 
-Rule (in `core.mjs`, `detectDateOrder`): only A/B/YYYY style dates count; ISO `YYYY-MM-DD` is never ambiguous.
+Rule (in `dates.mjs`, `detectDateOrder`): only A/B/YYYY style dates count; ISO `YYYY-MM-DD` is never ambiguous.
 If any first component is above 12 the file is D/M; if any second component is above 12 it is M/D;
 if every first and second component is 12 or less, the file is ambiguous and the UI shows a warning plus a US M/D / EU D/M toggle above the preview.
 
@@ -67,40 +67,42 @@ Default when ambiguous: US M/D, except Wise and Revolut presets (D/M). The user'
 
 ## Preset layout sources
 
-Every preset's column layout and sign convention comes from a public page. Fixtures use fake merchants.
+Moved to [VERIFY-presets.md](VERIFY-presets.md) (sources for every preset, fixture expectations, skipped presets).
 
-| Preset | Layout used | Sign convention | Sources |
-|--------|-------------|-----------------|---------|
-| Chase (`chase`) | Checking: `Details, Posting Date, Description, Amount, Type, Balance, Check or Slip #`. Card: `Transaction Date, Post Date, Description, Category, Type, Amount[, Memo]` | Amount signed, money out negative | https://bankxlsx.com/blog/can-i-export-chase-transactions-to-csv-or-excel |
-| Generic bank (Chase-like) (`generic_bank`) | v1 fixture: balance rows, `Date, Description, Debit, Credit, Amount`, parentheses negatives | Debit out, Credit in | v1 synthetic fixture (unchanged) |
-| Bank of America (`bofa`) | Summary block `Description,,Summary Amt.` / Beginning balance / Total credits / Total debits / Ending balance, blank line, then `Date, Description, Amount, Running Bal.`; first row "Beginning balance as of" with no amount; quoted thousands | Amount signed | https://github.com/baskinomics/teller ; https://www.reddit.com/r/BankOfAmerica/comments/1fu3pzq/what_is_the_format_of_a_bank_of_america_csv_file/ ; https://thefrugalcomputerguy.com/downloads/20/Bank2.csv ; download steps: https://www.easybankconvert.com/guides/bank-of-america-pdf-to-csv |
-| Wells Fargo (`wells_fargo`) | No header; 5 positional columns: Date, Amount, `*`, Check Number, Description | Amount signed, money out negative | https://www.quickbankconvert.com/blog/bank-guides/convert-wells-fargo-statements-to-csv-excel ; https://ardenmoney.com/guide/export-csv/wells-fargo/ ; https://fynnap.com/guides/wells-fargo-csv-export ; https://stmtai.com/guides/wells-fargo-bank-statement-download-and-convert |
-| American Express (`amex`) | `Date, Description, Card Member, Account #, Amount` (+ optional extended detail columns) | Charges positive, payments/credits negative: flipped for QBO | https://ardenmoney.com/guide/export-csv/amex/ ; https://qboready.com/banks/american-express-csv-to-qbo ; https://kleev.ai/blog/export-amex-csv ; https://www.americanexpress.com/us/customer-service/faq.download-export-transactions-software.html |
-| Capital One (`capital_one`) | `Transaction Date, Posted Date, Card No., Description, Category, Debit, Credit`, ISO dates | Debit and Credit both positive; Debit = money out | https://fynnap.com/guides/capital-one-csv-export ; https://bankxlsx.com/blog/can-i-export-capital-one-transactions-to-csv-or-excel ; https://csvtoqbo.com/blog/csv-to-qbo-quickbooks-online |
-| Revolut (`revolut`) | `Type, Product, Started Date, Completed Date, Description, Amount, Fee, Currency, State, Balance`; dates `YYYY-MM-DD HH:MM:SS` | Amount signed; Fee separate and positive (subtracted); keep State = COMPLETED | https://github.com/lastunicorn/revolut-toolkit ; https://money-talks.app/de/import/from-revolut/ ; https://jadapps.app/workflows/clean-bank-statement-workflow ; localized headers: https://homebanking-hilfe.de/forum/topic.php?t=27691 ; download: https://help.revolut.com/help/profile-and-plan/managing-my-account/account-statement-per-chosen-currency/ |
-| PayPal (`paypal`) | Activity Download: `Date, Time, TimeZone, Name, Type, Status, Currency, Gross, Fee, Net, ...`, optional `Balance`, `Balance Impact` (Debit/Credit/Memo); US date MM/DD/YYYY | Net signed | https://developer.paypal.com/reports/activity-download ; status rule cross-check: https://gitlab.com/egh/ledger-autosync/-/raw/master/ledgerautosync/converter.py |
-| Stripe (`stripe`) | Balance transactions export: `id, Type, Source, Amount, Fee, Net, Currency, Created (UTC), Available On (UTC), Description, ...` | Net signed; payouts negative | https://localcsv.com/guides/stripe-csv-export/ ; https://docs.stripe.com/reports/report-types/balance |
-| Wise (`wise`) | Balance statement: `TransferWise ID, Date, Amount, Currency, Description, Payment Reference, Running Balance, Exchange From, Exchange To, Exchange Rate, Payer Name, Payee Name, Payee Account Number, Merchant, Card Last Four Digits, Card Holder Full Name, Attachment, Note, Total fees`; Date `DD-MM-YYYY` | Amount signed | https://gitlab.com/egh/ledger-autosync/-/commit/a199dccfb6370e314abd504c3d8fa22849dd264b (WiseConverter, `strptime(row["Date"], "%d-%m-%Y")`) ; https://github.com/erp-mafia/accounted/issues/1019 ; download: https://wise.com/help/articles/2736049/how-do-i-download-a-statement |
+## v1.2 parsing fixes (suite `verify-adversarial.mjs`, fixtures `samples/adversarial/`)
 
-QuickBooks Online side: 3-column (Date, Description, Amount; money out negative) or 4-column (Date, Description, Credit, Debit) upload via Banking > Upload from file:
-https://quickbooks.intuit.com/learn-support/en-us/help-article/import-transactions/manually-upload-transactions-quickbooks-online/L0rE9OXBz_US_en_US .
-Credit card accounts also expect charges negative and payments positive:
-https://quickbooks.intuit.com/community/banking-4/i-did-a-csv-import-for-a-credit-card-i-forgot-to-change-the-amounts-from-a-positive-to-a-negative-they-are-showing-as-payments-and-not-charges-how-do-i-fix-this-26722 .
+Fixtures come from the live browser test suite (`qbo-e2e`). Nothing is dropped silently any more.
 
-## Preset fixture expectations (asserted in verify.mjs)
+| Fixture | Before v1.2 | v1.2 |
+|---------|-------------|------|
+| `eu-comma-quoted-decimal.csv` | -1250.00, 1.23, -8910.00 | -12.50, 1234.56, -89.10 (comma decimal detected) |
+| `eu-semicolon-comma-decimal.csv` | 0 rows, download enabled | `;` sniffed, -12.50, 1234.56, -89.10, dates 13.01.2026 -> 01/13/2026 |
+| `tab-delimited.csv` | 0 rows | tab sniffed, -4.50, 1200.00, -89.10 |
+| `unparseable-amounts.csv` | 1 of 4 rows, no note | `12.50-` = -12.50, `300.00 CR` = 300.00, `€45.00` = 45.00, -10.00 |
+| `text-month-dates.csv` | 1 of 3 rows, no note | `Jan 13 2026` and `13-Jan-2026` = 01/13/2026 |
+| `empty.csv`, `header-only.csv`, `not-a-csv.txt`, `not-a-csv.png` | no message or empty download | clear error, no download |
+| `formula-injection.csv` | `=HYPERLINK(...)` written as-is | `'=HYPERLINK(...)`, `'+SUM(1+1)`, `'@cmd`; amounts untouched |
 
-| Fixture | Preset | Rows | Net | Notes |
-|---------|--------|------|-----|-------|
-| `samples/chase-checking.csv` | chase | 6 | 1760.00 | CHECK 1043 = -250.00 |
-| `samples/bank-of-america.csv` | bofa | 7 | 1488.53 | 3410.22 + 1488.53 = 4898.75: reconcile PASS |
-| `samples/wells-fargo.csv` | wells_fargo | 6 | 930.80 | headerless; first row kept |
-| `samples/amex.csv` | amex | 6 | -68.30 | raw sum +68.30, flipped |
-| `samples/capital-one.csv` | capital_one | 6 | 452.26 | Debit 94.17 becomes -94.17 |
-| `samples/revolut.csv` | revolut | 6 | 313.34 | 2 rows skipped (PENDING, REVERTED); -61.25 - 0.61 fee = -61.86; matches final Balance 313.34 |
-| `samples/paypal.csv` | paypal | 5 | 10.79 | 1 Memo row skipped; matches final Balance 10.79 |
-| `samples/stripe.csv` | stripe | 6 | 43.39 | payout -237.83 |
-| `samples/wise.csv` | wise | 5 | 821.11 | D/M auto-detected; 27-02-2026 becomes 02/27/2026 |
+Rules:
 
-## Skipped presets
+- Decimal separator (`money.mjs`, `detectDecimal`): a value with both separators votes for the last one; `12,50` votes comma; `1,234,567` votes dot. When no value proves it (only `1,250`-style values) or values conflict, a warning and a dot/comma toggle appear above the preview; the default is dot. A proving value always wins over the toggle.
+- Amounts (`parseAmount`): parentheses, leading or trailing minus, CR (money in) / DR (money out) prefix or suffix, currency symbols and ISO codes, spaces, apostrophes and thousands separators.
+- Dates: English month names and abbreviations (`Jan 13 2026`, `January 13, 2026`, `13-Jan-2026`, `2026-Jan-13`) are unambiguous.
+- Delimiter (`parse.mjs`, `sniffDelimiter`): comma, semicolon, tab or pipe, counted outside quotes on the first non-empty lines; comma wins ties.
+- A row below the header with an unreadable or missing date or amount is listed in the "Left out N row(s) that could not be read" note with its row number and raw values. Any left-out row makes the reconcile badge **INCOMPLETE** (never PASS), even when the balances would otherwise match (asserted).
+- Free watermark: no extra row any more (a blank-date 0.00 row can make QBO reject the file or import a $0 line). The filename gets `_qbo-csv-fixer-free` and each description ends with ` (QBO CSV Fixer free)`; descriptions are capped at 200 characters including that suffix.
+- Output name: any input extension is dropped (`not-a-csv.txt` -> `not-a-csv_qbo-csv-fixer-free.csv`).
+- `not-a-csv.png` is kept locally only: the GitHub push tool used for this repo sends text, so the PNG bytes are embedded in `verify-adversarial.mjs` instead.
 
-None of the requested presets were skipped: each layout above has at least one public source.
+## v1.2 header drift (suite `verify-drift.mjs`, fixtures `samples/drift/`)
+
+Header names are compared after folding case, spacing, punctuation, BOM and abbreviations (`Trans.` = transaction, `Post`/`Posting` = posted, `No.`/`#` = number, `Amt` = amount). Synonyms map Posting Date / Posted Date / Trans. Date / Transaction Date to date; Withdrawals / Debit / Money Out / Paid out to debit; Deposits / Credit / Money In / Paid in to credit; Memo / Payee / Details / Narrative to description. Preset detection reports high (header rule or 85%+ weighted header match), medium (60%+) or low confidence; low keeps the generic map and lists the closest presets. Missing required columns stop with an error naming them and listing the file's headers.
+
+| Fixture | Detected | Rows | Net |
+|---------|----------|------|-----|
+| `renamed-headers.csv` (Capital One, Debit Amount / Credit Amount) | Capital One, medium | 6 | 183.70 |
+| `renamed-generic.csv` (Paid out / Paid in) | generic, low (suggests Bank of America) | 6 | 1517.36 |
+| `extra-columns.csv` (Amex + 8 columns) | Amex, high | 5 | -26.19 |
+| `reordered.csv` (Chase card, reordered) | Chase, high | 6 | 333.86 |
+| `bom-spacing.csv` (BOM, CRLF, padded) | generic, low | 5 | 258.72 |
+| `unmappable.csv` | error: Date, Description, Amount missing | 0 | |
