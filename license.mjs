@@ -94,6 +94,16 @@ export function limitsFor(unlocked = isProUnlocked()) {
   return unlocked ? PRO_LIMITS : FREE_LIMITS;
 }
 
+/**
+ * True when a processed file may be downloaded: no file or mapping error, at least one row,
+ * and the row count fits the tier. The UI disables the Download button whenever this is false.
+ */
+export function canDownload(result, unlocked = isProUnlocked()) {
+  if (!result || result.fileError || result.mappingError) return false;
+  const n = (result.transactions || []).length;
+  return n > 0 && tierAllows(n, 1, unlocked);
+}
+
 /** True when this many rows (and files) fit the tier's limits. */
 export function tierAllows(rowCount, fileCount = 1, unlocked = isProUnlocked()) {
   const l = limitsFor(unlocked);

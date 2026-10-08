@@ -3,7 +3,7 @@
  * Pure DOM output; no network calls.
  */
 import { buildExportRows, fmtMoney, FREE_ROW_LIMIT, WATERMARK_SUFFIX, WATERMARK_DESC_SUFFIX } from './core.mjs';
-import { tierAllows } from './license.mjs';
+import { tierAllows, canDownload } from './license.mjs';
 
 export const els = {};
 for (const id of [
@@ -168,10 +168,18 @@ export function renderResults(r, qboId) {
     : allowed
       ? `<strong>Free core:</strong> 1 file, up to ${FREE_ROW_LIMIT} rows, watermarked export (filename gets <code>${WATERMARK_SUFFIX}</code> and each description ends with <code>${escapeHtml(WATERMARK_DESC_SUFFIX.trim())}</code>). Unlimited version coming soon.`
       : `<strong>Free tier limit:</strong> this file has ${n} transaction rows (limit ${FREE_ROW_LIMIT}). Unlimited version coming soon.`;
-  els.downloadBtn.disabled = !allowed;
+  setDownloadEnabled(canDownload(r));
   return allowed;
 }
 
+/** Download button state: the disabled attribute plus aria-disabled (styled in styles.css). */
+export function setDownloadEnabled(on) {
+  els.downloadBtn.disabled = !on;
+  els.downloadBtn.setAttribute('aria-disabled', String(!on));
+}
+
+/** Rejected or unreadable file: hide results and disable Download so it cannot be forced. */
 export function hideResults() {
   els.results.classList.add('hidden');
+  setDownloadEnabled(false);
 }

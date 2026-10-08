@@ -16,7 +16,8 @@ import {
   WATERMARK_SUFFIX,
 } from './core.mjs';
 import { els, showError, setDetectNote, renderResults, hideResults } from './ui.mjs';
-import { isProUnlocked, limitsFor, tierAllows } from './license.mjs';
+import { isProUnlocked, limitsFor, canDownload } from './license.mjs';
+import { showDetectNoteFor } from './detect.mjs';
 import { setupPro } from './pro-ui.mjs';
 import { PRO_SUFFIX } from './batch.mjs';
 
@@ -120,6 +121,7 @@ function reprocess() {
     const fatal = r.fileError || r.mappingError;
     if (fatal) {
       // Empty / binary / no rows, or required columns missing: say why; never guess.
+      if (!showDetectNoteFor(r)) setDetectNote('');
       showError(fatal.message);
       hideResults();
       return;
@@ -135,7 +137,7 @@ function reprocess() {
 
 function downloadExport() {
   const r = state.result;
-  if (!r || r.mappingError || r.fileError || !r.transactions.length || !tierAllows(r.transactions.length)) return;
+  if (!canDownload(r)) return;
   const qboId = els.qboPreset.value || 'date_desc_amount';
   const { header, body } = buildExportRows(r.transactions, qboId);
   const wm = limitsFor(isProUnlocked()).watermark; // always true until a license check exists

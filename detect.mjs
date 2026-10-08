@@ -115,6 +115,15 @@ export function detectPreset(text) {
   return detectPresetScored(text).id;
 }
 
+/**
+ * Whether the detect note should stay visible next to this result. A file error (empty, not CSV,
+ * header only) says what is wrong; "closest bank matches" next to it is noise, so it is hidden.
+ * Missing-column errors keep the note: the suggested presets help there.
+ */
+export function showDetectNoteFor(result) {
+  return !(result && result.fileError);
+}
+
 /** Short visible note, e.g. "Detected: Capital One (credit card) (high confidence)". */
 export function detectionNote(det) {
   const label = (id) => (PRESETS[id] ? PRESETS[id].label : id);
