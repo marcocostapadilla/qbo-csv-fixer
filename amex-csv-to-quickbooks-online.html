@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amex CSV to QuickBooks Online: flip the signs before you import</title>
+  <meta name="description" content="American Express CSVs list charges as positive numbers, so QuickBooks Online imports them backwards. Flip every sign and get a clean upload file, locally in your browser." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/amex-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / American Express</p>
+    <header class="app-header">
+      <h1>American Express CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your American Express CSV export into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=amex">Open the tool with the American Express preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Download the CSV from American Express</h2>
+      <ol>
+        <li>Sign in at americanexpress.com on a computer.</li>
+        <li>Open <strong>Statements &amp; Activity</strong> and pick a billing period or a custom date range.</li>
+        <li>Choose <strong>Download</strong>, select <strong>CSV</strong>. Ticking the option to include all additional details is fine; the extra columns are ignored.</li>
+      </ol>
+      <p class="hint">Bank menus change from time to time. If a label differs, search the American Express help pages for "download transactions" or "export CSV".</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the American Express file</h2>
+      <ul>
+        <li>The amount is written from the card's point of view: charges are positive, payments and credits are negative.</li>
+        <li>QuickBooks Online expects the opposite for a card account (charges negative, payments positive). Imported as is, every charge shows up as a payment.</li>
+        <li>Extra columns such as <code>Card Member</code> and <code>Account #</code>, plus many more if you include additional details.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=amex">QBO CSV Fixer with the American Express preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the reconcile badge and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the American Express preset does:</p>
+      <ul>
+        <li>Flips every sign: a 412.80 charge becomes -412.80 and a 500.00 payment becomes 500.00.</li>
+        <li>Keeps Date, Description and Amount, drops the rest, writes dates as MM/DD/YYYY.</li>
+        <li>Shows a preview so you can check two or three charges against your statement before you download.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/amex.csv" download>American Express sample CSV</a> (fake merchants) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>The free export ends with one watermark row (blank date, amount 0.00). Untick it on the review screen or delete that last line first.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>Upload the result into the American Express credit card account in QuickBooks Online, not into a bank account.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>Other guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
