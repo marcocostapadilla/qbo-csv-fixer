@@ -1,0 +1,8 @@
+Date (UTC),Description,Amount,Status,Source Account,Bank Description,Reference,Note,Last Four Digits,Name On Card,Category,GL Code,Timestamp,Original Currency
+05-28-2026,Contoso Cloud,-48.00,Pending,Mercury Credit,CONTOSO CLOUD,,,4321,Jane Doe,Software,,05-28-2026 9:12,USD
+05-22-2026,Northwind Traders,4200.00,Sent,Mercury Checking xx9876,NORTHWIND TRADERS; Receivable,INV-1042,,,,,,05-22-2026 14:03,
+05-18-2026,Fabrikam Payroll,-2650.00,Sent,Mercury Checking xx9876,FABRIKAM PAYROLL; ACH,,,,,,,05-18-2026 16:40,
+05-14-2026,Litware Hosting,-19.00,Sent,Mercury Credit,LITWARE HOSTING,,,4321,Jane Doe,Software,,05-14-2026 7:10,USD
+05-09-2026,Woodgrove Ads,-75.50,Failed,Mercury Checking xx9876,WOODGROVE ADS,,,,,,,05-09-2026 11:00,
+05-03-2026,Adventure Works,-129.99,Sent,Mercury Credit,ADVENTURE WORKS,,,4321,Jane Doe,Office,,05-03-2026 12:55,USD
+05-01-2026,Mercury Credit,-210.00,Sent,Mercury Checking xx9876,IO AUTOPAY,,,,,,,05-01-2026 0:04,
