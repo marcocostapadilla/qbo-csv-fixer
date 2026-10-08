@@ -1,0 +1,9 @@
+﻿Date,Type,Title,Info,Currency,Amount,"Fees & Taxes",Net,"Tax Details",Status,"Availability Date"
+"March 31, 2026",Deposit,"$12.00 sent to your bank account",,USD,--,--,--,--
+"March 28, 2026",Fee,"Credit for processing fee","Order #4200000003",USD,--,$0.55,$0.55,--
+"March 28, 2026",Refund,"Refund to buyer for Order #4200000003",,USD,-$18.00,--,-$18.00,--
+"March 20, 2026",Tax,"Sales tax paid by buyer","Order #4200000001",USD,--,-$2.88,-$2.88,--
+"March 20, 2026",Fee,"Processing fee","Order #4200000001",USD,--,-$1.42,-$1.42,--
+"March 20, 2026",Fee,"Transaction fee: Hand-thrown stoneware mug","Order #4200000001",USD,--,-$2.34,-$2.34,--
+"March 20, 2026",Sale,"Payment for Order #4200000001",,USD,$38.88,--,$38.88,--
+"March 3, 2026",Fee,"Listing fee ($0.20 USD)","Listing #1700000001",USD,--,-$0.20,-$0.20,--

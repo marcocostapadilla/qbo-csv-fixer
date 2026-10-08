@@ -1,0 +1,7 @@
+Transaction Date,Type,Order,Card Brand,Card Source,Payout Status,Payout Date,Available On,Amount,Fee,Net,Checkout,Payment Method Name,Presentment Amount,Presentment Currency,Currency
+2026-03-18 10:02:11 -0400,charge,#1046,visa,online,pending,2026-03-23,2026-03-20,58.00,1.98,56.02,#42675990692187,card,58.00,USD,USD
+2026-03-17 16:45:30 -0400,refund,#1031,master,online,paid,2026-03-19,2026-03-17,-35.00,0.00,-35.00,#42569948889435,card,35.00,USD,USD
+2026-03-17 09:12:05 -0400,charge,#1045,american_express,online,paid,2026-03-19,2026-03-19,129.99,4.07,125.92,#42672842211675,card,129.99,USD,USD
+2026-03-16 20:31:44 -0400,adjustment,,,,paid,2026-03-19,2026-03-16,-15.00,0.00,-15.00,,,,,USD
+2026-03-16 14:03:27 -0400,charge,#1044,visa,online,paid,2026-03-18,2026-03-18,49.99,1.75,48.24,#42616161075547,card,49.99,USD,USD
+2026-03-15 11:26:40 -0400,charge,#1043,master,online,paid,2026-03-18,2026-03-17,24.99,1.03,23.96,#42667949523291,card,24.99,USD,USD

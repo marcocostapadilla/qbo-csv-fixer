@@ -12,6 +12,7 @@
  * 7. verify-license.mjs: license hook wired but off (mocked fetch: valid, invalid, refunded,
  *    chargebacked, network error; flag false never fetches).
  * 8. verify-ui-gates.mjs: Download disabled on rejected files; no detect note next to a file error.
+ * 9. verify-presets-v13.mjs: Square, Shopify Payments, Etsy, Venmo presets.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -22,6 +23,7 @@ import { run as runV12Presets } from './verify-presets-v12.mjs';
 import { run as runPro } from './verify-pro.mjs';
 import { run as runLicense } from './verify-license.mjs';
 import { run as runUiGates } from './verify-ui-gates.mjs';
+import { run as runV13Presets } from './verify-presets-v13.mjs';
 
 runV11();
 runPresets();
@@ -31,6 +33,7 @@ runV12Presets();
 runPro();
 await runLicense();
 runUiGates();
+runV13Presets();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
