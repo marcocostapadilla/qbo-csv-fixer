@@ -90,7 +90,7 @@ Rules:
 - Dates: English month names and abbreviations (`Jan 13 2026`, `January 13, 2026`, `13-Jan-2026`, `2026-Jan-13`) are unambiguous.
 - Delimiter (`parse.mjs`, `sniffDelimiter`): comma, semicolon, tab or pipe, counted outside quotes on the first non-empty lines; comma wins ties.
 - A row below the header with an unreadable or missing date or amount is listed in the "Left out N row(s) that could not be read" note with its row number and raw values. Any left-out row makes the reconcile badge **INCOMPLETE** (never PASS), even when the balances would otherwise match (asserted).
-- Free watermark: no extra row any more (a blank-date 0.00 row can make QBO reject the file or import a $0 line). The filename gets `_qbo-csv-fixer-free` and each description ends with ` (QBO CSV Fixer free)`; descriptions are capped at 200 characters including that suffix.
+- Free watermark (v1.3.1): filename only. The filename gets `_qbo-csv-fixer-free`; descriptions are exported exactly as read (no suffix, no length cap) and there is no extra row (a blank-date 0.00 row can make QBO reject the file or import a $0 line). The chase-like free export equals `samples/chase-like-qbo-ready.csv` byte for byte (suite 10, `verify-watermark.mjs`).
 - Output name: any input extension is dropped (`not-a-csv.txt` -> `not-a-csv_qbo-csv-fixer-free.csv`).
 - `not-a-csv.png` is kept locally only: the GitHub push tool used for this repo sends text, so the PNG bytes are embedded in `verify-adversarial.mjs` instead.
 

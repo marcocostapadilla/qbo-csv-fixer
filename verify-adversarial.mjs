@@ -2,11 +2,10 @@
  * Verify suite 4 (v1.2 parsing fixes): adversarial fixtures from the live browser test suite.
  * samples/adversarial/*.csv. Comma decimals, trailing minus / CR / currency amounts, text-month
  * dates, semicolon and tab delimiters, empty / header-only / binary / prose rejects,
- * left-out rows and INCOMPLETE reconcile, formula injection, watermark, output filename.
+ * left-out rows and INCOMPLETE reconcile, formula injection, output filename.
  */
 import {
-  processCsv, toCsvString, buildExportRows, exportFileName, parseAmount,
-  WATERMARK_DESC_SUFFIX, MAX_DESC_LEN,
+  processCsv, toCsvString, buildExportRows, exportFileName, parseAmount, parseCsv,
 } from './core.mjs';
 import { assert, readSample, printTxns } from './verify-lib.mjs';
 
@@ -57,24 +56,24 @@ export function run() {
   }
 
   console.log('');
-  console.log('=== Formula injection and watermark on export ===');
+  console.log('=== Formula injection on export; free watermark is the filename only ===');
   {
     const r = processCsv(readSample('adversarial/formula-injection.csv'), 'generic_bank');
     const { header, body } = buildExportRows(r.transactions, 'date_desc_amount');
-    const csv = toCsvString(header, body, { watermark: true });
+    const csv = toCsvString(header, body);
     const lines = csv.trim().split('\n');
     console.log(csv);
-    assert(lines.length === 1 + r.transactions.length, `no extra watermark row: ${lines.length} lines for ${r.transactions.length} rows`);
+    assert(lines.length === 1 + r.transactions.length, `no extra row: ${lines.length} lines for ${r.transactions.length} rows`);
     assert(lines.slice(1).every((l) => /^\d\d\/\d\d\/\d{4},/.test(l)), 'every exported row has a date (no blank-date row)');
     assert(lines[1].startsWith('01/13/2026,"\'=HYPERLINK(') && lines[2].includes(",'+SUM(1+1)") && lines[3].includes(",'@cmd"), 'descriptions starting with = + @ get a leading apostrophe');
     assert(lines[1].endsWith(',-1.00') && lines[2].endsWith(',2.00'), 'amount cells untouched (no apostrophe on -1.00)');
-    assert(lines.slice(1).every((l) => l.includes(WATERMARK_DESC_SUFFIX)), `each description carries "${WATERMARK_DESC_SUFFIX.trim()}"`);
+    assert(lines.slice(1).every((l) => !/free\)/.test(l)), 'no description suffix on free exports');
     const dc = buildExportRows([{ date: '01/02/2026', description: '-REFUND', amount: -5 }], 'date_desc_debit_credit');
     assert(toCsvString(dc.header, dc.body) === "Date,Description,Debit,Credit\n01/02/2026,'-REFUND,5.00,\n", 'leading minus in text is neutralized; Debit 5.00 unchanged');
     const long = processCsv(readSample('adversarial/long-description.csv'), 'generic_bank');
-    const lcsv = toCsvString(...Object.values(buildExportRows(long.transactions, 'date_desc_amount')), { watermark: true });
-    const descs = lcsv.trim().split('\n').slice(1).map((l) => l.split(',').slice(1, -1).join(','));
-    assert(descs.every((d) => d.length <= MAX_DESC_LEN && d.endsWith(WATERMARK_DESC_SUFFIX)), `watermarked descriptions capped at ${MAX_DESC_LEN} chars (max ${Math.max(...descs.map((d) => d.length))})`);
+    const lcsv = toCsvString(...Object.values(buildExportRows(long.transactions, 'date_desc_amount')));
+    const descs = parseCsv(lcsv, ',').slice(1).filter((x) => x.length > 1).map((x) => x[1]);
+    assert(descs.length === long.transactions.length && descs.every((d, i) => d === long.transactions[i].description), `long descriptions exported unchanged (max ${Math.max(...descs.map((d) => d.length))} chars)`);
   }
 
   console.log('');

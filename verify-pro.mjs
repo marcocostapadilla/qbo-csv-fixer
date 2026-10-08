@@ -10,7 +10,7 @@ import { crc32, makeZip } from './zip.mjs';
 import { isProUnlocked, limitsFor, tierAllows, FREE_LIMITS } from './license.mjs';
 import { convertBatch, SUMMARY_NAME } from './batch.mjs';
 import { listProfiles, saveProfile, loadProfile, deleteProfile, PROFILES_KEY } from './profiles.mjs';
-import { processCsv, buildExportRows, toCsvString, WATERMARK_DESC_SUFFIX } from './core.mjs';
+import { processCsv, buildExportRows, toCsvString, WATERMARK_SUFFIX } from './core.mjs';
 
 export function run() {
   console.log('');
@@ -72,8 +72,8 @@ export function run() {
   assert(presets === 'chase,amex,citi,mercury,chase,generic_bank', `per-file auto-detect (got ${presets})`);
   const citi = processCsv(readSample('citi.csv'), 'citi');
   const { header, body } = buildExportRows(citi.transactions, 'date_desc_amount');
-  assert(z[2].text === toCsvString(header, body, { watermark: false }), 'citi_qbo.csv equals the single-file export without watermark');
-  assert(z.slice(0, 5).every((e) => !e.text.includes(WATERMARK_DESC_SUFFIX.trim())), 'no free watermark in Pro batch files');
+  assert(z[2].text === toCsvString(header, body), 'citi_qbo.csv equals the single-file export');
+  assert(z.slice(0, 5).every((e) => !e.name.includes(WATERMARK_SUFFIX)), 'no free filename suffix in Pro batch files');
   const sum = z[5].text.split('\n');
   assert(sum[0] === 'File,Output,Preset,Rows,Net,Reconcile,Left out,Check,Error', 'summary header row');
   assert(/^citi\.csv,citi_qbo\.csv,citi,6,430\.12,/.test(sum[3]) && /^mercury\.csv,mercury_qbo\.csv,mercury,5,1191\.01,N\/A,2,/.test(sum[4]), 'summary rows carry preset, rows, net, left-out count');

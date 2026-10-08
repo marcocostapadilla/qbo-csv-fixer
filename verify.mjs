@@ -6,13 +6,14 @@
  * 2. verify-presets.mjs: named bank presets (row count, net, signs, dates, auto-detect).
  * 3. verify-drift.mjs: header drift (fuzzy headers, synonyms, confidence, unmapped error).
  * 4. verify-adversarial.mjs: parsing fixes (decimals, amounts, dates, delimiters, rejects,
- *    left-out rows, formula injection, watermark, filename).
+ *    left-out rows, formula injection, filename).
  * 5. verify-presets-v12.mjs: Citi, U.S. Bank, PNC, Discover, Mercury presets.
  * 6. verify-pro.mjs: inert Pro features (zip writer, license hook, free limits, batch, profiles).
  * 7. verify-license.mjs: license hook wired but off (mocked fetch: valid, invalid, refunded,
  *    chargebacked, network error; flag false never fetches).
  * 8. verify-ui-gates.mjs: Download disabled on rejected files; no detect note next to a file error.
  * 9. verify-presets-v13.mjs: Square, Shopify Payments, Etsy, Venmo presets.
+ * 10. verify-watermark.mjs: free watermark is the filename only (no description suffix).
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -24,6 +25,7 @@ import { run as runPro } from './verify-pro.mjs';
 import { run as runLicense } from './verify-license.mjs';
 import { run as runUiGates } from './verify-ui-gates.mjs';
 import { run as runV13Presets } from './verify-presets-v13.mjs';
+import { run as runWatermark } from './verify-watermark.mjs';
 
 runV11();
 runPresets();
@@ -34,6 +36,7 @@ runPro();
 await runLicense();
 runUiGates();
 runV13Presets();
+runWatermark();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
