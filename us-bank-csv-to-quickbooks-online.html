@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>U.S. Bank CSV to QuickBooks Online: clean 3-column upload file</title>
+  <meta name="description" content="U.S. Bank CSV downloads carry Date, Transaction, Name, Memo and Amount. Trim them to a QuickBooks Online upload file with clean dates, locally in your browser." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/us-bank-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / U.S. Bank</p>
+    <header class="app-header">
+      <h1>U.S. Bank CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your U.S. Bank CSV export into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=us_bank">Open the tool with the U.S. Bank preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Download the CSV from U.S. Bank</h2>
+      <ol>
+        <li>Sign in at usbank.com on a computer (the mobile app has no transaction download).</li>
+        <li>Select the account, then the download icon in the top right of the <strong>Transactions</strong> tile.</li>
+        <li>Choose the date range and <strong>Spreadsheet (.CSV)</strong> as the format, then Download. Up to 18 months of history is available.</li>
+      </ol>
+      <p class="hint">Menus change from time to time. If a label differs, search the U.S. Bank help pages for "download transactions" or "export CSV".</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the U.S. Bank file</h2>
+      <ul>
+        <li>Columns: <code>Date, Transaction, Name, Memo, Amount</code>.</li>
+        <li>Transaction (debit or credit) and Memo are extra columns the QuickBooks Online importer does not need.</li>
+        <li>Amount is already signed (debits negative), so the file mostly needs trimming and consistent dates.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=us_bank">QBO CSV Fixer with the U.S. Bank preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the reconcile badge and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the U.S. Bank preset does:</p>
+      <ul>
+        <li>Uses Name as the description and keeps the signed Amount.</li>
+        <li>Drops Transaction and Memo and writes dates as MM/DD/YYYY.</li>
+        <li>Offers the 3-column (Date, Description, Amount) or 4-column (Date, Description, Debit, Credit) QuickBooks layout.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/us-bank.csv" download>U.S. Bank sample CSV</a> (fake merchants) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>In the free export each description ends with &quot;(QBO CSV Fixer free)&quot; and the file name ends with _qbo-csv-fixer-free. There is no extra watermark row to remove.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>The file has no balances, so the reconcile badge shows N/A. Compare the net total with your statement.</li>
+        <li>Longer periods may need several downloads; the free tier handles one file of up to 100 rows.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>Other guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="citi-csv-to-quickbooks-online.html">Citi</a> · <a href="pnc-csv-to-quickbooks-online.html">PNC</a> · <a href="discover-csv-to-quickbooks-online.html">Discover</a> · <a href="mercury-csv-to-quickbooks-online.html">Mercury</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
