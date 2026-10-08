@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Etsy CSV to QuickBooks Online: monthly payments statement to a bank upload</title>
+  <meta name="description" content="Turn an Etsy Payments monthly statement CSV (sales, fees, sales tax, refunds, deposits) into a QuickBooks Online upload file with net amounts and clean dates, locally." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/etsy-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / Etsy</p>
+    <header class="app-header">
+      <h1>Etsy CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your Etsy monthly statement CSV export into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=etsy">Open the tool with the Etsy preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Download the CSV from Etsy</h2>
+      <ol>
+        <li>In Shop Manager, open <strong>Finances</strong>, then <strong>Payment account</strong>.</li>
+        <li>Find the monthly statements, pick the month and download the CSV.</li>
+      </ol>
+      <p class="hint">Menus change from time to time. If a label differs, search the Etsy help pages for "payment account" or "monthly statement".</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the Etsy file</h2>
+      <ul>
+        <li>Columns: <code>Date, Type, Title, Info, Currency, Amount, Fees &amp; Taxes, Net</code>. Recent files add <code>Tax Details, Status, Availability Date</code> to the header.</li>
+        <li>One sale becomes many rows: a Sale row, then separate Fee rows (transaction fee, processing fee), Tax rows (sales tax paid by buyer), listing fees and Etsy Ads.</li>
+        <li>Empty money cells are written as <code>--</code>. Dates are text, like <code>March 20, 2026</code> (older files: <code>16 January, 2024</code>).</li>
+        <li>Refunds read <code>Refund to buyer for Order #...</code> and are negative, often with a positive <code>Credit for processing fee</code> row.</li>
+        <li>Deposits to your bank show the amount only in the Title, for example <code>$12.00 sent to your bank account</code>; every money cell on that row is <code>--</code>.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=etsy">QBO CSV Fixer with the Etsy preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the reconcile badge and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the Etsy preset does:</p>
+      <ul>
+        <li>Uses Net as the amount and Type, Title and Info as the description.</li>
+        <li>Treats <code>--</code> as empty and reads a deposit amount from its Title as money out of the Etsy balance.</li>
+        <li>Writes text dates as MM/DD/YYYY.</li>
+        <li>Fits an Etsy clearing account in QuickBooks Online: deposits become transfers you match in your real bank account.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/etsy.csv" download>Etsy sample CSV</a> (fake names) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>In the free export each description ends with &quot;(QBO CSV Fixer free)&quot; and the file name ends with _qbo-csv-fixer-free. There is no extra watermark row to remove.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>The Sale amount includes the sales tax the buyer paid, and a Tax row takes it back out. Categorize both so the tax nets to zero.</li>
+        <li>This statement has no opening or ending balance, so the reconcile badge shows n/a.</li>
+        <li>Shops paid in euro or pound get amounts like <code>-€0.17</code> or <code>£1,208.35</code>; they are read the same way.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>All guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="citi-csv-to-quickbooks-online.html">Citi</a> · <a href="us-bank-csv-to-quickbooks-online.html">U.S. Bank</a> · <a href="pnc-csv-to-quickbooks-online.html">PNC</a> · <a href="discover-csv-to-quickbooks-online.html">Discover</a> · <a href="mercury-csv-to-quickbooks-online.html">Mercury</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a> · <a href="square-csv-to-quickbooks-online.html">Square</a> · <a href="shopify-csv-to-quickbooks-online.html">Shopify Payments</a> · <a href="etsy-csv-to-quickbooks-online.html">Etsy</a> · <a href="venmo-csv-to-quickbooks-online.html">Venmo</a></p>
+      <p>Compare: <a href="qbo-csv-fixer-vs-alternatives.html">QBO CSV Fixer vs Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

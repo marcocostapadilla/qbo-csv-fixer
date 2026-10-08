@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Square CSV to QuickBooks Online: transactions export to a bank upload</title>
+  <meta name="description" content="Turn a Square transactions CSV (gross sales, fees, net total, refunds) into a QuickBooks Online upload file with net amounts and clean dates, locally." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/square-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / Square</p>
+    <header class="app-header">
+      <h1>Square CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your Square transactions CSV export into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=square">Open the tool with the Square preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Download the CSV from Square</h2>
+      <ol>
+        <li>In the Square Dashboard, open <strong>Transactions</strong> and pick the date range and location.</li>
+        <li>Choose <strong>Export</strong>, then the <strong>Transactions CSV</strong> (not the item detail CSV).</li>
+      </ol>
+      <p class="hint">Menus change from time to time. If a label differs, search the Square help pages for "export transactions".</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the Square file</h2>
+      <ul>
+        <li>About 54 columns: <code>Date, Time, Time Zone, Gross Sales, Discounts, Service Charges, Net Sales, ..., Total Collected, ..., Fees, Net Total, Transaction ID, ..., Description, Event Type, ...</code> Older files have fewer columns in a different order.</li>
+        <li>Fees are negative and written in parentheses, for example <code>($2.55)</code>. Net Total is what you keep after fees.</li>
+        <li>Refunds are their own rows with Event Type <code>Refund</code> and negative amounts.</li>
+        <li>Cash sales sit in the same file with a <code>$0.00</code> fee, but that cash never reaches a Square deposit.</li>
+        <li>Recent exports write dates as <code>2026-03-06</code>; older ones as <code>12/27/2018</code>. The time is in its own column.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=square">QBO CSV Fixer with the Square preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the reconcile badge and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the Square preset does:</p>
+      <ul>
+        <li>Uses Net Total as the amount and Event Type plus Description as the description.</li>
+        <li>Reads <code>($33.62)</code> as -33.62 and <code>$1,149.00</code> as 1149.00.</li>
+        <li>Writes every date as MM/DD/YYYY.</li>
+        <li>Keeps refunds as money out, so you can upload into a Square clearing account in QuickBooks Online and match each Square deposit to your real bank account.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/square.csv" download>Square sample CSV</a> (fake names) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>In the free export each description ends with &quot;(QBO CSV Fixer free)&quot; and the file name ends with _qbo-csv-fixer-free. There is no extra watermark row to remove.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>Cash sales are included. If you do not book cash through the Square clearing account, exclude or recategorize those lines in For review.</li>
+        <li>This export has no opening or ending balance, so the reconcile badge shows n/a. Compare the net total with your Square sales summary instead.</li>
+        <li>Square deposits (transfers) come in a separate export with a different layout; this preset reads the Transactions CSV.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>All guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="citi-csv-to-quickbooks-online.html">Citi</a> · <a href="us-bank-csv-to-quickbooks-online.html">U.S. Bank</a> · <a href="pnc-csv-to-quickbooks-online.html">PNC</a> · <a href="discover-csv-to-quickbooks-online.html">Discover</a> · <a href="mercury-csv-to-quickbooks-online.html">Mercury</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a> · <a href="square-csv-to-quickbooks-online.html">Square</a> · <a href="shopify-csv-to-quickbooks-online.html">Shopify Payments</a> · <a href="etsy-csv-to-quickbooks-online.html">Etsy</a> · <a href="venmo-csv-to-quickbooks-online.html">Venmo</a></p>
+      <p>Compare: <a href="qbo-csv-fixer-vs-alternatives.html">QBO CSV Fixer vs Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

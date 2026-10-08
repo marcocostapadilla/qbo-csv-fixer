@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shopify Payments CSV to QuickBooks Online: payout transactions to a bank upload</title>
+  <meta name="description" content="Turn a Shopify Payments payout transactions CSV (charges, refunds, adjustments, fees, net) into a QuickBooks Online upload file with clean dates, locally." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/shopify-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / Shopify Payments</p>
+    <header class="app-header">
+      <h1>Shopify Payments CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your Shopify Payments payout transactions CSV export into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=shopify">Open the tool with the Shopify Payments preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Download the CSV from Shopify Payments</h2>
+      <ol>
+        <li>In Shopify admin, open the Shopify Payments payouts page (Settings, then Payments, then View payouts).</li>
+        <li>Open a payout to export only its transactions, or stay on the list for a date range, and choose <strong>Export</strong> to get the transactions CSV.</li>
+      </ol>
+      <p class="hint">Menus change from time to time, and depending on region the file downloads in the browser or arrives by email. If a label differs, search the Shopify help pages for "payout details".</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the Shopify Payments file</h2>
+      <ul>
+        <li>One row per charge, refund or adjustment: <code>Transaction Date, Type, Order, Card Brand, Card Source, Payout Status, Payout Date, Available On, Amount, Fee, Net, ...</code> Some regions add VAT or GST columns.</li>
+        <li>Transaction Date has a time and a UTC offset, for example <code>2026-03-18 10:02:11 -0400</code>.</li>
+        <li>Amount is gross, Fee is separate and Net is Amount minus Fee. Refunds and adjustments are negative.</li>
+        <li>Rows with Payout Status <code>pending</code> are real charges that have not been paid out yet.</li>
+        <li>There is no payout ID column, and the payout to your bank is not a row in this file.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=shopify">QBO CSV Fixer with the Shopify Payments preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the reconcile badge and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the Shopify Payments preset does:</p>
+      <ul>
+        <li>Uses Net as the amount (the fee is never subtracted a second time) and Type plus Order as the description.</li>
+        <li>Keeps refunds and adjustments negative and keeps pending rows.</li>
+        <li>Drops the time and offset and writes Transaction Date as MM/DD/YYYY.</li>
+        <li>Fits a Shopify Payments clearing account in QuickBooks Online: record each payout as a transfer to your bank and match it there.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/shopify-payouts.csv" download>Shopify Payments sample CSV</a> (fake names) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>In the free export each description ends with &quot;(QBO CSV Fixer free)&quot; and the file name ends with _qbo-csv-fixer-free. There is no extra watermark row to remove.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>To match one bank deposit, export only that payout. The sum of Net should equal the payout amount Shopify shows.</li>
+        <li>This export has no opening or ending balance, so the reconcile badge shows n/a.</li>
+        <li>Keep each currency in its own export and its own QuickBooks account.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>All guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="citi-csv-to-quickbooks-online.html">Citi</a> · <a href="us-bank-csv-to-quickbooks-online.html">U.S. Bank</a> · <a href="pnc-csv-to-quickbooks-online.html">PNC</a> · <a href="discover-csv-to-quickbooks-online.html">Discover</a> · <a href="mercury-csv-to-quickbooks-online.html">Mercury</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a> · <a href="square-csv-to-quickbooks-online.html">Square</a> · <a href="shopify-csv-to-quickbooks-online.html">Shopify Payments</a> · <a href="etsy-csv-to-quickbooks-online.html">Etsy</a> · <a href="venmo-csv-to-quickbooks-online.html">Venmo</a></p>
+      <p>Compare: <a href="qbo-csv-fixer-vs-alternatives.html">QBO CSV Fixer vs Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
