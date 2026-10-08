@@ -13,9 +13,14 @@ import {
   exportFileName,
   PRESETS,
   QBO_PRESETS,
-  freeTierAllows,
+  WATERMARK_SUFFIX,
 } from './core.mjs';
 import { els, showError, setDetectNote, renderResults, hideResults } from './ui.mjs';
+import { isProUnlocked, limitsFor, tierAllows } from './license.mjs';
+import { setupPro } from './pro-ui.mjs';
+import { PRO_SUFFIX } from './batch.mjs';
+
+let pro = { multiDrop() {} };
 
 let state = {
   fileName: '',
@@ -130,11 +135,12 @@ function reprocess() {
 
 function downloadExport() {
   const r = state.result;
-  if (!r || r.mappingError || r.fileError || !r.transactions.length || !freeTierAllows(r.transactions.length)) return;
+  if (!r || r.mappingError || r.fileError || !r.transactions.length || !tierAllows(r.transactions.length)) return;
   const qboId = els.qboPreset.value || 'date_desc_amount';
   const { header, body } = buildExportRows(r.transactions, qboId);
-  const csv = toCsvString(header, body, { watermark: true });
-  saveBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), exportFileName(state.fileName));
+  const wm = limitsFor(isProUnlocked()).watermark; // always true until a license check exists
+  const csv = toCsvString(header, body, { watermark: wm });
+  saveBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), exportFileName(state.fileName, wm ? WATERMARK_SUFFIX : PRO_SUFFIX));
 }
 
 export function saveBlob(blob, name) {
@@ -159,8 +165,9 @@ function setupDropzone() {
   dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
   dz.addEventListener('drop', (e) => {
     dz.classList.remove('dragover');
-    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-    if (f) readFile(f);
+    const list = (e.dataTransfer && e.dataTransfer.files) || [];
+    pro.multiDrop(list.length); // free core: 1 file; only the first one is read
+    if (list[0]) readFile(list[0]);
   });
   dz.addEventListener('click', (e) => {
     if (e.target.closest('button')) return;
@@ -230,6 +237,23 @@ function init() {
     });
   }
   els.downloadBtn.addEventListener('click', downloadExport);
+  pro = setupPro({
+    getSettings: () => ({ preset: els.processorPreset.value, qbo: els.qboPreset.value, dateOrder: state.dateOrder, decimal: state.decimal }),
+    applySettings,
+    saveBlob,
+  });
+}
+
+/** Apply a saved profile (Pro only; never called while isProUnlocked() is false). */
+function applySettings(p) {
+  els.processorPreset.value = p.preset;
+  els.qboPreset.value = p.qbo;
+  state.presetLocked = true;
+  state.dateOrder = p.dateOrder;
+  state.decimal = p.decimal;
+  updateProcessorHint();
+  setDetectNote('');
+  reprocess();
 }
 
 init();

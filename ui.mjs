@@ -2,7 +2,8 @@
  * QBO CSV Fixer - browser rendering helpers (badges, preview table, notes).
  * Pure DOM output; no network calls.
  */
-import { buildExportRows, fmtMoney, FREE_ROW_LIMIT, WATERMARK_SUFFIX, WATERMARK_DESC_SUFFIX, freeTierAllows } from './core.mjs';
+import { buildExportRows, fmtMoney, FREE_ROW_LIMIT, WATERMARK_SUFFIX, WATERMARK_DESC_SUFFIX } from './core.mjs';
+import { tierAllows } from './license.mjs';
 
 export const els = {};
 for (const id of [
@@ -161,7 +162,7 @@ export function renderResults(r, qboId) {
   renderPreview(header, body);
 
   const n = r.transactions.length;
-  const allowed = n > 0 && freeTierAllows(n);
+  const allowed = n > 0 && tierAllows(n);
   els.tierNote.innerHTML = !n
     ? '<strong>No transactions could be read</strong>, so there is nothing to download. See the note above.'
     : allowed

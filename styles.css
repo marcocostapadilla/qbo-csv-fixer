@@ -519,3 +519,31 @@ footer {
 .map-note {
   margin: 0 0 0.75rem;
 }
+
+.pro-card .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.6rem 0;
+}
+
+.pro-card input[type="text"],
+.pro-card select {
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.pro-card :disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pro-note {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.5rem 0 0;
+}
