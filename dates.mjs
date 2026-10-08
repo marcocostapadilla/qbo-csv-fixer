@@ -7,6 +7,8 @@
  * Returns { kind: 'iso', y, m, d } for YYYY-MM-DD (never ambiguous),
  * { kind: 'pair', a, b, y } for A/B/YYYY style (A/B could be M/D or D/M),
  * or null when it does not look like a date.
+ * Month names are unambiguous and also return kind 'iso': "Jan 13 2026", "January 13, 2026",
+ * "13-Jan-2026", "13 Jan 26", "2026-Jan-13", optionally after a weekday ("Tue, Jan 13 2026").
  * Trailing times ("2026-01-03 10:12:45", "2026-01-03T10:12:45Z") are ignored.
  */
 export function parseDateParts(raw) {
@@ -31,7 +33,53 @@ export function parseDateParts(raw) {
     }
     return { kind: 'pair', a: Number(m[1]), b: Number(m[2]), y: year };
   }
+  return parseNamedMonth(t);
+}
+
+const MONTHS = {
+  jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12,
+};
+
+function monthOf(word) {
+  const w = String(word).toLowerCase().replace(/\.$/, '');
+  if (w.length < 3) return 0;
+  const key = Object.keys(MONTHS).find((k) => w.startsWith(k) && 'january february march april may june july august september october november december'.includes(w));
+  return key ? MONTHS[key] : 0;
+}
+
+function fullYear(y) {
+  if (y.length === 4) return y;
+  if (y.length === 2) {
+    const n = Number(y);
+    return String(n >= 70 ? 1900 + n : 2000 + n);
+  }
   return null;
+}
+
+/** English month names or abbreviations in day-month-year, month-day-year or year-month-day order. */
+function parseNamedMonth(t) {
+  const s = t.replace(/^(mon|tue|tues|wed|thu|thur|thurs|fri|sat|sun)[a-z]*\.?,?\s+/i, '');
+  const parts = s.split(/[\s,\-\/.]+/).filter(Boolean);
+  if (parts.length !== 3) return null;
+  const idx = parts.findIndex((p) => /^[a-z]+\.?$/i.test(p));
+  if (idx < 0) return null;
+  const m = monthOf(parts[idx]);
+  if (!m) return null;
+  const nums = parts.filter((_, i) => i !== idx);
+  if (!nums.every((n) => /^\d{1,4}$/.test(n))) return null;
+  let d;
+  let y;
+  if (idx === 1 && nums[0].length === 4) {
+    y = nums[0];
+    d = nums[1];
+  } else {
+    d = nums[0];
+    y = nums[1];
+  }
+  d = Number(d.replace(/(st|nd|rd|th)$/i, ''));
+  y = fullYear(y);
+  if (!y || !(d >= 1 && d <= 31)) return null;
+  return { kind: 'iso', y, m, d };
 }
 
 /**
