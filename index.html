@@ -3,15 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QBO CSV Fixer</title>
-  <meta name="description" content="Local bank/PayPal CSV to QuickBooks Online import. Files never leave your browser." />
+  <title>QBO CSV Fixer: bank CSV to QuickBooks Online import, in your browser</title>
+  <meta name="description" content="Turn Chase, Bank of America, Wells Fargo, Amex, Capital One, Revolut, PayPal, Stripe or Wise CSV exports into a QuickBooks Online upload file. Runs locally; files never leave your browser." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="wrap">
     <header class="app-header">
       <h1>QBO CSV Fixer</h1>
-      <p class="subhead">Local bank/PayPal CSV to QuickBooks Online import. Files never leave your browser.</p>
+      <p class="subhead">Local bank, card and PayPal/Stripe/Wise CSV to QuickBooks Online import. Files never leave your browser.</p>
       <ol class="steps" aria-label="How it works">
         <li><span class="n">1</span> Drop a CSV</li>
         <li><span class="n">2</span> Pick a preset</li>
@@ -29,7 +30,7 @@
         <p>Parsing runs entirely in your browser. Nothing is uploaded.</p>
         <div class="file-row">
           <button type="button" class="primary" id="browseBtn">Choose file</button>
-          <button type="button" class="secondary" id="loadSampleBtn">Load chase-like sample</button>
+          <button type="button" class="secondary" id="loadSampleBtn">Load sample for selected preset</button>
           <input type="file" id="fileInput" accept=".csv,text/csv,text/plain" hidden />
         </div>
         <p class="file-name" id="fileName" style="margin-top:0.75rem"></p>
@@ -38,6 +39,16 @@
         <span>Samples:</span>
         <a href="samples/chase-like-messy.csv" download>before (messy)</a>
         <a href="samples/chase-like-qbo-ready.csv" download>after (QBO-ready)</a>
+        <a href="samples/chase-checking.csv" download>Chase</a>
+        <a href="samples/bank-of-america.csv" download>Bank of America</a>
+        <a href="samples/wells-fargo.csv" download>Wells Fargo</a>
+        <a href="samples/amex.csv" download>Amex</a>
+        <a href="samples/capital-one.csv" download>Capital One</a>
+        <a href="samples/revolut.csv" download>Revolut</a>
+        <a href="samples/paypal.csv" download>PayPal</a>
+        <a href="samples/stripe.csv" download>Stripe</a>
+        <a href="samples/wise.csv" download>Wise</a>
+        <a href="samples/ambiguous-dates.csv" download>ambiguous dates</a>
       </div>
     </section>
 
@@ -45,8 +56,9 @@
       <h2>2. Presets</h2>
       <div class="controls">
         <label class="field">
-          Processor / bank map
+          Bank / processor input
           <select id="processorPreset"></select>
+          <p class="detect-note hidden" id="detectNote" aria-live="polite"></p>
           <p class="hint" id="processorHint"></p>
         </label>
         <label class="field">
@@ -59,7 +71,15 @@
 
     <section id="results" class="card hidden">
       <h2>3. Preview and reconcile</h2>
+      <div id="dateWarning" class="date-warning hidden" role="alert">
+        <p style="margin:0"><strong>Check the date format.</strong> <span id="dateWarningText">Every date in this file could be read as US month/day or as EU day/month, so the file alone cannot tell which one your bank used. Pick the one that matches your statement before you download.</span></p>
+        <div class="date-toggle" role="radiogroup" aria-label="Date format of the source file">
+          <label><input type="radio" name="dateOrder" value="mdy" id="dateOrderMdy" /> US M/D (03/04 = March 4)</label>
+          <label><input type="radio" name="dateOrder" value="dmy" id="dateOrderDmy" /> EU D/M (03/04 = April 3)</label>
+        </div>
+      </div>
       <div id="badgeRow" class="badge-row" aria-live="polite"></div>
+      <p id="skipNote" class="skip-note hidden"></p>
       <p class="hint" style="margin-bottom:0.75rem">
         Transaction rows: <strong id="txnCount">0</strong>.
         Beginning/Ending balance rows are skipped from the export but used for the reconcile badge when present.
@@ -83,15 +103,25 @@
         <li><strong>Silent reconcile miss:</strong> ChatGPT can return a CSV that looks import-ready while missing an opening/closing balance break (our sample fixture has a built-in $2 gap; chat did not warn).</li>
         <li><strong>No one-click local UI:</strong> chat offered DIY scripts, not a bookmarkable browser tool that never uploads the file.</li>
       </ul>
-      <p style="margin:0.75rem 0 0">This demo does not claim that chat drops rows or flips signs. The wedge is the visible reconcile badge plus an offline UI.</p>
+      <p style="margin:0.75rem 0 0">The point of this tool is the visible reconcile badge plus an offline, one-click UI.</p>
     </section>
 
     <footer>
       <p>
-        Free core: 1 file, ≤100 rows, watermarked export.
-        Soft unlock stub: <a href="https://marcocostapadilla.gumroad.com/l/qbo-csv-fixer" target="_blank" rel="noopener noreferrer">CHF 19 lifetime on Gumroad</a>
-        (link only; this demo does not create accounts).
+        Free core: 1 file, ≤100 rows, watermarked export. Unlimited version coming soon.
       </p>
+      <p style="margin-bottom:0">How-to guides: bank CSV to QuickBooks Online</p>
+      <ul class="guide-links">
+        <li><a href="chase-csv-to-quickbooks-online.html">Chase</a></li>
+        <li><a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a></li>
+        <li><a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a></li>
+        <li><a href="amex-csv-to-quickbooks-online.html">American Express</a></li>
+        <li><a href="capital-one-csv-to-quickbooks-online.html">Capital One</a></li>
+        <li><a href="revolut-csv-to-quickbooks-online.html">Revolut</a></li>
+        <li><a href="paypal-csv-to-quickbooks-online.html">PayPal</a></li>
+        <li><a href="stripe-csv-to-quickbooks-online.html">Stripe</a></li>
+        <li><a href="wise-csv-to-quickbooks-online.html">Wise</a></li>
+      </ul>
       <p>CSV only. No PDF. No bank login. No server. See <a href="README.md">README.md</a> for local open instructions and known gaps.</p>
     </footer>
   </div>
