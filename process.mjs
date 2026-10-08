@@ -104,6 +104,9 @@ export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) 
   const leaveOut = (i, reason, row) =>
     leftOutRows.push({ sourceRow: i + 1, reason, date: rawDateOf(row), amounts: moneyCells(row).filter(Boolean) });
 
+  // v1.3 preset hook: repair rows in place (Etsy deposit amount lives in Title)
+  if (preset.fixRow) for (let i = headerRowIndex + 1; i < rows.length; i++) preset.fixRow(rows[i], headers);
+
   // Candidate transaction rows: everything below the header (all rows when headerless).
   const candidates = [];
   for (let i = headerRowIndex + 1; i < rows.length; i++) {
@@ -179,6 +182,8 @@ export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) 
     });
   }
 
+  // v1.3 preset hook: balances from columns (Venmo Beginning/Ending Balance)
+  if (preset.balancesFrom && opening == null && closing == null) ({ opening, closing } = preset.balancesFrom(rows.slice(headerRowIndex + 1), headers, numOpts));
   leftOutRows.sort((a, b) => a.sourceRow - b.sourceRow);
   const net = round2(transactions.reduce((s, t) => s + t.amount, 0));
   const reconcile = reconcileBalances(opening, closing, net, leftOutRows.length);

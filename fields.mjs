@@ -10,7 +10,7 @@ import { parseDateParts } from './dates.mjs';
 export const FIELD_SYNONYMS = {
   date: [
     'date', 'transaction date', 'posted date', 'date posted', 'value date', 'booking date',
-    'effective date', 'completed date', 'created', 'created utc', 'date of transaction',
+    'effective date', 'completed date', 'created', 'created utc', 'date of transaction', 'datetime',
   ],
   description: [
     'description', 'transaction description', 'memo', 'payee', 'payee name', 'details',
