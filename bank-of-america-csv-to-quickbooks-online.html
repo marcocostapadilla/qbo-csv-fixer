@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bank of America CSV to QuickBooks Online: remove the summary block</title>
+  <meta name="description" content="Bank of America CSV downloads start with a summary block that breaks QuickBooks Online imports. Strip it, check the balance math and get a clean upload file, locally." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/bank-of-america-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / Bank of America</p>
+    <header class="app-header">
+      <h1>Bank of America CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your Bank of America CSV export into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=bofa">Open the tool with the Bank of America preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Download the CSV from Bank of America</h2>
+      <ol>
+        <li>Sign in to Bank of America Online Banking and open the checking or savings account.</li>
+        <li>Use the <strong>Download</strong> link above the transaction list.</li>
+        <li>Pick the statement period or date range and choose the <strong>Microsoft Excel</strong> format, which saves a .csv file.</li>
+      </ol>
+      <p class="hint">Bank menus change from time to time. If a label differs, search the Bank of America help pages for "download transactions" or "export CSV".</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the Bank of America file</h2>
+      <ul>
+        <li>The file does not start with a header. It opens with a summary block: <code>Description,,Summary Amt.</code>, then <em>Beginning balance as of</em>, <em>Total credits</em>, <em>Total debits</em> and <em>Ending balance as of</em> rows, then a blank line.</li>
+        <li>The real header comes after that: <code>Date, Description, Amount, Running Bal.</code></li>
+        <li>The first row under the header is another <em>Beginning balance as of</em> line with no amount.</li>
+        <li>Larger amounts are quoted with thousands separators, for example <code>"2,500.00"</code>.</li>
+        <li>QuickBooks Online reads the summary block as data, so the upload fails or imports junk lines unless you delete them by hand.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=bofa">QBO CSV Fixer with the Bank of America preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the reconcile badge and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the Bank of America preset does:</p>
+      <ul>
+        <li>Skips the summary block and the in-table Beginning balance row; none of them reach the export.</li>
+        <li>Uses the Beginning and Ending balance from the summary for the reconcile badge: opening + transactions must equal ending, or you see FAIL with the exact difference.</li>
+        <li>Removes thousands separators, drops Running Bal., writes dates as MM/DD/YYYY.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/bank-of-america.csv" download>Bank of America sample CSV</a> (fake merchants) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>The free export ends with one watermark row (blank date, amount 0.00). Untick it on the review screen or delete that last line first.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>This preset targets checking and savings downloads. Bank of America card downloads use a different layout; check the preview if you use it for a card file.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>Other guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Capital One CSV to QuickBooks Online: merge Debit and Credit columns</title>
+  <meta name="description" content="Capital One CSVs split money out and money in into two positive columns with ISO dates. Turn them into a signed QuickBooks Online upload file, locally in your browser." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/capital-one-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / Capital One</p>
+    <header class="app-header">
+      <h1>Capital One CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your Capital One CSV export into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=capital_one">Open the tool with the Capital One preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Download the CSV from Capital One</h2>
+      <ol>
+        <li>Sign in to your Capital One account on a computer and select the card.</li>
+        <li>Choose the option to download transactions.</li>
+        <li>Pick the date range and <strong>CSV</strong> as the format.</li>
+      </ol>
+      <p class="hint">Bank menus change from time to time. If a label differs, search the Capital One help pages for "download transactions" or "export CSV".</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the Capital One file</h2>
+      <ul>
+        <li>Seven columns: <code>Transaction Date, Posted Date, Card No., Description, Category, Debit, Credit</code>.</li>
+        <li>Debit (purchases, fees) and Credit (payments, refunds) are both written as positive numbers, with one of them blank on each row.</li>
+        <li>Dates are usually YYYY-MM-DD, while a US QuickBooks Online company usually maps MM/DD/YYYY.</li>
+        <li>Card No. and Category are Capital One's own fields and do not belong in the import.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=capital_one">QBO CSV Fixer with the Capital One preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the reconcile badge and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the Capital One preset does:</p>
+      <ul>
+        <li>Turns Debit into a negative amount and Credit into a positive amount, or keeps them as separate columns if you pick the 4-column QuickBooks layout.</li>
+        <li>Uses Transaction Date and converts it to MM/DD/YYYY.</li>
+        <li>Drops Posted Date, Card No. and Category.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/capital-one.csv" download>Capital One sample CSV</a> (fake merchants) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>The free export ends with one watermark row (blank date, amount 0.00). Untick it on the review screen or delete that last line first.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>Upload the result into the Capital One credit card account in QuickBooks Online.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>Other guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
