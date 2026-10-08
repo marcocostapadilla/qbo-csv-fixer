@@ -1,0 +1,6 @@
+"TransferWise ID","Date","Amount","Currency","Description","Payment Reference","Running Balance","Exchange From","Exchange To","Exchange Rate","Payer Name","Payee Name","Payee Account Number","Merchant","Card Last Four Digits","Card Holder Full Name","Attachment","Note","Total fees"
+"TRANSFER-1122334455","27-02-2026","-450.00","EUR","Sent money to Jane Doe","INV-2026-031","1210.55","","","","","Jane Doe","DE00123456780000000000","","","","","","0.00"
+"CARD-998877665","21-02-2026","-18.90","EUR","Card transaction of 18.90 EUR issued by Northwind Books BERLIN","","1660.55","","","","","","","Northwind Books","4321","Jane Doe","","","0.00"
+"BALANCE-55667788","16-02-2026","-200.00","EUR","Converted 200.00 EUR to 216.40 USD","","1679.45","EUR","USD","1.082","","","","","","","","","0.00"
+"TRANSFER-1122001100","09-02-2026","1500.00","EUR","Received money from Contoso GmbH with reference INV-2026-022","INV-2026-022","1879.45","","","","Contoso GmbH","","","","","","","","0.00"
+"CARD-998877000","04-02-2026","-9.99","EUR","Card transaction of 9.99 EUR issued by Fabrikam Cloud DUBLIN","","379.45","","","","","","","Fabrikam Cloud","4321","Jane Doe","","","0.00"

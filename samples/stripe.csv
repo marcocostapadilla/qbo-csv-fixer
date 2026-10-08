@@ -1,0 +1,7 @@
+id,Type,Source,Amount,Fee,Net,Currency,Created (UTC),Available On (UTC),Description,Customer Email,Transfer
+txn_1Qa,charge,ch_1Qa,80.00,2.62,77.38,usd,2026-02-02 15:04:11,2026-02-04 00:00:00,Invoice 2026-014,ana@example.com,po_1Qz
+txn_1Qb,charge,ch_1Qb,250.00,7.55,242.45,usd,2026-02-03 09:12:40,2026-02-05 00:00:00,Invoice 2026-015,ben@example.com,po_1Qz
+txn_1Qc,refund,re_1Qc,-80.00,0.00,-80.00,usd,2026-02-03 17:30:00,2026-02-03 17:30:00,Refund for Invoice 2026-014,ana@example.com,po_1Qz
+txn_1Qd,stripe_fee,,-2.00,0.00,-2.00,usd,2026-02-04 00:00:00,2026-02-04 00:00:00,Billing usage fee,,po_1Qz
+txn_1Qe,payout,po_1Qz,-237.83,0.00,-237.83,usd,2026-02-05 00:00:00,2026-02-05 00:00:00,STRIPE PAYOUT,,po_1Qz
+txn_1Qf,charge,ch_1Qf,45.00,1.61,43.39,usd,2026-02-06 11:45:02,2026-02-08 00:00:00,Invoice 2026-016,cara@example.com,

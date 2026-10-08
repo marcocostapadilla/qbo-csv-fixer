@@ -1,0 +1,7 @@
+"Date","Time","TimeZone","Name","Type","Status","Currency","Gross","Fee","Net","From Email Address","To Email Address","Transaction ID","Balance","Balance Impact"
+"01/04/2026","10:15:22","PST","Northwind Studio","Express Checkout Payment","Completed","USD","120.00","-4.67","115.33","buyer1@example.com","shop@example.com","1AB23456CD789012E","115.33","Credit"
+"01/06/2026","14:02:10","PST","Fabrikam Hosting","PreApproved Payment Bill User Payment","Completed","USD","-29.00","0.00","-29.00","shop@example.com","billing@example.net","2BC34567DE890123F","86.33","Debit"
+"01/09/2026","09:41:55","PST","Contoso Goods","General Authorization","Pending","USD","-75.00","0.00","-75.00","shop@example.com","sales@example.org","3CD45678EF901234G","86.33","Memo"
+"01/13/2026","16:20:00","PST","Adventure Works","Express Checkout Payment","Completed","USD","45.50","-1.82","43.68","buyer2@example.com","shop@example.com","4DE56789FG012345H","130.01","Credit"
+"01/15/2026","11:05:43","PST","Northwind Studio","Payment Refund","Completed","USD","-20.00","0.78","-19.22","shop@example.com","buyer1@example.com","5EF67890GH123456J","110.79","Debit"
+"01/20/2026","08:00:00","PST","","General Withdrawal","Completed","USD","-100.00","0.00","-100.00","shop@example.com","","6FG78901HJ234567K","10.79","Debit"
