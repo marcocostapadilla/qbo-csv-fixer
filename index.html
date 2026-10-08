@@ -109,6 +109,23 @@
       <div id="tierNote" class="tier-note"></div>
     </section>
 
+    <section class="card pro-card" id="proCard">
+      <h2>Batch zip and saved profiles</h2>
+      <p class="hint">Convert several CSV files into one zip, and save the preset, QBO columns, date and decimal choices per client in this browser.</p>
+      <div class="row">
+        <input type="file" id="batchInput" accept=".csv,text/csv,text/plain" multiple disabled aria-label="CSV files for the batch" />
+        <button type="button" class="secondary" id="batchBtn" disabled>Download all as zip</button>
+      </div>
+      <div class="row">
+        <input type="text" id="profileName" maxlength="40" placeholder="Profile name" disabled aria-label="Profile name" />
+        <button type="button" class="secondary" id="profileSave" disabled>Save</button>
+        <select id="profileSelect" disabled aria-label="Saved profiles"></select>
+        <button type="button" class="secondary" id="profileLoad" disabled>Load</button>
+        <button type="button" class="secondary" id="profileDelete" disabled>Delete</button>
+      </div>
+      <p class="pro-note" id="proNote" aria-live="polite">Unlimited version coming soon.</p>
+    </section>
+
     <section class="card vs-chat">
       <h2>Why not just paste into chat?</h2>
       <ul>
