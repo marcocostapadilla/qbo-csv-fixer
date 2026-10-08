@@ -1,1 +1,1 @@
-PLACEHOLDER_LOAD_FROM_DISK
+LOAD_FROM_/tmp/core_content_only.txt_VIA_PYTHON
