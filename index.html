@@ -79,7 +79,15 @@
         </div>
       </div>
       <div id="badgeRow" class="badge-row" aria-live="polite"></div>
+      <div id="decimalWarning" class="date-warning hidden" role="alert">
+        <p style="margin:0"><strong>Check the decimal separator.</strong> <span id="decimalWarningText"></span></p>
+        <div class="date-toggle" role="radiogroup" aria-label="Decimal separator of the source file">
+          <label><input type="radio" name="decimalSep" value="." id="decimalDot" /> Dot decimal (1,250.00 = one thousand two hundred fifty)</label>
+          <label><input type="radio" name="decimalSep" value="," id="decimalComma" /> Comma decimal (1.250,00 = one thousand two hundred fifty)</label>
+        </div>
+      </div>
       <p id="skipNote" class="skip-note hidden"></p>
+      <p id="mapNote" class="hint map-note hidden" aria-live="polite"></p>
       <p class="hint" style="margin-bottom:0.75rem">
         Transaction rows: <strong id="txnCount">0</strong>.
         Beginning/Ending balance rows are skipped from the export but used for the reconcile badge when present.

@@ -274,6 +274,12 @@ label.field select {
   border: 1px solid #fecdca;
 }
 
+.badge.incomplete {
+  background: var(--warn-bg);
+  color: #93370d;
+  border: 1px solid var(--warn-border);
+}
+
 .badge.na {
   background: var(--na-bg);
   color: var(--na);
@@ -507,5 +513,9 @@ footer {
 
 .breadcrumb {
   font-size: 0.85rem;
+  margin: 0 0 0.75rem;
+}
+
+.map-note {
   margin: 0 0 0.75rem;
 }
