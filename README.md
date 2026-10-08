@@ -1,6 +1,6 @@
-# QBO CSV Fixer (v1.2)
+# QBO CSV Fixer (v1.3)
 
-Local browser tool: messy bank, card, PayPal, Stripe and Wise CSV exports to a QuickBooks Online import CSV.
+Local browser tool: messy bank, card, PayPal, Stripe, Wise, Square, Shopify Payments, Etsy and Venmo CSV exports to a QuickBooks Online import CSV.
 
 Live: https://marcocostapadilla.github.io/qbo-csv-fixer/
 **Files never leave your browser.** No backend, no PDF, no bank login.
@@ -43,18 +43,19 @@ npx --yes serve -p 8765
 | `samples/chase-like-qbo-ready.csv` | Expected after (10 txns) |
 | `samples/ambiguous-dates.csv` | US M/D vs EU D/M ambiguity fixture |
 | `samples/<bank>.csv` | One small fake-merchant fixture per named preset |
-| `*-csv-to-quickbooks-online.html` | How-to page per preset (14 pages) |
+| `*-csv-to-quickbooks-online.html` | How-to page per preset (18 pages) |
+| `qbo-csv-fixer-vs-alternatives.html` | Comparison with Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT (facts as of 6 Oct 2026) |
 | `sitemap.xml`, `robots.txt` | SEO files |
 | `samples/drift/`, `samples/adversarial/` | Header drift fixtures; adversarial fixtures from the browser test suite |
 | `verify.mjs`, `verify-*.mjs` | Node proof: v1 FAIL Δ $2.00, dates, every preset, header drift, parsing fixes, zip and Pro gating |
-| `VERIFY.md`, `VERIFY-presets.md`, `VERIFY-presets-v12.md` | Hand math, parsing rules, drift fixtures; preset layout sources; v1.2 presets and skipped presets |
+| `VERIFY.md`, `VERIFY-presets.md`, `VERIFY-presets-v12.md`, `VERIFY-presets-v13.md` | Hand math, parsing rules, drift fixtures; preset layout sources; v1.2 presets and skipped presets; v1.3 processor presets |
 
 ## Features
 
 1. Drag-drop / file picker; client-side CSV parse only.
 2. Visible opening/closing **reconcile badge** (PASS/FAIL) when balances exist.
 3. QBO Online presets: Date/Description/Amount and Date/Description/Debit/Credit.
-4. Named input presets with header auto-detect and a preset dropdown: Chase, Bank of America, Wells Fargo (headerless), American Express (sign flip), Capital One (Debit/Credit), Citi (Debit/Credit, Cleared only), U.S. Bank, PNC (Withdrawals/Deposits, pick from the list; not auto-detected), Discover (sign flip), Mercury (Sent only), Revolut (COMPLETED only, fee subtracted), PayPal, Stripe, Wise, plus generic bank (Chase-like). Layout sources are listed in VERIFY-presets.md and VERIFY-presets-v12.md. TD Bank, Relay and Novo were not added: no public source shows their CSV header row.
+4. Named input presets with header auto-detect and a preset dropdown: Chase, Bank of America, Wells Fargo (headerless), American Express (sign flip), Capital One (Debit/Credit), Citi (Debit/Credit, Cleared only), U.S. Bank, PNC (Withdrawals/Deposits, pick from the list; not auto-detected), Discover (sign flip), Mercury (Sent only), Revolut (COMPLETED only, fee subtracted), PayPal, Stripe, Wise, Square (Net Total), Shopify Payments (payout transactions, Net), Etsy (monthly statement, deposits read from Title), Venmo (statement, Beginning/Ending Balance reconcile), plus generic bank (Chase-like). Layout sources are listed in VERIFY-presets.md, VERIFY-presets-v12.md and VERIFY-presets-v13.md. TD Bank, Relay and Novo were not added: no public source shows their CSV header row.
 5. Date ambiguity warning: when every slash date could be US M/D or EU D/M, a warning and a US/EU toggle appear above the preview; the toggle re-parses dates and updates preview and export. A row with a component above 12 auto-picks the order. ISO dates are never ambiguous.
 6. Free core: 1 file, ≤100 rows, watermarked export: the filename gets `_qbo-csv-fixer-free` and each description ends with ` (QBO CSV Fixer free)` (capped at 200 characters). There is no extra watermark row any more: a blank-date 0.00 row could make QBO reject the file or import a $0 line. Unlimited version coming soon.
 7. Sample links for every preset on the page, plus a "Load sample for selected preset" button.
@@ -63,7 +64,7 @@ npx --yes serve -p 8765
 10. Rows that did not settle (Revolut PENDING/REVERTED/DECLINED, PayPal Balance Impact = Memo) are left out and listed.
 11. Nothing is dropped silently: rows with an unreadable date or amount are listed with row number and raw values, and the reconcile badge shows INCOMPLETE instead of PASS.
 12. Comma or dot decimals detected per file (warning + toggle when the file cannot prove it); trailing minus, CR/DR, currency symbols and codes; English month-name dates; semicolon, tab and pipe delimiters.
-13. Empty, header-only, binary (image/PDF/Excel) and prose files are refused with a clear message; download is disabled when there are no rows.
+13. Empty, header-only, binary (image/PDF/Excel) and prose files are refused with a clear message (without the "closest matches" note); the Download button is disabled and greyed out whenever a file is rejected or has no rows.
 14. Export guards against spreadsheet formulas: text cells starting with = + - @ get a leading apostrophe (amounts untouched).
 15. Header drift: fuzzy header matching (case, spacing, punctuation, BOM, synonyms), preset auto-detect with a visible confidence note, and a clear error listing missing required columns and the file's headers.
 16. Built but switched off: multi-file batch to one zip (with `batch-summary.csv`) and saved mapping profiles (preset, QBO columns, date order, decimal) per client in localStorage. Both are gated by `isProUnlocked()` in `license.mjs`, which returns false, so the controls ship disabled with an "Unlimited version coming soon" note and the free limits apply.
@@ -102,6 +103,7 @@ Make no other claims about chat output (not proven on the 6 Oct 2026 eval).
 - The free watermark changes descriptions in the export, so QBO bank rules keyed on exact descriptions may need a "contains" condition.
 - robots.txt sits at the project subpath; crawlers only read robots.txt at the host root, so it is informational. Submit sitemap.xml in Search Console instead.
 - Excel `.xlsx` not supported (CSV only).
+- v1.3 processors: Venmo Amount (fee) is not subtracted (unconfirmed whether Amount (total) includes it; the reconcile badge shows it). Square cash sales are included. Square Transfers and Shopify payout list exports are not covered. Square, Shopify and Etsy files have no balances, so their badge is N/A.
 
 ## Brand lock
 
