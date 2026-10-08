@@ -404,3 +404,108 @@ footer {
   margin-bottom: 1rem;
   font-size: 0.9rem;
 }
+
+/* v1.1: date ambiguity warning */
+.date-warning {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-border);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.date-warning strong {
+  font-weight: 700;
+}
+
+.date-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: 0.6rem;
+}
+
+.date-toggle label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.detect-note {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--accent);
+  margin: 0;
+}
+
+.skip-note {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+}
+
+/* v1.1: footer guide links */
+.guide-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin: 0.5rem 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.guide-links a {
+  font-weight: 600;
+}
+
+/* v1.1: how-to pages */
+.howto h2 {
+  margin-top: 0;
+}
+
+.howto ol,
+.howto ul {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.howto li {
+  margin: 0.3rem 0;
+}
+
+.howto code,
+.howto pre {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.howto code {
+  padding: 0.05rem 0.3rem;
+}
+
+.howto pre {
+  padding: 0.75rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.howto pre code {
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.cta {
+  margin: 1rem 0 0;
+}
+
+.breadcrumb {
+  font-size: 0.85rem;
+  margin: 0 0 0.75rem;
+}
