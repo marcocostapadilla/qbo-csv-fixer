@@ -41,18 +41,18 @@ npx --yes serve -p 8765
 | `samples/chase-like-qbo-ready.csv` | Expected after (10 txns) |
 | `samples/ambiguous-dates.csv` | US M/D vs EU D/M ambiguity fixture |
 | `samples/<bank>.csv` | One small fake-merchant fixture per named preset |
-| `*-csv-to-quickbooks-online.html` | How-to page per preset (9 pages) |
+| `*-csv-to-quickbooks-online.html` | How-to page per preset (14 pages) |
 | `sitemap.xml`, `robots.txt` | SEO files |
 | `samples/drift/`, `samples/adversarial/` | Header drift fixtures; adversarial fixtures from the browser test suite |
 | `verify.mjs`, `verify-*.mjs` | Node proof: v1 FAIL Δ $2.00, dates, every preset, header drift, parsing fixes |
-| `VERIFY.md`, `VERIFY-presets.md` | Hand math, parsing rules, drift fixtures; preset layout sources |
+| `VERIFY.md`, `VERIFY-presets.md`, `VERIFY-presets-v12.md` | Hand math, parsing rules, drift fixtures; preset layout sources; v1.2 presets and skipped presets |
 
 ## Features
 
 1. Drag-drop / file picker; client-side CSV parse only.
 2. Visible opening/closing **reconcile badge** (PASS/FAIL) when balances exist.
 3. QBO Online presets: Date/Description/Amount and Date/Description/Debit/Credit.
-4. Named input presets with header auto-detect and a preset dropdown: Chase, Bank of America, Wells Fargo (headerless), American Express (sign flip), Capital One (Debit/Credit), Revolut (COMPLETED only, fee subtracted), PayPal, Stripe, Wise, plus generic bank (Chase-like). Layout sources are listed in VERIFY.md.
+4. Named input presets with header auto-detect and a preset dropdown: Chase, Bank of America, Wells Fargo (headerless), American Express (sign flip), Capital One (Debit/Credit), Citi (Debit/Credit, Cleared only), U.S. Bank, PNC (Withdrawals/Deposits, pick from the list; not auto-detected), Discover (sign flip), Mercury (Sent only), Revolut (COMPLETED only, fee subtracted), PayPal, Stripe, Wise, plus generic bank (Chase-like). Layout sources are listed in VERIFY-presets.md and VERIFY-presets-v12.md. TD Bank, Relay and Novo were not added: no public source shows their CSV header row.
 5. Date ambiguity warning: when every slash date could be US M/D or EU D/M, a warning and a US/EU toggle appear above the preview; the toggle re-parses dates and updates preview and export. A row with a component above 12 auto-picks the order. ISO dates are never ambiguous.
 6. Free core: 1 file, ≤100 rows, watermarked export: the filename gets `_qbo-csv-fixer-free` and each description ends with ` (QBO CSV Fixer free)` (capped at 200 characters). There is no extra watermark row any more: a blank-date 0.00 row could make QBO reject the file or import a $0 line. Unlimited version coming soon.
 7. Sample links for every preset on the page, plus a "Load sample for selected preset" button.
@@ -90,6 +90,7 @@ Make no other claims about chat output (not proven on the 6 Oct 2026 eval).
 - Revolut: personal statement layout only (Business exports differ); localized (e.g. German) headers are not recognized.
 - Wise: whether fees are inside Amount depends on the statement options chosen at Wise; not verified against a real export.
 - Bank of America preset targets checking/savings downloads; card downloads differ.
+- PNC is not auto-detected (generic headers); U.S. Bank date format is unconfirmed by sources; Mercury all-account exports show internal transfers twice. No TD Bank, Relay or Novo preset (no public header row).
 - No unlock or payment flow yet; free tier is soft (watermark + row cap in UI).
 - No batch zip, saved profiles, or multi-file combine yet (roadmap items).
 - Only English month names are read; dates like `13. Januar 2026` are listed as left out.

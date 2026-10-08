@@ -40,4 +40,4 @@ https://quickbooks.intuit.com/community/banking-4/i-did-a-csv-import-for-a-credi
 
 ## Skipped presets
 
-None of the requested presets were skipped: each layout above has at least one public source.
+None of the v1.1 presets above were skipped. v1.2 presets (Citi, U.S. Bank, PNC, Discover, Mercury), their sources, and the skipped v1.2 presets (TD Bank, Relay, Novo) with reasons are in `VERIFY-presets-v12.md`.
