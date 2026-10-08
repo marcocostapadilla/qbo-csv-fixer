@@ -1,8 +1,10 @@
 /**
  * QBO CSV Fixer - browser UI (ES module). Serve via http.server for local demo.
+ * Everything runs client-side; the file is read with FileReader and never uploaded.
  */
 import {
   processCsv,
+  detectPreset,
   buildExportRows,
   toCsvString,
   fmtMoney,
@@ -13,8 +15,6 @@ import {
   freeTierAllows,
 } from './core.mjs';
 
-const GUMROAD_URL = 'https://marcocostapadilla.gumroad.com/l/qbo-csv-fixer';
-
 const els = {
   dropzone: document.getElementById('dropzone'),
   fileInput: document.getElementById('fileInput'),
@@ -23,8 +23,14 @@ const els = {
   processorPreset: document.getElementById('processorPreset'),
   qboPreset: document.getElementById('qboPreset'),
   processorHint: document.getElementById('processorHint'),
+  detectNote: document.getElementById('detectNote'),
   results: document.getElementById('results'),
   badgeRow: document.getElementById('badgeRow'),
+  skipNote: document.getElementById('skipNote'),
+  dateWarning: document.getElementById('dateWarning'),
+  dateWarningText: document.getElementById('dateWarningText'),
+  dateOrderMdy: document.getElementById('dateOrderMdy'),
+  dateOrderDmy: document.getElementById('dateOrderDmy'),
   previewHead: document.getElementById('previewHead'),
   previewBody: document.getElementById('previewBody'),
   downloadBtn: document.getElementById('downloadBtn'),
@@ -33,10 +39,17 @@ const els = {
   txnCount: document.getElementById('txnCount'),
 };
 
+const AMBIGUOUS_TEXT =
+  'Every date in this file could be read as US month/day or as EU day/month, so the file alone cannot tell which one your bank used. Pick the one that matches your statement before you download.';
+const CONFLICT_TEXT =
+  'Some dates in this file only work as month/day and others only as day/month, so the file mixes formats. Pick the format most rows use, then check every date in the preview against your statement before you download.';
+
 let state = {
   fileName: '',
   rawText: '',
   result: null,
+  dateOrder: null, // null = auto / preset default; 'mdy' | 'dmy' once the user picks
+  presetLocked: false, // true once the user picks a preset or arrives with ?preset=
 };
 
 function showError(msg) {
@@ -49,6 +62,25 @@ function showError(msg) {
   els.errorBanner.classList.remove('hidden');
 }
 
+function setDetectNote(msg) {
+  if (!msg) {
+    els.detectNote.classList.add('hidden');
+    els.detectNote.textContent = '';
+    return;
+  }
+  els.detectNote.textContent = msg;
+  els.detectNote.classList.remove('hidden');
+}
+
+function presetFromUrl() {
+  try {
+    const p = new URLSearchParams(window.location.search).get('preset');
+    return p && PRESETS[p] ? p : null;
+  } catch {
+    return null;
+  }
+}
+
 function fillPresetSelects() {
   els.processorPreset.innerHTML = '';
   for (const p of Object.values(PRESETS)) {
@@ -57,7 +89,12 @@ function fillPresetSelects() {
     opt.textContent = p.label;
     els.processorPreset.appendChild(opt);
   }
-  els.processorPreset.value = 'generic_bank';
+  const fromUrl = presetFromUrl();
+  els.processorPreset.value = fromUrl || 'generic_bank';
+  if (fromUrl) {
+    state.presetLocked = true;
+    setDetectNote(`Preset selected from link: ${PRESETS[fromUrl].label}.`);
+  }
 
   els.qboPreset.innerHTML = '';
   for (const p of Object.values(QBO_PRESETS)) {
@@ -75,18 +112,38 @@ function updateProcessorHint() {
   els.processorHint.textContent = p ? p.hint : '';
 }
 
+/** New file text arrived: reset the date choice and (unless locked) auto-detect the preset. */
+function loadText(name, text, { autoDetect = true } = {}) {
+  state.fileName = name;
+  state.rawText = text;
+  state.dateOrder = null;
+  showError('');
+  if (autoDetect) {
+    const detected = detectPreset(text);
+    const current = els.processorPreset.value;
+    if (!state.presetLocked) {
+      els.processorPreset.value = detected;
+      updateProcessorHint();
+      setDetectNote(
+        detected === 'generic_bank'
+          ? 'No specific bank layout recognized; using the generic bank map. Pick a preset if your bank is listed.'
+          : `Auto-detected layout: ${PRESETS[detected].label}. Change it if that is wrong.`
+      );
+    } else if (detected !== current && detected !== 'generic_bank') {
+      setDetectNote(`This file looks like ${PRESETS[detected].label}. Switch the preset if the preview looks wrong.`);
+    } else {
+      setDetectNote('');
+    }
+  }
+  reprocess();
+}
+
 function readFile(file) {
   if (!file) return;
-  if (!/\.csv$/i.test(file.name) && file.type && !file.type.includes('csv') && !file.type.includes('text')) {
-    // still allow; many OS report blank type
-  }
   const reader = new FileReader();
   reader.onload = () => {
-    state.fileName = file.name;
-    state.rawText = String(reader.result || '');
     els.fileName.textContent = file.name;
-    showError('');
-    reprocess();
+    loadText(file.name, String(reader.result || ''));
   };
   reader.onerror = () => showError('Could not read that file in the browser.');
   reader.readAsText(file);
@@ -99,7 +156,7 @@ function reprocess() {
   }
   try {
     const processorId = els.processorPreset.value || 'generic_bank';
-    state.result = processCsv(state.rawText, processorId);
+    state.result = processCsv(state.rawText, processorId, { dateOrder: state.dateOrder || undefined });
     renderResults();
   } catch (err) {
     console.error(err);
@@ -108,10 +165,24 @@ function reprocess() {
   }
 }
 
+function renderDateWarning(r) {
+  const info = r.dateInfo || {};
+  if (!info.ambiguous) {
+    els.dateWarning.classList.add('hidden');
+    return;
+  }
+  els.dateWarningText.textContent = info.conflict ? CONFLICT_TEXT : AMBIGUOUS_TEXT;
+  els.dateOrderMdy.checked = info.used === 'mdy';
+  els.dateOrderDmy.checked = info.used === 'dmy';
+  els.dateWarning.classList.remove('hidden');
+}
+
 function renderResults() {
   const r = state.result;
   if (!r) return;
   els.results.classList.remove('hidden');
+
+  renderDateWarning(r);
 
   const qboId = els.qboPreset.value || 'date_desc_amount';
   const { header, body } = buildExportRows(r.transactions, qboId);
@@ -153,6 +224,19 @@ function renderResults() {
     </div>
   `;
 
+  if (r.skippedRows && r.skippedRows.length) {
+    const list = r.skippedRows
+      .slice(0, 8)
+      .map((s) => `row ${s.sourceRow} (${s.reason})`)
+      .join(', ');
+    const more = r.skippedRows.length > 8 ? `, and ${r.skippedRows.length - 8} more` : '';
+    els.skipNote.textContent = `Left out ${r.skippedRows.length} row(s) that did not settle: ${list}${more}.`;
+    els.skipNote.classList.remove('hidden');
+  } else {
+    els.skipNote.classList.add('hidden');
+    els.skipNote.textContent = '';
+  }
+
   els.txnCount.textContent = String(r.transactions.length);
 
   // Preview table
@@ -171,10 +255,10 @@ function renderResults() {
 
   const allowed = freeTierAllows(r.transactions.length);
   if (!allowed) {
-    els.tierNote.innerHTML = `<strong>Free tier limit:</strong> this file has ${r.transactions.length} transaction rows (limit ${FREE_ROW_LIMIT}). Unlock unlimited files and rows for CHF 19 lifetime on <a href="${GUMROAD_URL}" target="_blank" rel="noopener noreferrer">Gumroad</a> (stub link; product page may not be live yet).`;
+    els.tierNote.innerHTML = `<strong>Free tier limit:</strong> this file has ${r.transactions.length} transaction rows (limit ${FREE_ROW_LIMIT}). Unlimited version coming soon.`;
     els.downloadBtn.disabled = true;
   } else {
-    els.tierNote.innerHTML = `<strong>Free core:</strong> 1 file, up to ${FREE_ROW_LIMIT} rows, watermarked export (filename gets <code>${WATERMARK_SUFFIX}</code> and a watermark row). Soft unlock: <a href="${GUMROAD_URL}" target="_blank" rel="noopener noreferrer">CHF 19 lifetime on Gumroad</a> (stub; no account created from this demo).`;
+    els.tierNote.innerHTML = `<strong>Free core:</strong> 1 file, up to ${FREE_ROW_LIMIT} rows, watermarked export (filename gets <code>${WATERMARK_SUFFIX}</code> and a watermark row). Unlimited version coming soon.`;
     els.downloadBtn.disabled = false;
   }
 }
@@ -240,32 +324,41 @@ function init() {
   fillPresetSelects();
   setupDropzone();
   els.processorPreset.addEventListener('change', () => {
+    state.presetLocked = true;
+    setDetectNote('');
     updateProcessorHint();
     reprocess();
   });
   els.qboPreset.addEventListener('change', () => {
     if (state.result) renderResults();
   });
+  for (const radio of [els.dateOrderMdy, els.dateOrderDmy]) {
+    radio.addEventListener('change', () => {
+      if (!radio.checked) return;
+      state.dateOrder = radio.value;
+      reprocess();
+    });
+  }
   els.downloadBtn.addEventListener('click', downloadExport);
 
-  // Load sample via fetch when served over http (button)
+  // Load the sample that matches the selected preset (needs http, not file://)
   const loadSampleBtn = document.getElementById('loadSampleBtn');
   if (loadSampleBtn) {
-    loadSampleBtn.addEventListener('click', async () => {
+    loadSampleBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const preset = PRESETS[els.processorPreset.value] || PRESETS.generic_bank;
+      const path = preset.sample || 'samples/chase-like-messy.csv';
+      const name = path.split('/').pop();
       try {
-        const res = await fetch('samples/chase-like-messy.csv');
+        const res = await fetch(path);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const text = await res.text();
-        state.fileName = 'chase-like-messy.csv';
-        state.rawText = text;
-        els.fileName.textContent = 'chase-like-messy.csv (sample)';
-        showError('');
-        els.processorPreset.value = 'generic_bank';
-        updateProcessorHint();
-        reprocess();
+        els.fileName.textContent = name + ' (sample)';
+        setDetectNote('');
+        loadText(name, text, { autoDetect: false });
       } catch (err) {
         showError(
-          'Could not load sample via fetch. Open this page through a local server (see README), or drop samples/chase-like-messy.csv yourself.'
+          `Could not load ${path} via fetch. Open this page through a local server (see README), or drop the sample file yourself.`
         );
       }
     });
