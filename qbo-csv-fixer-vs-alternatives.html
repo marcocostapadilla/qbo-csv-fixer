@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QBO CSV Fixer vs Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT</title>
+  <meta name="description" content="An honest comparison for getting bank and processor CSVs into QuickBooks Online: what QBO CSV Fixer does, and where Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT are stronger." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/qbo-csv-fixer-vs-alternatives.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / Compare</p>
+    <header class="app-header">
+      <h1>QBO CSV Fixer vs the alternatives</h1>
+      <p class="subhead">Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT all help with messy bank files. Here is what each one does, where each is stronger, and where QBO CSV Fixer fits. Facts about the other tools are as of their public listings on 6 Oct 2026; the ChatGPT notes come from one test we ran that day.</p>
+      <p class="cta"><a class="btn primary" href="index.html">Open QBO CSV Fixer</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>At a glance</h2>
+      <div class="table-wrap">
+        <table class="preview" aria-label="Comparison">
+          <thead><tr><th>Tool</th><th>Where it runs</th><th>Input</th><th>Output</th><th>Price (as listed)</th></tr></thead>
+          <tbody>
+            <tr><td>QBO CSV Fixer</td><td>Your browser, nothing uploaded</td><td>CSV only</td><td>QuickBooks Online upload CSV: Date / Description / Amount or Date / Description / Debit / Credit</td><td>Free core: 1 file, up to 100 rows, watermarked. Unlimited version coming soon.</td></tr>
+            <tr><td>Bank CSV Tamer</td><td>Offline browser tool, downloaded as a ZIP</td><td>CSV only</td><td>Date, Description, Amount, Account, Source File, Source Row</td><td>$19.99 one-time</td></tr>
+            <tr><td><a href="https://www.statementvision.com/">StatementVision</a></td><td>Browser-local for CSV; PDF goes through a separate AI path on their server</td><td>CSV (PDF separately)</td><td>.QBO (Web Connect), .OFX, .QIF</td><td>Free preview; download $9 for 24 hours or $29 lifetime</td></tr>
+            <tr><td>DocuClipper</td><td>Cloud</td><td>PDF statements (OCR)</td><td>Not compared</td><td>About $29 per month</td></tr>
+            <tr><td>ChatGPT</td><td>Chat (paste the file) or a DIY script it writes for you</td><td>Whatever you paste</td><td>Whatever you ask for</td><td>Not compared</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card howto">
+      <h2>Where each alternative is stronger</h2>
+      <ul>
+        <li><strong>Bank CSV Tamer</strong> combines several files into one, flags duplicates, and has mature reusable mapping profiles. QBO CSV Fixer reads one file at a time in the free core and has no duplicate flags.</li>
+        <li><strong><a href="https://www.statementvision.com/csv-to-qbo">StatementVision</a></strong> exports .QBO, .OFX and .QIF files (including Web Connect .QBO with duplicate-safe IDs) and has a ledger preview, column remap and auto-detect for debit/credit and EU formats. QBO CSV Fixer only writes CSV for QuickBooks Online's Upload from file.</li>
+        <li><strong>DocuClipper</strong> reads PDF statements with OCR and runs in the cloud. QBO CSV Fixer does not read PDFs at all.</li>
+        <li><strong>ChatGPT</strong> is flexible and handles odd one-off files you would never build a preset for. In our test it converted the sample correctly on the mechanics: plain CSV, all 10 rows, correct signs from parentheses, balance rows left out and dates normalized.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Where QBO CSV Fixer fits</h2>
+      <ul>
+        <li><strong>Visible reconcile badge.</strong> When a file has a beginning and ending balance, the badge shows PASS or FAIL for opening plus transactions equals closing before you download. Neither the Bank CSV Tamer listing nor the StatementVision CSV to QBO page markets this.</li>
+        <li><strong>QuickBooks Online upload layouts in one click.</strong> Date / Description / Amount or Date / Description / Debit / Credit, ready for Banking &gt; Upload from file.</li>
+        <li><strong>Named presets</strong> for 11 bank, card and fintech accounts plus PayPal, Stripe, Wise, Square, Shopify Payments, Etsy and Venmo, with auto-detect. Neither listing above names PayPal, Stripe and Wise presets.</li>
+        <li><strong>Nothing leaves the browser,</strong> and there is a free core on a public page, so you can try it on a real file without paying first.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>What happened in our ChatGPT test (6 Oct 2026)</h2>
+      <ul>
+        <li>We pasted a Chase-like sample with a built-in $2.00 gap between the opening balance plus transactions and the ending balance. ChatGPT returned an import-ready CSV and did not warn about the gap.</li>
+        <li>It did not warn that some dates could be read as US month/day or EU day/month.</li>
+        <li>Asked for a fully offline workflow for client data, it offered a DIY Python script of about 250 lines instead of a local tool. Run on the same sample, the script printed <code>Closing balance: NOT FOUND</code> and neither OK nor FAILED for the reconcile step.</li>
+      </ul>
+      <p style="margin:0.75rem 0 0">QBO CSV Fixer shows that same sample as <strong>FAIL, Δ $2.00</strong> in the reconcile badge. <a href="index.html">Try it with the sample file</a>.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no .QBO/.OFX/.QIF export, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>All guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="citi-csv-to-quickbooks-online.html">Citi</a> · <a href="us-bank-csv-to-quickbooks-online.html">U.S. Bank</a> · <a href="pnc-csv-to-quickbooks-online.html">PNC</a> · <a href="discover-csv-to-quickbooks-online.html">Discover</a> · <a href="mercury-csv-to-quickbooks-online.html">Mercury</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a> · <a href="square-csv-to-quickbooks-online.html">Square</a> · <a href="shopify-csv-to-quickbooks-online.html">Shopify Payments</a> · <a href="etsy-csv-to-quickbooks-online.html">Etsy</a> · <a href="venmo-csv-to-quickbooks-online.html">Venmo</a></p>
+      <p>Compare: <a href="qbo-csv-fixer-vs-alternatives.html">QBO CSV Fixer vs Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
