@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://marcocostapadilla.github.io/qbo-csv-fixer/sitemap.xml
