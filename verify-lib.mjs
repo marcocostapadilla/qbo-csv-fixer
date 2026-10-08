@@ -34,6 +34,7 @@ export function printTxns(r) {
 /**
  * One named-preset fixture: auto-detect, row count, net, money out negative, money in positive,
  * MM/DD/YYYY dates, first date, optional skipped rows / reconcile, Debit/Credit export balance.
+ * c.detectAs: expected auto-detect result when the preset is deliberately not auto-detected.
  */
 export function runPresetCase(c) {
   console.log('');
@@ -41,7 +42,8 @@ export function runPresetCase(c) {
   const t = readSample(c.file);
   const r = processCsv(t, c.preset);
   printTxns(r);
-  assert(detectPreset(t) === c.preset, `auto-detect === ${c.preset} (got ${detectPreset(t)})`);
+  const want = c.detectAs || c.preset;
+  assert(detectPreset(t) === want, `auto-detect === ${want} (got ${detectPreset(t)})`);
   assert(r.transactions.length === c.count, `row count === ${c.count} (got ${r.transactions.length})`);
   assert(Math.abs(r.net - c.net) < 0.001, `net === ${c.net.toFixed(2)} (got ${r.net})`);
   const out = r.transactions.find((x) => x.description.includes(c.outflow));
