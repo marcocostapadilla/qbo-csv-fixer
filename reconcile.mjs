@@ -8,7 +8,21 @@ export function round2(n) {
   return Math.round((n + Number.EPSILON) * 100) / 100;
 }
 
-export function reconcileBalances(opening, closing, net) {
+/**
+ * Opening + net vs ending balance. leftOutCount > 0 (rows that could not be read) always gives
+ * INCOMPLETE, never PASS: the totals are missing those rows.
+ */
+export function reconcileBalances(opening, closing, net, leftOutCount = 0) {
+  if (leftOutCount > 0) {
+    const hasBal = opening != null && closing != null;
+    const expected = hasBal ? round2(opening + net) : null;
+    return {
+      status: 'INCOMPLETE',
+      expectedClosing: expected,
+      delta: hasBal ? round2(closing - expected) : null,
+      message: `${leftOutCount} row(s) could not be read and were left out, so the totals are incomplete`,
+    };
+  }
   if (opening == null || closing == null) {
     return {
       status: 'N/A',

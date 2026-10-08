@@ -1,7 +1,50 @@
 /**
- * QBO CSV Fixer - header normalization, column lookup, balance-row labels.
+ * QBO CSV Fixer - header normalization, fuzzy column lookup, balance-row labels.
+ *
+ * headerKey() is the fuzzy form used for every header comparison:
+ *  - strips BOM / zero-width characters, turns non-breaking spaces into spaces
+ *  - lowercases, turns '#' into 'number' and '&' into 'and'
+ *  - turns every other punctuation run into one space and trims
+ *  - folds common abbreviations: Trans./Txn -> transaction, Post/Posting -> posted,
+ *    No./Num -> number, Amt -> amount, Desc -> description, Bal. -> balance, Ref -> reference
+ * So "Trans. Date", " TRANSACTION  DATE " and "Transaction_Date" all become "transaction date".
  */
 
+const TOKEN_FOLDS = {
+  trans: 'transaction',
+  txn: 'transaction',
+  tran: 'transaction',
+  transactions: 'transaction',
+  post: 'posted',
+  posting: 'posted',
+  no: 'number',
+  num: 'number',
+  nbr: 'number',
+  amt: 'amount',
+  desc: 'description',
+  descr: 'description',
+  bal: 'balance',
+  ref: 'reference',
+  dt: 'date',
+};
+
+export function headerKey(h) {
+  const s = String(h ?? '')
+    .replace(/[\uFEFF\u200B-\u200D\u2060]/g, '')
+    .replace(/\u00A0/g, ' ')
+    .toLowerCase()
+    .replace(/#/g, ' number ')
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+  if (!s) return '';
+  return s
+    .split(' ')
+    .map((t) => TOKEN_FOLDS[t] || t)
+    .join(' ');
+}
+
+/** v1.1 normalization (kept for callers that want the light form). */
 export function normHeader(h) {
   return String(h || '')
     .trim()
@@ -10,15 +53,7 @@ export function normHeader(h) {
 }
 
 export function isBalanceLabel(cell) {
-  const t = String(cell || '').trim().toLowerCase();
-  return (
-    /^(beginning|opening)\s+balance/.test(t) ||
-    /^(ending|closing)\s+balance/.test(t) ||
-    t === 'beginning balance' ||
-    t === 'ending balance' ||
-    t === 'opening balance' ||
-    t === 'closing balance'
-  );
+  return isOpeningLabel(cell) || isClosingLabel(cell);
 }
 
 export function isOpeningLabel(cell) {
@@ -39,20 +74,28 @@ export function lastNonEmpty(row) {
   return '';
 }
 
+/** True when every token of `alias` appears, in order and adjacent, among the tokens of `key`. */
+function containsTokens(key, alias) {
+  return (' ' + key + ' ').includes(' ' + alias + ' ');
+}
+
 /**
- * Column index helpers from header row.
- * Exact alias match first; partial "contains" match only for aliases of 4+ chars,
- * so short aliases like "in" / "out" cannot grab "Posting Date" or "Running Bal.".
+ * Find a column for a list of aliases (in priority order), comparing headerKey() forms.
+ * Exact match first; then a whole-word "contains" match for aliases of 4+ characters,
+ * so short aliases like "in" / "out" never grab "Posting Date" or "Running Bal.".
+ * `taken` (optional Set of indexes) is skipped so two fields never share a column.
  */
-export function findCol(headers, aliases) {
-  const norms = headers.map(normHeader);
-  for (const a of aliases) {
-    const i = norms.indexOf(a);
+export function findCol(headers, aliases, taken) {
+  const keys = headers.map(headerKey);
+  const free = (i) => !taken || !taken.has(i);
+  const akeys = aliases.map(headerKey).filter(Boolean);
+  for (const a of akeys) {
+    const i = keys.findIndex((k, j) => k === a && free(j));
     if (i >= 0) return i;
   }
-  for (const a of aliases) {
+  for (const a of akeys) {
     if (a.length < 4) continue;
-    const i = norms.findIndex((h) => h.includes(a));
+    const i = keys.findIndex((k, j) => free(j) && containsTokens(k, a));
     if (i >= 0) return i;
   }
   return -1;
