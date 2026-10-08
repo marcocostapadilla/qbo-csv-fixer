@@ -36,6 +36,8 @@ npx --yes serve -p 8765
 | `presets.mjs`, `presets-*.mjs` | Input preset registry and data (aliases, detection rules, signatures) |
 | `mapping.mjs`, `detect.mjs` | Column mapping per preset; preset auto-detect with confidence |
 | `process.mjs`, `reconcile.mjs`, `export.mjs` | Pipeline and left-out rows; reconcile badge; QBO export, watermark, formula guard |
+| `license.mjs` | License hook: `isProUnlocked()` returns false (future license check); free limits |
+| `zip.mjs`, `batch.mjs`, `profiles.mjs`, `pro-ui.mjs` | Inert Pro features: STORE zip writer with CRC-32, multi-file batch to zip, saved profiles in localStorage, disabled UI wiring |
 | `styles.css` | Bookkeeper-friendly styles (tool + how-to pages) |
 | `samples/chase-like-messy.csv` | Before fixture (generic bank, reconcile FAIL Δ $2.00) |
 | `samples/chase-like-qbo-ready.csv` | Expected after (10 txns) |
@@ -44,7 +46,7 @@ npx --yes serve -p 8765
 | `*-csv-to-quickbooks-online.html` | How-to page per preset (14 pages) |
 | `sitemap.xml`, `robots.txt` | SEO files |
 | `samples/drift/`, `samples/adversarial/` | Header drift fixtures; adversarial fixtures from the browser test suite |
-| `verify.mjs`, `verify-*.mjs` | Node proof: v1 FAIL Δ $2.00, dates, every preset, header drift, parsing fixes |
+| `verify.mjs`, `verify-*.mjs` | Node proof: v1 FAIL Δ $2.00, dates, every preset, header drift, parsing fixes, zip and Pro gating |
 | `VERIFY.md`, `VERIFY-presets.md`, `VERIFY-presets-v12.md` | Hand math, parsing rules, drift fixtures; preset layout sources; v1.2 presets and skipped presets |
 
 ## Features
@@ -64,6 +66,7 @@ npx --yes serve -p 8765
 13. Empty, header-only, binary (image/PDF/Excel) and prose files are refused with a clear message; download is disabled when there are no rows.
 14. Export guards against spreadsheet formulas: text cells starting with = + - @ get a leading apostrophe (amounts untouched).
 15. Header drift: fuzzy header matching (case, spacing, punctuation, BOM, synonyms), preset auto-detect with a visible confidence note, and a clear error listing missing required columns and the file's headers.
+16. Built but switched off: multi-file batch to one zip (with `batch-summary.csv`) and saved mapping profiles (preset, QBO columns, date order, decimal) per client in localStorage. Both are gated by `isProUnlocked()` in `license.mjs`, which returns false, so the controls ship disabled with an "Unlimited version coming soon" note and the free limits apply.
 
 ## Prove the FAIL badge
 
@@ -91,8 +94,8 @@ Make no other claims about chat output (not proven on the 6 Oct 2026 eval).
 - Wise: whether fees are inside Amount depends on the statement options chosen at Wise; not verified against a real export.
 - Bank of America preset targets checking/savings downloads; card downloads differ.
 - PNC is not auto-detected (generic headers); U.S. Bank date format is unconfirmed by sources; Mercury all-account exports show internal transfers twice. No TD Bank, Relay or Novo preset (no public header row).
-- No unlock or payment flow yet; free tier is soft (watermark + row cap in UI).
-- No batch zip, saved profiles, or multi-file combine yet (roadmap items).
+- No unlock, license or payment flow yet; `isProUnlocked()` always returns false, so batch zip and saved profiles cannot be used on the live site. The free tier is soft (watermark + row cap in the UI).
+- Batch zip (when enabled) auto-detects each file's preset and uses default date/decimal choices; ambiguous files are flagged in the summary's Check column, not asked about. No multi-file combine into one CSV.
 - Only English month names are read; dates like `13. Januar 2026` are listed as left out.
 - CR/DR markers are read as CR = money in, DR = money out. A card statement that uses CR for payments still reads correctly; any preset that means the opposite must say so.
 - The free watermark changes descriptions in the export, so QBO bank rules keyed on exact descriptions may need a "contains" condition.

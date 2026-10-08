@@ -106,3 +106,11 @@ Header names are compared after folding case, spacing, punctuation, BOM and abbr
 | `reordered.csv` (Chase card, reordered) | Chase, high | 6 | 333.86 |
 | `bom-spacing.csv` (BOM, CRLF, padded) | generic, low | 5 | 258.72 |
 | `unmappable.csv` | error: Date, Description, Amount missing | 0 | |
+
+## v1.2 inert Pro features (suite `verify-pro.mjs`, helpers `verify-zip-lib.mjs`)
+
+- `zip.mjs`: STORE-only ZIP writer. CRC-32 check value of `123456789` is `CBF43926`. The test reads every zip back with an independent reader (end record, central directory, each local header, method 0, sizes, CRC per entry) and also runs `python3 -m zipfile -t` when python3 is installed. UTF-8 names round-trip; an empty zip is a valid 22-byte end record.
+- `license.mjs`: `isProUnlocked()` returns false. Free limits: 1 file, 100 rows (101 refused), watermark on. Batch zip and profile save/list/load refuse while locked and write nothing to storage.
+- Forced on (`unlocked: true` passed to the functions, the shipped hook is not changed): 6 files (chase, amex, citi, mercury, a duplicate chase name, an empty file) give 5 CSVs (`chase-checking_qbo-2.csv` for the duplicate) plus `batch-summary.csv`; the empty file is listed with its error, not zipped; files carry no watermark and equal the single-file export; QBO layout choice is honoured.
+- Profiles (forced on, in-memory storage): save, list sorted, load case-insensitive, overwrite by name, refuse empty names and unknown presets, odd names like `__proto__` stored safely, delete, corrupt storage reads as empty.
+- `index.html` ships all 7 Pro controls with `disabled` and the note "Unlimited version coming soon".
