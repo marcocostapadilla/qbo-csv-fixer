@@ -170,9 +170,14 @@ button.primary:hover,
   background: var(--accent-hover);
 }
 
-button.primary:disabled {
-  opacity: 0.45;
+button.primary:disabled,
+#downloadBtn:disabled {
+  background: #9aa3ad;
+  border-color: #9aa3ad;
+  color: #f4f5f7;
+  opacity: 0.6;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 button.secondary,

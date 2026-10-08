@@ -11,6 +11,7 @@
  * 6. verify-pro.mjs: inert Pro features (zip writer, license hook, free limits, batch, profiles).
  * 7. verify-license.mjs: license hook wired but off (mocked fetch: valid, invalid, refunded,
  *    chargebacked, network error; flag false never fetches).
+ * 8. verify-ui-gates.mjs: Download disabled on rejected files; no detect note next to a file error.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -20,6 +21,7 @@ import { run as runAdversarial } from './verify-adversarial.mjs';
 import { run as runV12Presets } from './verify-presets-v12.mjs';
 import { run as runPro } from './verify-pro.mjs';
 import { run as runLicense } from './verify-license.mjs';
+import { run as runUiGates } from './verify-ui-gates.mjs';
 
 runV11();
 runPresets();
@@ -28,6 +30,7 @@ runAdversarial();
 runV12Presets();
 runPro();
 await runLicense();
+runUiGates();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
