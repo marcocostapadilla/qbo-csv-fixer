@@ -9,6 +9,8 @@
  *    left-out rows, formula injection, watermark, filename).
  * 5. verify-presets-v12.mjs: Citi, U.S. Bank, PNC, Discover, Mercury presets.
  * 6. verify-pro.mjs: inert Pro features (zip writer, license hook, free limits, batch, profiles).
+ * 7. verify-license.mjs: license hook wired but off (mocked fetch: valid, invalid, refunded,
+ *    chargebacked, network error; flag false never fetches).
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -17,6 +19,7 @@ import { run as runDrift } from './verify-drift.mjs';
 import { run as runAdversarial } from './verify-adversarial.mjs';
 import { run as runV12Presets } from './verify-presets-v12.mjs';
 import { run as runPro } from './verify-pro.mjs';
+import { run as runLicense } from './verify-license.mjs';
 
 runV11();
 runPresets();
@@ -24,6 +27,7 @@ runDrift();
 runAdversarial();
 runV12Presets();
 runPro();
+await runLicense();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);

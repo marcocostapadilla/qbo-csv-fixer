@@ -36,7 +36,7 @@ npx --yes serve -p 8765
 | `presets.mjs`, `presets-*.mjs` | Input preset registry and data (aliases, detection rules, signatures) |
 | `mapping.mjs`, `detect.mjs` | Column mapping per preset; preset auto-detect with confidence |
 | `process.mjs`, `reconcile.mjs`, `export.mjs` | Pipeline and left-out rows; reconcile badge; QBO export, watermark, formula guard |
-| `license.mjs` | License hook: `isProUnlocked()` returns false (future license check); free limits |
+| `license.mjs` | License hook, off: `LICENSE_ENABLED = false`, `verifyLicense()` (wired, mocked in tests), `isProUnlocked()` false; free limits |
 | `zip.mjs`, `batch.mjs`, `profiles.mjs`, `pro-ui.mjs` | Inert Pro features: STORE zip writer with CRC-32, multi-file batch to zip, saved profiles in localStorage, disabled UI wiring |
 | `styles.css` | Bookkeeper-friendly styles (tool + how-to pages) |
 | `samples/chase-like-messy.csv` | Before fixture (generic bank, reconcile FAIL Δ $2.00) |
@@ -95,6 +95,7 @@ Make no other claims about chat output (not proven on the 6 Oct 2026 eval).
 - Bank of America preset targets checking/savings downloads; card downloads differ.
 - PNC is not auto-detected (generic headers); U.S. Bank date format is unconfirmed by sources; Mercury all-account exports show internal transfers twice. No TD Bank, Relay or Novo preset (no public header row).
 - No unlock, license or payment flow yet; `isProUnlocked()` always returns false, so batch zip and saved profiles cannot be used on the live site. The free tier is soft (watermark + row cap in the UI).
+- License hook (v1.3) is wired but off: `LICENSE_ENABLED = false` in `license.mjs`, so `isProUnlocked()` returns false and no request is ever made. `verifyLicense()` posts `product_id` + `license_key` to the license vendor's public verify endpoint (URL only in `license.mjs`) and rejects invalid, refunded and chargebacked purchases. `LICENSE_PRODUCT_ID` is a placeholder (`REPLACE_WITH_PRODUCT_ID`) because the listing does not exist yet. **Browser CORS on that endpoint is unverified**: test a real call from the live page before turning the flag on; if the browser blocks it, the check cannot run client-side as written. There is no key entry UI yet.
 - Batch zip (when enabled) auto-detects each file's preset and uses default date/decimal choices; ambiguous files are flagged in the summary's Check column, not asked about. No multi-file combine into one CSV.
 - Only English month names are read; dates like `13. Januar 2026` are listed as left out.
 - CR/DR markers are read as CR = money in, DR = money out. A card statement that uses CR for payments still reads correctly; any preset that means the opposite must say so.
