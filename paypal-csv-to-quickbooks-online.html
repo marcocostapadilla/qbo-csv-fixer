@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PayPal CSV to QuickBooks Online: settled rows, net amounts</title>
+  <meta name="description" content="PayPal activity downloads include authorizations and other non-balance rows. Turn them into a clean QuickBooks Online upload file using Net amounts, locally in your browser." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/paypal-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / PayPal</p>
+    <header class="app-header">
+      <h1>PayPal CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your PayPal CSV export into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=paypal">Open the tool with the PayPal preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Download the CSV from PayPal</h2>
+      <ol>
+        <li>Sign in to PayPal and open <strong>Activity download</strong> (under Activity or Reports, depending on your account type).</li>
+        <li>Pick the date range and <strong>CSV</strong> as the format, then create the report.</li>
+        <li>Download the file when it is ready (PayPal names it <code>Download.CSV</code>).</li>
+      </ol>
+      <p class="hint">Bank menus change from time to time. If a label differs, search the PayPal help pages for "download transactions" or "export CSV".</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the PayPal file</h2>
+      <ul>
+        <li>Many columns: <code>Date, Time, TimeZone, Name, Type, Status, Currency, Gross, Fee, Net</code>, then emails, Transaction ID and optional fields.</li>
+        <li>Not every row moves money. Rows with <code>Balance Impact</code> = Memo (for example authorizations) do not change your PayPal balance.</li>
+        <li>Gross, Fee and Net are separate; the amount that hits your PayPal balance is Net.</li>
+        <li>The date format follows your PayPal country; US accounts get MM/DD/YYYY.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=paypal">QBO CSV Fixer with the PayPal preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the reconcile badge and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the PayPal preset does:</p>
+      <ul>
+        <li>Uses Net as the amount (money out negative).</li>
+        <li>Skips Balance Impact = Memo rows, or, when that column is missing, rows whose Status is not Completed, Refunded or Reversed. The rows left out are listed.</li>
+        <li>Combines Type and Name into the description, writes dates as MM/DD/YYYY. If every date could be read either way, you get a US/EU date toggle.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/paypal.csv" download>PayPal sample CSV</a> (fake merchants) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>The free export ends with one watermark row (blank date, amount 0.00). Untick it on the review screen or delete that last line first.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>Using Net means fees are netted into each line. If you book gross sales and PayPal fees separately, this preset does not do that yet.</li>
+        <li>Multi-currency accounts produce currency conversion rows; filter to one currency per QuickBooks account.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>Other guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
