@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chase CSV to QuickBooks Online: clean import file in your browser</title>
+  <meta name="description" content="How to download a Chase checking or credit card CSV and turn it into a QuickBooks Online bank upload file. Free, runs locally, nothing is uploaded." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/chase-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / Chase</p>
+    <header class="app-header">
+      <h1>Chase CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your Chase CSV export into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=chase">Open the tool with the Chase preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Download the CSV from Chase</h2>
+      <ol>
+        <li>Sign in at chase.com on a computer (the mobile app has fewer export options).</li>
+        <li>Open the checking, savings or credit card account and go to its Activity view.</li>
+        <li>Click the download icon above the transaction list.</li>
+        <li>Pick the date range and choose <strong>Spreadsheet (CSV)</strong> as the file type, then download.</li>
+        <li>Chase only offers recent activity as a download. Older months exist as PDF statements, which this tool does not read.</li>
+      </ol>
+      <p class="hint">Bank menus change from time to time. If a label differs, search the Chase help pages for "download transactions" or "export CSV".</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the Chase file</h2>
+      <ul>
+        <li>Checking and credit card files have different headers. Checking: <code>Details, Posting Date, Description, Amount, Type, Balance, Check or Slip #</code>. Card: <code>Transaction Date, Post Date, Description, Category, Type, Amount</code> (some files add <code>Memo</code>).</li>
+        <li>Most of those columns (Details, Type, Balance, Category, Check or Slip #) mean nothing to the QuickBooks Online importer and get in the way of column mapping.</li>
+        <li>Amount is already signed (money out negative), which is what QuickBooks wants, but the file still needs trimming to Date, Description, Amount.</li>
+        <li>If your file was edited by hand or comes from another bank with <em>Beginning balance</em> / <em>Ending balance</em> rows and Debit/Credit columns with parentheses, use the <em>Generic bank (Chase-like)</em> preset instead. It strips those rows and checks the balance math.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=chase">QBO CSV Fixer with the Chase preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the reconcile badge and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the Chase preset does:</p>
+      <ul>
+        <li>Recognizes both Chase layouts from the header and picks Posting Date (checking) or Transaction Date (card).</li>
+        <li>Keeps Description and the signed Amount, drops the other columns.</li>
+        <li>Writes dates as MM/DD/YYYY and offers the 3-column (Date, Description, Amount) or 4-column (Date, Description, Debit, Credit) QuickBooks layout.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/chase-checking.csv" download>Chase sample CSV</a> (fake merchants) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>The free export ends with one watermark row (blank date, amount 0.00). Untick it on the review screen or delete that last line first.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>Chase files carry no opening or closing balance row, so the reconcile badge shows N/A. Compare the net total against your statement before importing.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>Other guides: <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
