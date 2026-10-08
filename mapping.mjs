@@ -1,8 +1,11 @@
 /**
  * QBO CSV Fixer - per-preset column mapping, description and signed amount rules.
+ * Column aliases live in the preset data (presets-*.mjs); this file applies them.
  */
 import { parseAmount } from './parse.mjs';
 import { findCol } from './headers.mjs';
+import { FIELD_SYNONYMS, mapBySynonyms } from './fields.mjs';
+import { PRESETS } from './presets.mjs';
 
 export const NO_COL = -1;
 
@@ -20,110 +23,75 @@ export function baseCols(extra) {
       balanceImpact: NO_COL,
       checkNumber: NO_COL,
       descExtras: [],
+      viaSynonyms: [],
     },
     extra
   );
 }
 
+// Debit/Credit before Amount so a drifted "Debit Amount" header is never taken as Amount.
+const SINGLE_FIELDS = ['date', 'dateFallback', 'debit', 'credit', 'amount', 'description', 'fee', 'status', 'balanceImpact', 'checkNumber'];
+
+/** Apply a preset's alias lists to a header row; two fields never share a column. */
+function mapByAliases(headers, spec) {
+  const out = {};
+  const taken = new Set();
+  for (const f of SINGLE_FIELDS) {
+    if (!spec[f]) continue;
+    out[f] = findCol(headers, spec[f], taken);
+    if (out[f] >= 0) taken.add(out[f]);
+  }
+  if (spec.descExtras) {
+    out.descExtras = spec.descExtras.map((aliases) => findCol(headers, aliases)).filter((i) => i >= 0);
+  }
+  return baseCols(out);
+}
+
+/**
+ * Fill required fields a preset could not find from the generic synonym table
+ * (header drift: "Posting Date" for "Date", "Paid out" for "Debit", ...).
+ * Every filled field is listed in cols.viaSynonyms so the UI can show it.
+ * Presets that flip signs only borrow a single Amount column, never Debit/Credit.
+ */
+function fillFromSynonyms(headers, cols, preset) {
+  const used = new Set(
+    [cols.date, cols.description, cols.amount, cols.debit, cols.credit].filter((i) => i >= 0)
+  );
+  const take = (field) => {
+    const i = findCol(headers, FIELD_SYNONYMS[field], used);
+    if (i >= 0) {
+      cols[field] = i;
+      used.add(i);
+      cols.viaSynonyms.push(field);
+    }
+  };
+  if (cols.date < 0) take('date');
+  if (cols.description < 0 && !cols.descExtras.length) take('description');
+  if (cols.amount < 0 && cols.debit < 0 && cols.credit < 0) {
+    take('amount');
+    if (cols.amount < 0 && !preset.invertAmount) {
+      take('debit');
+      take('credit');
+    }
+  }
+  return cols;
+}
+
 export function mapColumnsForPreset(headers, presetId) {
-  if (presetId === 'paypal') {
-    return baseCols({
-      date: findCol(headers, ['date', 'transaction date', 'transaction date time']),
-      description: findCol(headers, ['name', 'subject', 'type', 'description', 'item title']),
-      // Prefer Net for signed settlement; fallback Gross, Amount
-      amount: findCol(headers, ['net', 'gross', 'amount']),
-      status: findCol(headers, ['status']),
-      balanceImpact: findCol(headers, ['balance impact']),
-      descExtras: [findCol(headers, ['type']), findCol(headers, ['name']), findCol(headers, ['subject'])].filter(
-        (i) => i >= 0
-      ),
-    });
+  const preset = PRESETS[presetId] || PRESETS.generic_bank;
+
+  if (preset.columns === 'synonyms' || !preset.columns) {
+    return baseCols(mapBySynonyms(headers));
   }
 
-  if (presetId === 'stripe') {
-    return baseCols({
-      date: findCol(headers, ['created (utc)', 'created', 'created date (utc)', 'date', 'available on (utc)', 'available on']),
-      description: findCol(headers, ['description', 'type', 'reporting category', 'source']),
-      amount: findCol(headers, ['net', 'amount', 'gross']),
-      descExtras: [findCol(headers, ['type']), findCol(headers, ['description'])].filter((i) => i >= 0),
-    });
-  }
-
-  if (presetId === 'wise') {
-    return baseCols({
-      date: findCol(headers, ['date', 'finished on', 'created on']),
-      description: findCol(headers, ['description', 'payment reference', 'merchant', 'name']),
-      amount: findCol(headers, ['amount', 'source amount', 'target amount', 'total amount']),
-      descExtras: [findCol(headers, ['description']), findCol(headers, ['payment reference'])].filter((i) => i >= 0),
-    });
-  }
-
-  if (presetId === 'chase') {
-    return baseCols({
-      date: findCol(headers, ['posting date', 'transaction date', 'post date', 'date']),
-      description: findCol(headers, ['description']),
-      amount: findCol(headers, ['amount']),
-    });
-  }
-
-  if (presetId === 'bofa') {
-    return baseCols({
-      date: findCol(headers, ['date', 'posted date', 'posting date']),
-      description: findCol(headers, ['description', 'payee']),
-      amount: findCol(headers, ['amount']),
-    });
-  }
-
-  if (presetId === 'amex') {
-    return baseCols({
-      date: findCol(headers, ['date']),
-      description: findCol(headers, ['description', 'appears on your statement as']),
-      amount: findCol(headers, ['amount']),
-    });
-  }
-
-  if (presetId === 'capital_one') {
-    return baseCols({
-      date: findCol(headers, ['transaction date', 'posted date', 'date']),
-      dateFallback: findCol(headers, ['posted date']),
-      description: findCol(headers, ['description']),
-      debit: findCol(headers, ['debit']),
-      credit: findCol(headers, ['credit']),
-      amount: findCol(headers, ['amount', 'transaction amount']),
-    });
-  }
-
-  if (presetId === 'revolut') {
-    return baseCols({
-      date: findCol(headers, ['completed date']),
-      dateFallback: findCol(headers, ['started date']),
-      description: findCol(headers, ['description']),
-      amount: findCol(headers, ['amount']),
-      fee: findCol(headers, ['fee']),
-      status: findCol(headers, ['state']),
-    });
-  }
-
-  if (presetId === 'wells_fargo') {
+  if (preset.id === 'wells_fargo') {
     // Header row is optional (users sometimes add one); fall back to positions.
-    const byName = baseCols({
-      date: findCol(headers, ['date']),
-      amount: findCol(headers, ['amount']),
-      checkNumber: findCol(headers, ['check number', 'check']),
-      description: findCol(headers, ['description']),
-    });
+    const byName = mapByAliases(headers, preset.columns);
     if (byName.date >= 0 && byName.amount >= 0 && byName.description >= 0) return byName;
-    return baseCols({ date: 0, amount: 1, checkNumber: 3, description: 4 });
+    return baseCols({ date: 0, amount: 1, checkNumber: 3, description: 4, byPosition: true });
   }
 
-  // generic_bank (default): Date, Description, Debit, Credit, Amount
-  return baseCols({
-    date: findCol(headers, ['date', 'transaction date', 'posted date', 'posting date']),
-    description: findCol(headers, ['description', 'memo', 'payee', 'name', 'details', 'narrative']),
-    amount: findCol(headers, ['amount', 'transaction amount']),
-    debit: findCol(headers, ['debit', 'withdrawal', 'withdrawals', 'money out', 'out']),
-    credit: findCol(headers, ['credit', 'deposit', 'deposits', 'money in', 'in']),
-  });
+  return fillFromSynonyms(headers, mapByAliases(headers, preset.columns), preset);
 }
 
 export function buildDescription(row, cols) {
@@ -146,24 +114,21 @@ export function buildDescription(row, cols) {
 /**
  * Signed amount from Debit/Credit preferred when present; else Amount column.
  * Debit = money out (negative). Credit = money in (positive).
- * Parentheses already handled by parseAmount.
+ * Parentheses, trailing minus, CR/DR and comma decimals are handled by parseAmount (money.mjs).
+ * Returns null when no money cell can be read (the caller lists the row as left out).
  */
-export function signedAmountFromRow(row, cols) {
+export function signedAmountFromRow(row, cols, numOpts = {}) {
   const hasDebitCol = cols.debit >= 0;
   const hasCreditCol = cols.credit >= 0;
 
   if (hasDebitCol || hasCreditCol) {
-    const debitRaw = hasDebitCol ? row[cols.debit] : '';
-    const creditRaw = hasCreditCol ? row[cols.credit] : '';
-    const d = parseAmount(debitRaw);
-    const c = parseAmount(creditRaw);
-
+    const d = parseAmount(hasDebitCol ? row[cols.debit] : '', numOpts);
+    const c = parseAmount(hasCreditCol ? row[cols.credit] : '', numOpts);
     // If Amount column empty (typical chase-like), build from D/C
-    const amountRaw = cols.amount >= 0 ? row[cols.amount] : '';
-    const a = parseAmount(amountRaw);
+    const a = parseAmount(cols.amount >= 0 ? row[cols.amount] : '', numOpts);
 
     if (d != null && d !== 0) {
-      // Debit column value: treat as outflow. If already negative via (), keep sign magnitude as negative.
+      // Debit column value: treat as outflow. If already negative via (), keep it negative.
       return d > 0 ? -d : d;
     }
     if (c != null && c !== 0) {
@@ -177,16 +142,17 @@ export function signedAmountFromRow(row, cols) {
   }
 
   if (cols.amount >= 0) {
-    return parseAmount(row[cols.amount]);
+    return parseAmount(row[cols.amount], numOpts);
   }
   return null;
 }
 
 /** Row filter by status columns. Returns null to keep, or a skip reason string. */
 export function statusSkipReason(row, cols, presetId) {
-  if (presetId === 'revolut' && cols.status >= 0) {
-    const st = String(row[cols.status] ?? '').trim().toUpperCase();
-    if (st && st !== 'COMPLETED') return `State ${st}`;
+  const preset = PRESETS[presetId] || {};
+  if (preset.keepStatus && cols.status >= 0) {
+    const st = String(row[cols.status] ?? '').trim();
+    if (st && !preset.keepStatus.includes(st.toLowerCase())) return `${preset.statusLabel || 'State'} ${st.toUpperCase()}`;
   }
   if (presetId === 'paypal') {
     if (cols.balanceImpact >= 0) {
