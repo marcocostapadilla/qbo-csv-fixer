@@ -30,7 +30,7 @@
       <h2>2. What is messy about the Venmo file</h2>
       <ul>
         <li>Two lines come before the header: <code>Account Statement - (@your-username)</code> and <code>Account Activity</code>.</li>
-        <li>The header starts with an empty column: <code>,ID,Datetime,Type,Status,Note,From,To,Amount (total),...,Funding Source,Destination,Beginning Balance,Ending Balance,...</code> Business profiles add tip, tax and tax rate columns.</li>
+        <li>The header starts with an empty column: <code style="overflow-wrap:anywhere">,ID,Datetime,Type,Status,Note,From,To,Amount (total),...,Funding Source,Destination,Beginning Balance,Ending Balance,...</code> Business profiles add tip, tax and tax rate columns.</li>
         <li>Amounts carry a sign and a space: <code>+ $650.00</code> is money in, <code>- $42.50</code> is money out.</li>
         <li>The beginning balance sits on its own line under the header, the ending balance on a line near the bottom, followed by a long disclaimer.</li>
         <li>Datetime looks like <code>2026-03-27T10:10:10</code>.</li>
@@ -69,7 +69,7 @@
     <section class="card howto">
       <h2>Good to know</h2>
       <ul>
-        <li>Amount (fee) is not subtracted again. Public samples did not show whether Amount (total) already includes a fee; if the badge fails by exactly your statement period Venmo fees, add the fees as one line in QuickBooks Online.</li>
+        <li>Amount (total) is exported as is; Amount (fee) is neither added nor subtracted, because public samples do not show whether the total already includes it. When a file has non-zero fees, the tool shows a note with the fee count and total. If the reconcile badge then fails by exactly that fee total, add the fees as one line in QuickBooks Online.</li>
         <li>Standard Transfer rows (to your bank) are money out. Match them to the deposit in your bank account.</li>
         <li>The time of day is dropped; the date is used as written in the file.</li>
       </ul>

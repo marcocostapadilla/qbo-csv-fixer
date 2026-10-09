@@ -67,6 +67,12 @@
     </section>
 
     <section class="card howto">
+      <h2>Payouts list export: one line per payout</h2>
+      <p>To record only the payouts, export the payouts list (one row per payout, not the transactions) from the payouts page (see step 1; in newer admin: <strong>Finance</strong>, <strong>Payouts</strong>). Its columns are <code>Payout Date, Status, Charges, Refunds, Adjustments, Reserved Funds, Fees, Retried Amount, Total</code> (the total is the net payout; a Total (Net) or Net header also works).</p>
+      <p>Open <a href="index.html?preset=shopify_payouts">QBO CSV Fixer with the Shopify payouts list preset</a> (or drop the file; it is auto-detected). Each payout becomes one line from Total, dated Payout Date, as money out of the Shopify Payments clearing account. A withdrawn (negative) payout comes back as money in. Scheduled, pending, failed and canceled payouts are left out and listed, because they have not reached your bank. Try the <a href="samples/shopify-payouts-list.csv" download>payouts list sample CSV</a>.</p>
+    </section>
+
+    <section class="card howto">
       <h2>Good to know</h2>
       <ul>
         <li>To match one bank deposit, export only that payout. The sum of Net should equal the payout amount Shopify shows.</li>

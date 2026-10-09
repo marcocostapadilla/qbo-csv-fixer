@@ -67,11 +67,17 @@
     </section>
 
     <section class="card howto">
+      <h2>Square transfers export: one line per bank deposit</h2>
+      <p>To record the deposits instead of the sales, export the transfers list: in the Square Dashboard go to <strong>Banking</strong>, <strong>View all transfers</strong>, then <strong>Export</strong>. That file has <code>Deposit Date, Payment Date, Type, Transaction ID, Payment ID, Collected, Fees, Deposited, Deposit ID, Location</code>, one row per payment or refund.</p>
+      <p>Open <a href="index.html?preset=square_transfers">QBO CSV Fixer with the Square transfers preset</a> (or drop the file; it is auto-detected). Rows with the same Deposit ID are added up into one line per transfer, dated Deposit Date, as money out of the Square clearing account, so each line matches one deposit in your bank. Refunds and chargebacks lower the transfer. Rows with no Deposit Date (not transferred yet) or no Deposited amount are left out and listed. Try the <a href="samples/square-transfers.csv" download>Square transfers sample CSV</a>.</p>
+    </section>
+
+    <section class="card howto">
       <h2>Good to know</h2>
       <ul>
         <li>Cash sales are included. If you do not book cash through the Square clearing account, exclude or recategorize those lines in For review.</li>
         <li>This export has no opening or ending balance, so the reconcile badge shows n/a. Compare the net total with your Square sales summary instead.</li>
-        <li>Square deposits (transfers) come in a separate export with a different layout; this preset reads the Transactions CSV.</li>
+        <li>The Square preset reads the Transactions CSV; the transfers export has its own preset (see above).</li>
       </ul>
     </section>
 
