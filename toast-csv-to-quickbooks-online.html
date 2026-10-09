@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Toast CSV to QuickBooks Online: PaymentDetails export to a bank upload</title>
+  <meta name="description" content="Turn a Toast PaymentDetails.csv (payments data export) into a QuickBooks Online upload file: one line per payment, refunds as their own lines, voided and denied payments left out, locally." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/toast-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / Toast</p>
+    <header class="app-header">
+      <h1>Toast CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your Toast payments export (PaymentDetails.csv) into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=toast">Open the tool with the Toast preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Get the CSV from Toast</h2>
+      <ol>
+        <li>In Toast Web, open <strong>Reports</strong> and the payments report for the days you want, then export it as CSV. With data exports set up (<strong>Reports &gt; Settings &gt; Data Exports</strong>), the same data arrives each night as <code>PaymentDetails.csv</code>.</li>
+        <li>Keep Toast's default column names. Toast lets you rename and reorder export columns; the preset finds columns by name.</li>
+      </ol>
+      <p class="hint">Menus change from time to time. If a label differs, search the Toast help pages for "data exports" or "payments report".</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the Toast file</h2>
+      <ul>
+        <li>About 40 columns: <code>Location, Payment Id, Order Id, Order #, Paid Date, ..., Amount, Tip, Gratuity, Total, ..., Refunded, Refund Date, Refund Amount, Refund Tip Amount, ..., Status, Type, ..., Card Type, ..., V/MC/D Fees</code>.</li>
+        <li>Dates carry a time, like <code>2/1/22 10:50 AM</code>.</li>
+        <li>Every attempt is a row: <code>CAPTURED</code> next to <code>DENIED</code>, <code>VOIDED</code>, <code>ERROR</code> or <code>CANCELLED</code> payments that never took money.</li>
+        <li>A refund is not its own row. It sits in the Refund columns of the original payment.</li>
+        <li>Cash shows <code>Amount Tendered</code> (what the guest handed over), not what you kept.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=toast">QBO CSV Fixer with the Toast preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the left-out note and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the Toast preset does:</p>
+      <ul>
+        <li>One line per payment on its Paid Date, using Total (amount plus tip and gratuity) as money in, described like <code>Toast Credit Visa, order 12</code>.</li>
+        <li>A refund becomes its own negative line (Refund Amount plus Refund Tip Amount) on the Refund Date.</li>
+        <li>Denied, voided, error and cancelled payments are left out and listed by row.</li>
+        <li>Card fees (<code>V/MC/D Fees</code>) are not subtracted. A note shows their total, because how Toast collects them (from each deposit or once a month) is not in the file.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/toast.csv" download>Toast sample CSV</a> (fake names) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>The free export is marked only in its file name, which ends with _qbo-csv-fixer-free. Nothing is added to the descriptions, and there is no extra watermark row to remove.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>Upload into a Toast clearing account, not your checking account. Card deposits from Toast then become transfers you match in the bank.</li>
+        <li>Cash and gift card payments are in the file too. Leave them in if your clearing account tracks all sales, or untick them in QuickBooks before you import.</li>
+        <li>Intuit's limits for one upload: 350 KB or less and up to 1,000 lines. A busy month can pass that; export a shorter date range. The tool warns you when a file is over either limit.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free core: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>All guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="citi-csv-to-quickbooks-online.html">Citi</a> · <a href="us-bank-csv-to-quickbooks-online.html">U.S. Bank</a> · <a href="pnc-csv-to-quickbooks-online.html">PNC</a> · <a href="discover-csv-to-quickbooks-online.html">Discover</a> · <a href="mercury-csv-to-quickbooks-online.html">Mercury</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a> · <a href="square-csv-to-quickbooks-online.html">Square</a> · <a href="shopify-csv-to-quickbooks-online.html">Shopify Payments</a> · <a href="etsy-csv-to-quickbooks-online.html">Etsy</a> · <a href="venmo-csv-to-quickbooks-online.html">Venmo</a> · <a href="toast-csv-to-quickbooks-online.html">Toast</a></p>
+      <p>Compare: <a href="qbo-csv-fixer-vs-alternatives.html">QBO CSV Fixer vs Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

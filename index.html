@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>QBO CSV Fixer: bank CSV to QuickBooks Online import, in your browser</title>
-  <meta name="description" content="Turn bank, card, PayPal, Stripe, Wise, Square, Shopify Payments, Etsy or Venmo CSV exports into a QuickBooks Online upload file. Runs locally; files never leave your browser." />
+  <meta name="description" content="Turn bank, card, PayPal, Stripe, Wise, Square, Shopify Payments, Etsy, Venmo or Toast CSV exports into a QuickBooks Online upload file. Runs locally; files never leave your browser." />
   <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -57,6 +57,7 @@
         <a href="samples/shopify-payouts.csv" download>Shopify Payments</a>
         <a href="samples/etsy.csv" download>Etsy</a>
         <a href="samples/venmo.csv" download>Venmo</a>
+        <a href="samples/toast.csv" download>Toast</a>
         <a href="samples/ambiguous-dates.csv" download>ambiguous dates</a>
       </div>
     </section>
@@ -99,7 +100,7 @@
       <p id="mapNote" class="hint map-note hidden" aria-live="polite"></p>
       <p class="hint" style="margin-bottom:0.75rem">
         Transaction rows: <strong id="txnCount">0</strong>.
-        Beginning/Ending balance rows are skipped from the export but used for the reconcile badge when present.
+        Balance rows are not exported; they feed the reconcile badge.
       </p>
       <div class="table-wrap">
         <table class="preview" aria-label="Mapped preview">
@@ -137,7 +138,6 @@
         <li><strong>Silent reconcile miss:</strong> ChatGPT can return a CSV that looks import-ready while missing an opening/closing balance break (our sample fixture has a built-in $2 gap; chat did not warn).</li>
         <li><strong>No one-click local UI:</strong> chat offered DIY scripts, not a bookmarkable browser tool that never uploads the file.</li>
       </ul>
-      <p style="margin:0.75rem 0 0">The point of this tool is the visible reconcile badge plus an offline, one-click UI.</p>
     </section>
 
     <footer>
@@ -164,6 +164,7 @@
         <li><a href="shopify-csv-to-quickbooks-online.html">Shopify Payments</a></li>
         <li><a href="etsy-csv-to-quickbooks-online.html">Etsy</a></li>
         <li><a href="venmo-csv-to-quickbooks-online.html">Venmo</a></li>
+        <li><a href="toast-csv-to-quickbooks-online.html">Toast</a></li>
       </ul>
       <p>Compare: <a href="qbo-csv-fixer-vs-alternatives.html">QBO CSV Fixer vs Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT</a></p>
       <p>CSV only. No PDF. No bank login. No server. See <a href="README.md">README.md</a> for local open instructions and known gaps.</p>
