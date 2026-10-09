@@ -120,3 +120,10 @@ Header names are compared after folding case, spacing, punctuation, BOM and abbr
 - Files are read as bytes and decoded: UTF-8 (BOM or not), UTF-16 LE/BE (BOM, or LE without BOM), else Windows-1252 (smart quotes, euro). PNG and random bytes are still refused.
 - Square transfers and Shopify payouts list presets (sources in VERIFY-presets-v13.md).
 - Adversarial fixtures in `samples/adversarial/` (the UTF-16 and Windows-1252 ones are stored as UTF-8 text and encoded by the test): Square as UTF-16 LE (refund with returned fee, dispute fee, empty Net Total, Total footer), Etsy as Windows-1252 (euro, pending row, row of only `--`), Shopify with BOM (chargeback, negative fee on a refund, empty money cells, footer), Venmo with fees (note shown), Square transfers edge cases (chargeback, no Deposit Date, no Deposited).
+
+## v1.5 QuickBooks Online upload rules (suite 12, `verify-v15.mjs`)
+
+Intuit's own words only; full quotes, URLs and the folklore list are in `VERIFY-qbo-limits.md`. A = "Manually upload transactions into QuickBooks Online" (L0rE9OXBz_US_en_US, updated 8/24/2026), C = "Common errors for importing bank transactions using CSV" (L02IgW462_US_en_US).
+
+- Size, A: "350 KB or less". Rows, A: "up to 1,000 lines per upload". Date range, A: no maximum, only "shorten the date range". Columns, A: "either 3 ... or 4". Dates, A: "same format", dd/mm/yyyy only "recommend"ed. Zeros, A: "Leave ... blank". Debit/Credit money out only, C: "could give you an error".
+- Free downloads stop at 100 rows, so no split was built. `qboLimitNotes()` warns past 1,000 lines or 350 KB, or on a money-out-only Debit/Credit file. Zero amounts are now blank cells.
