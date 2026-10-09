@@ -1,0 +1,6 @@
+Date,Type,Title,Info,Currency,Amount,"Fees & Taxes",Net,"Tax Details",Status,"Availability Date"
+"April 30, 2026",Sale,"Payment for Order #4200000051",,USD,$25.00,--,$25.00,--,Pending,"May 4, 2026"
+"April 29, 2026",Fee,"Transaction fee: Mug",,USD,--,-$1.63,-$1.63,--,pending,"May 4, 2026"
+"April 28, 2026",Sale,"Payment for Order #4200000050",,USD,$40.00,--,$40.00,--,Available,
+"April 27, 2026",Fee,"Listing fee",,USD,--,-$0.20,-$0.20,--
+"April 26, 2026",Sale,"Payment for Order #4200000049",,USD,$12.00,--,$12.00,--,,
