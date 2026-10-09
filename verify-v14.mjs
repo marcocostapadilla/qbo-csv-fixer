@@ -74,7 +74,7 @@ export function run() {
   assert(amt(s16.r, 'Mug, large \u201cblue\u201d') === 1115.38 && amt(s16.r, 'Caf\u00e9 bowl') === -38.8 && amt(s16.r, 'Chargeback fee') === -15, 'Square: quoted comma and smart quotes kept; refund with a returned fee nets -38.80; dispute fee -15.00');
   assert(reasons(s16.r) === '5:missing amount' && s16.r.reconcile.status === 'INCOMPLETE' && s16.r.skippedSummary.some((x) => x.label === 'Total'), `Square: empty Net Total listed as left out; "Total" footer is not a row (got ${reasons(s16.r)})`);
   const e12 = adv('etsy-encodings.csv', 'etsy', 'Windows-1252');
-  assert(e12.enc === 'Windows-1252' && e12.det === 'etsy' && e12.r.transactions.length === 6, `Etsy file saved as Windows-1252 (Excel CSV): detected and read, 6 rows (got ${e12.enc}, ${e12.det}, ${e12.r.transactions.length})`);
+  assert(e12.enc === 'Windows-1252' && e12.det === 'etsy' && e12.r.transactions.length === 5, `Etsy file saved as Windows-1252 (Excel CSV): detected and read, 5 rows + 1 pending left out (got ${e12.enc}, ${e12.det}, ${e12.r.transactions.length})`);
   assert(amt(e12.r, 'sent to your bank account') === -1208.35 && amt(e12.r, 'Refund to buyer') === -18 && amt(e12.r, '\u201cCaf\u00e9\u201d mug') === 30, 'Etsy: euro deposit read from Title, euro refund negative, smart quotes kept');
   assert(reasons(e12.r) === '8:missing amount', `Etsy: a row of only "--" is listed as missing amount, not unreadable (got ${reasons(e12.r)})`);
   const sb = adv('shopify-bom-chargeback.csv', 'shopify');

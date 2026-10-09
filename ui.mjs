@@ -3,6 +3,7 @@
  * Pure DOM output; no network calls.
  */
 import { buildExportRows, fmtMoney, FREE_ROW_LIMIT, WATERMARK_SUFFIX } from './core.mjs';
+import { qboLimitNotes } from './export.mjs';
 import { tierAllows, canDownload } from './license.mjs';
 
 export const els = {};
@@ -114,7 +115,7 @@ function listRows(rows, fmt) {
 }
 
 /** One note for every row not in the export: unreadable rows first, then rows that did not settle. */
-function renderSkipNote(r) {
+function renderSkipNote(r, extra = []) {
   const parts = [];
   const lo = r.leftOutRows || [];
   if (lo.length) {
@@ -131,7 +132,7 @@ function renderSkipNote(r) {
         listRows(r.skippedRows, (s) => `row ${s.sourceRow} (${s.reason})`) + '.'
     );
   }
-  for (const n of r.notes || []) parts.push(n); // v1.4 preset notes (Venmo fees)
+  for (const n of [...(r.notes || []), ...extra]) parts.push(n); // preset notes (Venmo fees), QBO upload limits (v1.5)
   setText(els.skipNote, parts.join(' '));
 }
 
@@ -158,7 +159,7 @@ export function renderResults(r, qboId) {
   setText(els.mapNote, mappingNote(r.mapping));
   const { header, body } = buildExportRows(r.transactions, qboId);
   renderBadges(r);
-  renderSkipNote(r);
+  renderSkipNote(r, qboLimitNotes(header, body));
   els.txnCount.textContent = String(r.transactions.length);
   renderPreview(header, body);
 
