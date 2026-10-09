@@ -1,0 +1,7 @@
+Deposit Date,Payment Date,Type,Transaction ID,Payment ID,Collected,Fees,Deposited,Deposit ID,Location
+3/10/2026,3/9/2026,Payment,kT4wB8nQ2xZ6,Qx2Zn8Bw4Tk6,$81.50,($2.14),$79.36,3Z4617,Northwind Ceramics
+3/10/2026,3/9/2026,Payment,mR9cV5dJ7sL1,Ls1Jd7Vc5Rm9,$90.10,($2.35),$87.75,3Z4617,Northwind Ceramics
+3/10/2026,3/9/2026,Refund,pH6jF2wD8rC3,Cr3Dw8Fj2Hp6,($20.00),$0.52,($19.48),3Z4617,Northwind Ceramics
+3/11/2026,3/10/2026,Payment,zL5vB9qT1mK7,Km7Tq1Bv9Lz5,"$1,149.00",($30.21),"$1,118.79",3Z4689,Northwind Ceramics
+3/11/2026,3/10/2026,Payment,aB3cD4eF5gH6,Hg6Fe5Dc4Ba3,$24.00,($0.93),$23.07,3Z4689,Northwind Ceramics
+3/13/2026,3/12/2026,Refund,qW2eR3tY4uI5,Iu5Yt4Re3Wq2,($35.00),$0.00,($35.00),3Z4700,Northwind Ceramics

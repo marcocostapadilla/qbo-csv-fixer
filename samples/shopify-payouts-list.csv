@@ -1,0 +1,6 @@
+Payout Date,Status,Charges,Refunds,Adjustments,Reserved Funds,Fees,Retried Amount,Total,Currency
+2026-03-23,Scheduled,58.00,0.00,0.00,0.00,-1.98,0.00,56.02,USD
+2026-03-19,Deposited,"1,329.99",-35.00,15.00,0.00,-39.17,0.00,"1,270.82",USD
+2026-03-12,Deposited,412.50,0.00,0.00,0.00,-12.26,0.00,400.24,USD
+2026-03-05,Failed,96.00,0.00,0.00,0.00,-3.08,0.00,92.92,USD
+2026-03-02,Withdrawn,0.00,-40.00,-15.00,0.00,0.00,0.00,-55.00,USD
