@@ -14,6 +14,8 @@
  * 8. verify-ui-gates.mjs: Download disabled on rejected files; no detect note next to a file error.
  * 9. verify-presets-v13.mjs: Square, Shopify Payments, Etsy, Venmo presets.
  * 10. verify-watermark.mjs: free watermark is the filename only (no description suffix).
+ * 11. verify-v14.mjs: Square transfers, Shopify payouts list, Venmo fee note, file encodings,
+ *     adversarial Square / Shopify / Etsy / Venmo fixtures.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -26,6 +28,7 @@ import { run as runLicense } from './verify-license.mjs';
 import { run as runUiGates } from './verify-ui-gates.mjs';
 import { run as runV13Presets } from './verify-presets-v13.mjs';
 import { run as runWatermark } from './verify-watermark.mjs';
+import { run as runV14 } from './verify-v14.mjs';
 
 runV11();
 runPresets();
@@ -37,6 +40,7 @@ await runLicense();
 runUiGates();
 runV13Presets();
 runWatermark();
+runV14();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);

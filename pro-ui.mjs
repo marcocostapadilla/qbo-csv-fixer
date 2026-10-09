@@ -6,15 +6,16 @@
 import { isProUnlocked, PRO_COMING_SOON } from './license.mjs';
 import { convertBatch } from './batch.mjs';
 import { listProfiles, saveProfile, loadProfile, deleteProfile } from './profiles.mjs';
+import { decodeBytes } from './encoding.mjs';
 
 const IDS = ['batchInput', 'batchBtn', 'profileName', 'profileSave', 'profileSelect', 'profileLoad', 'profileDelete'];
 
 const readText = (file) =>
   new Promise((resolve, reject) => {
     const r = new FileReader();
-    r.onload = () => resolve({ name: file.name, text: String(r.result || '') });
+    r.onload = () => resolve({ name: file.name, text: decodeBytes(r.result).text });
     r.onerror = () => reject(new Error('Could not read ' + file.name));
-    r.readAsText(file);
+    r.readAsArrayBuffer(file);
   });
 
 /**
