@@ -20,6 +20,7 @@ import { isProUnlocked, limitsFor, canDownload } from './license.mjs';
 import { showDetectNoteFor } from './detect.mjs';
 import { setupPro } from './pro-ui.mjs';
 import { PRO_SUFFIX } from './batch.mjs';
+import { decodeBytes } from './encoding.mjs';
 
 let pro = { multiDrop() {} };
 
@@ -100,10 +101,11 @@ function readFile(file) {
   const reader = new FileReader();
   reader.onload = () => {
     els.fileName.textContent = file.name;
-    loadText(file.name, String(reader.result || ''));
+    // v1.4: raw bytes, decoded here, so UTF-16 and Windows-1252 files are read correctly
+    loadText(file.name, decodeBytes(reader.result).text);
   };
   reader.onerror = () => showError('Could not read that file in the browser.');
-  reader.readAsText(file);
+  reader.readAsArrayBuffer(file);
 }
 
 function reprocess() {

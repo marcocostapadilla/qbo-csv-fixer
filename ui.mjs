@@ -131,6 +131,7 @@ function renderSkipNote(r) {
         listRows(r.skippedRows, (s) => `row ${s.sourceRow} (${s.reason})`) + '.'
     );
   }
+  for (const n of r.notes || []) parts.push(n); // v1.4 preset notes (Venmo fees)
   setText(els.skipNote, parts.join(' '));
 }
 

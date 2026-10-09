@@ -16,6 +16,8 @@ function etsyFixRow(row, headers) {
   const title = findCol(headers, ['title']);
   const net = findCol(headers, ['net']);
   if (type < 0 || title < 0 || net < 0) return;
+  // v1.4: "--" is Etsy's empty marker, so a row with no money is "missing amount", not "unreadable"
+  for (const c of [findCol(headers, ['amount']), findCol(headers, ['fees & taxes']), net]) if (c >= 0 && String(row[c] ?? '').trim() === '--') row[c] = '';
   if (String(row[type] ?? '').trim().toLowerCase() !== 'deposit') return;
   const cell = String(row[net] ?? '').trim();
   const m = String(row[title] ?? '').match(ETSY_DEPOSIT);
@@ -36,6 +38,21 @@ function venmoBalances(rows, headers, numOpts) {
     if (c != null) closing = c;
   }
   return { opening, closing };
+}
+
+/**
+ * v1.4: Venmo has a separate Amount (fee) column, and no public source says whether Amount (total)
+ * already includes it. Amount (total) is used as is; when any fee is non-zero, say so on screen.
+ */
+function venmoFeeNote(rows, headers, numOpts) {
+  const f = findCol(headers, ['amount (fee)']);
+  if (f < 0) return [];
+  const fees = rows.map((r) => parseAmount(r[f], numOpts)).filter((v) => v != null && v !== 0);
+  if (!fees.length) return [];
+  const total = Math.abs(fees.reduce((a, b) => a + b, 0)).toFixed(2);
+  return [
+    `This file has fees in a separate column (Amount (fee): ${fees.length} row(s), $${total} in total). Amount (total) is exported as is, without adding or subtracting the fee. Check that your totals include them; the reconcile badge will flag a mismatch.`,
+  ];
 }
 
 export const V13_PRESETS = {
@@ -91,7 +108,7 @@ export const V13_PRESETS = {
   venmo: {
     id: 'venmo',
     label: 'Venmo (statement CSV)',
-    hint: 'Account statement (title and "Account Activity" lines, then ,ID,Datetime,Type,Status,Note,From,To,Amount (total),...,Beginning Balance,Ending Balance,..., then a disclaimer). Amount (total) is signed ("+ $10.00" in, "- $5.00" out) and used as is; Amount (fee) is not subtracted again. Beginning and Ending Balance feed the reconcile badge.',
+    hint: 'Account statement (title and "Account Activity" lines, then ,ID,Datetime,Type,Status,Note,From,To,Amount (total),...,Beginning Balance,Ending Balance,..., then a disclaimer). Amount (total) is signed ("+ $10.00" in, "- $5.00" out) and used as is; Amount (fee) is not subtracted, and a note shows when any fee is non-zero. Beginning and Ending Balance feed the reconcile badge.',
     defaultDateOrder: 'mdy',
     slug: 'venmo',
     sample: 'samples/venmo.csv',
@@ -102,6 +119,7 @@ export const V13_PRESETS = {
       descExtras: [['type'], ['note'], ['from'], ['to']],
     },
     balancesFrom: venmoBalances,
+    fileNotes: venmoFeeNote,
     detect: [{ all: ['datetime', 'amount (total)'] }],
     signatures: [['id', 'datetime', 'type', 'status', 'note', 'from', 'to', 'amount (total)', 'amount (fee)', 'funding source', 'destination', 'beginning balance', 'ending balance']],
   },
