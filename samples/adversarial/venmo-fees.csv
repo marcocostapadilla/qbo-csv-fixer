@@ -1,0 +1,8 @@
+Account Statement - (@Northwind-Studio) ,,,,,,,,,,,,,,,,,,,,,
+Account Activity,,,,,,,,,,,,,,,,,,,,,
+,ID,Datetime,Type,Status,Note,From,To,Amount (total),Amount (tip),Amount (tax),Amount (fee),Tax Rate,Tax Exempt,Funding Source,Destination,Beginning Balance,Ending Balance,Statement Period Venmo Fees,Terminal Location,Year to Date Venmo Fees,Disclaimer
+,,,,,,,,,,,,,,,,"$1,000.00",,,,,
+,4100000000000000011,2026-03-02T15:04:11,Payment,Complete,"Logo, deposit",Contoso Bakery,Northwind Studio,+ $300.00,,0,- $8.97,0,,,Venmo balance,,,,Venmo,,
+,4100000000000000012,2026-03-05T09:30:00,Instant Transfer,Issued,,,,- $100.00,,,- $1.75,,,,Contoso Checking *1234,,,,,,
+,4100000000000000013,2026-03-06T12:00:00,Payment,Complete,Paper,Northwind Studio,Fabrikam Supply,- $5.00,,0,,0,,Venmo balance,,,,,Venmo,,
+,,,,,,,,,,,,,,,,,"$1,195.00",$10.72,,$10.72,"In case of errors or questions, contact Venmo. (Sample statement: names and numbers are fictional.)"

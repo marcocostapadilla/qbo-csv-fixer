@@ -1,0 +1,8 @@
+Date,Type,Title,Info,Currency,Amount,"Fees & Taxes",Net,"Tax Details",Status,"Availability Date"
+"March 31, 2026",Deposit,"€1,208.35 sent to your bank account",,EUR,--,--,--,--
+"March 28, 2026",Refund,"Refund to buyer for Order #4200000043",,EUR,-€18.00,--,-€18.00,--
+"March 28, 2026",Fee,"Credit for processing fee","Order #4200000043",EUR,--,€0.55,€0.55,--
+"March 27, 2026",Sale,"Payment for Order #4200000044","“Café” mug, blue",EUR,€30.00,--,€30.00,--
+"March 27, 2026",Fee,"Transaction fee: “Café” mug, blue","Order #4200000044",EUR,--,-€1.95,-€1.95,--
+"March 25, 2026",Sale,"Payment for Order #4200000045",,EUR,€10.00,--,€10.00,--,Pending,"April 1, 2026"
+"March 24, 2026",Fee,"Listing fee",,EUR,--,--,--,--

@@ -1,0 +1,8 @@
+﻿Transaction Date,Type,Order,Card Brand,Card Source,Payout Status,Payout Date,Available On,Amount,Fee,Net,Currency
+2026-03-18 10:02:11 -0400,charge,#1046,visa,online,pending,2026-03-23,2026-03-20,58.00,1.98,56.02,USD
+2026-03-17 16:45:30 -0400,refund,#1031,master,online,paid,2026-03-19,2026-03-17,-35.00,-0.30,-34.70,USD
+2026-03-16 09:00:00 -0400,chargeback,#1020,visa,online,paid,2026-03-19,2026-03-16,-80.00,15.00,-95.00,USD
+2026-03-15 09:00:00 -0400,adjustment,,,,paid,2026-03-19,2026-03-15,15.00,0.00,15.00,USD
+2026-03-14 09:00:00 -0400,charge,"#1019, gift order",visa,online,paid,2026-03-19,2026-03-14,"1,200.00",35.10,"1,164.90",USD
+2026-03-13 09:00:00 -0400,charge,#1018,visa,online,paid,2026-03-19,2026-03-13,,,,USD
+Total,,,,,,,,1158.00,51.78,1106.22,

@@ -1,0 +1,6 @@
+Deposit Date,Payment Date,Type,Transaction ID,Payment ID,Collected,Fees,Deposited,Deposit ID,Location
+3/10/2026,3/9/2026,Payment,kT4wB8nQ2xZ6,Qx2Zn8Bw4Tk6,$81.50,($2.14),$79.36,3Z4617,"Northwind Ceramics, Main St"
+3/10/2026,3/9/2026,Chargeback,cB1cB2cB3cB4,Bc4Bc3Bc2Bc1,($50.00),($15.00),($65.00),3Z4617,"Northwind Ceramics, Main St"
+,3/12/2026,Payment,nD1nD2nD3nD4,Dn4Dn3Dn2Dn1,$12.00,($0.47),$11.53,,"Northwind Ceramics, Main St"
+3/11/2026,3/10/2026,Payment,eM1eM2eM3eM4,Me4Me3Me2Me1,$24.00,($0.93),,3Z4689,"Northwind Ceramics, Main St"
+Total,,,,,$67.50,($18.54),$25.89,,
