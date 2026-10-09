@@ -10,7 +10,7 @@ import { parseDateParts, detectDateOrder, normalizeDate } from './dates.mjs';
 import { isBalanceLabel, isOpeningLabel, isClosingLabel, lastNonEmpty } from './headers.mjs';
 import { isHeaderRow, missingRequired, mappingErrorMessage } from './fields.mjs';
 import { PRESETS } from './presets.mjs';
-import { mapColumnsForPreset, buildDescription, signedAmountFromRow, statusSkipReason } from './mapping.mjs';
+import { mapColumnsForPreset, buildDescription, signedAmountFromRow, statusSkipReason, describeMapping } from './mapping.mjs';
 import { isWellsFargoDataRow } from './detect.mjs';
 import { round2, reconcileBalances } from './reconcile.mjs';
 
@@ -21,7 +21,7 @@ function emptyResult(preset, extra) {
   return Object.assign(
     {
       opening: null, closing: null, net: 0, headerRowIndex: -1, headers: [], columns: null, mapping: null,
-      mappingError: null, fileError: null, transactions: [], skippedSummary: [], skippedRows: [], leftOutRows: [],
+      mappingError: null, fileError: null, transactions: [], skippedSummary: [], skippedRows: [], leftOutRows: [], notes: [],
       dateInfo: { ambiguous: false, conflict: false, detected: null, used: preset.defaultDateOrder || 'mdy', pairCount: 0, isoCount: 0 },
       decimalInfo: { decimal: '.', ambiguous: false, conflict: false, used: '.' },
       reconcile: reconcileBalances(null, null, 0),
@@ -144,7 +144,7 @@ export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) 
   const decimalInfo = Object.assign({}, dec, { used: decimal });
   const numOpts = { decimal, crdr: preset.crdr };
 
-  const transactions = [];
+  let transactions = [];
   for (const { i, row, dateRaw } of candidates) {
     const description = buildDescription(row, cols);
     let amount = signedAmountFromRow(row, cols, numOpts);
@@ -184,6 +184,9 @@ export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) 
 
   // v1.3 preset hook: balances from columns (Venmo Beginning/Ending Balance)
   if (preset.balancesFrom && opening == null && closing == null) ({ opening, closing } = preset.balancesFrom(rows.slice(headerRowIndex + 1), headers, numOpts));
+  // v1.4 preset hooks: merge rows (Square transfers: one line per Deposit ID); file-level notes (Venmo fees)
+  if (preset.groupTxns) transactions = preset.groupTxns(transactions, rows, headers);
+  const notes = preset.fileNotes ? preset.fileNotes(candidates.map((c) => c.row), headers, numOpts) : [];
   leftOutRows.sort((a, b) => a.sourceRow - b.sourceRow);
   const net = round2(transactions.reduce((s, t) => s + t.amount, 0));
   const reconcile = reconcileBalances(opening, closing, net, leftOutRows.length);
@@ -193,21 +196,7 @@ export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) 
       : null;
 
   return Object.assign(emptyResult(preset), base, {
-    opening, closing, net, fileError, transactions, skippedRows, leftOutRows, dateInfo, decimalInfo, reconcile,
+    opening, closing, net, fileError, transactions, skippedRows, leftOutRows, dateInfo, decimalInfo, reconcile, notes,
     headerRowIndex: head.headerless ? -1 : headerRowIndex,
   });
-}
-
-/** Which header feeds each output field (for the visible "Columns used" note). */
-function describeMapping(headers, cols) {
-  const name = (i) => (i >= 0 ? (cols.byPosition ? `column ${i + 1}` : headers[i] || `column ${i + 1}`) : null);
-  return {
-    date: name(cols.date),
-    description: cols.descExtras && cols.descExtras.length > 1 ? cols.descExtras.map(name).join(' + ') : name(cols.description),
-    amount: name(cols.amount),
-    debit: name(cols.debit),
-    credit: name(cols.credit),
-    viaSynonyms: cols.viaSynonyms || [],
-    byPosition: !!cols.byPosition,
-  };
 }

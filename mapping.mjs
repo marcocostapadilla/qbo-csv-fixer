@@ -154,6 +154,11 @@ export function statusSkipReason(row, cols, presetId) {
     const st = String(row[cols.status] ?? '').trim();
     if (st && !preset.keepStatus.includes(st.toLowerCase())) return `${preset.statusLabel || 'State'} ${st.toUpperCase()}`;
   }
+  // v1.4: deny-list (Shopify payouts list: scheduled, failed, ... never reached the bank)
+  if (preset.skipStatus && cols.status >= 0) {
+    const st = String(row[cols.status] ?? '').trim();
+    if (preset.skipStatus.includes(st.toLowerCase())) return `${preset.statusLabel || 'Status'} ${st.toUpperCase()}`;
+  }
   if (presetId === 'paypal') {
     if (cols.balanceImpact >= 0) {
       const bi = String(row[cols.balanceImpact] ?? '').trim().toLowerCase();
@@ -164,4 +169,18 @@ export function statusSkipReason(row, cols, presetId) {
     }
   }
   return null;
+}
+
+/** Which header feeds each output field (for the visible "Columns used" note). */
+export function describeMapping(headers, cols) {
+  const name = (i) => (i >= 0 ? (cols.byPosition ? `column ${i + 1}` : headers[i] || `column ${i + 1}`) : null);
+  return {
+    date: name(cols.date),
+    description: cols.descExtras && cols.descExtras.length > 1 ? cols.descExtras.map(name).join(' + ') : name(cols.description),
+    amount: name(cols.amount),
+    debit: name(cols.debit),
+    credit: name(cols.credit),
+    viaSynonyms: cols.viaSynonyms || [],
+    byPosition: !!cols.byPosition,
+  };
 }
