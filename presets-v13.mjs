@@ -91,7 +91,7 @@ export const V13_PRESETS = {
   etsy: {
     id: 'etsy',
     label: 'Etsy (monthly statement CSV)',
-    hint: 'Payments monthly statement (Date, Type, Title, Info, Currency, Amount, Fees & Taxes, Net, ...). Uses Net: sales positive; fees, sales tax, ads and refunds negative. "--" means empty. Deposit rows carry the amount only in Title ("$X sent to your bank account"), so they are read from there as money out of the Etsy balance.',
+    hint: 'Payments monthly statement (Date, Type, Title, Info, Currency, Amount, Fees & Taxes, Net, ...). Uses Net: sales positive; fees, sales tax, ads and refunds negative. "--" means empty. Deposit rows carry the amount only in Title ("$X sent to your bank account"), so they are read from there as money out of the Etsy balance. Rows with Status Pending are left out and listed.',
     defaultDateOrder: 'mdy',
     slug: 'etsy',
     sample: 'samples/etsy.csv',
@@ -99,8 +99,12 @@ export const V13_PRESETS = {
       date: ['date'],
       description: ['title'],
       amount: ['net'],
+      status: ['status'],
       descExtras: [['type'], ['title'], ['info']],
     },
+    // v1.5: funds not yet available are left out and listed (as Shopify scheduled payouts)
+    skipStatus: ['pending'],
+    statusLabel: 'Status',
     fixRow: etsyFixRow,
     detect: [{ all: ['title', 'info', 'fees & taxes', 'net'] }],
     signatures: [['date', 'type', 'title', 'info', 'currency', 'amount', 'fees & taxes', 'net', 'tax details']],
