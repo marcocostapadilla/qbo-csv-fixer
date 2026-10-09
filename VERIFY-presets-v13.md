@@ -22,6 +22,28 @@ Data in `presets-v13.mjs`; assertions in `verify-presets-v13.mjs` (suite 9). Fix
 
 Hooks: `fixRow` (Etsy deposit amount from Title) and `balancesFrom` (Venmo Beginning/Ending Balance columns), both called from `process.mjs`. All four have header rules in `DETECT_ORDER` and signatures; older samples still detect as before.
 
-Known gaps: Venmo Amount (fee) is not subtracted; public samples do not show whether Amount (total) already includes it, so the reconcile badge is the check. Square cash sales are included (cash never reaches a Square deposit). Square Transfers and Shopify payout list exports have other layouts and are not covered. Etsy and Square files carry no balances, so their badge is N/A. Venmo Datetime time zone is not documented; the date is used as written.
+Known gaps: Venmo Amount (fee) is not subtracted; public samples do not show whether Amount (total) already includes it, so the reconcile badge is the check (v1.4 adds an on-screen note, below). Square cash sales are included (cash never reaches a Square deposit). Square Transfers and Shopify payout list exports have their own presets since v1.4 (below). Etsy and Square files carry no balances, so their badge is N/A. Venmo Datetime time zone is not documented; the date is used as written.
 
 Skipped v1.3 presets: none.
+
+## v1.4: Square transfers, Shopify payouts list, Venmo fees, encodings
+
+Data in `presets-v14.mjs`; assertions in `verify-v14.mjs` (suite 11). Fixtures use fake names.
+
+| Preset | Header row used | Rule | Sources |
+|--------|-----------------|------|---------|
+| Square transfers (`square_transfers`) | `Deposit Date, Payment Date, Type, Transaction ID, Payment ID, Collected, Fees, Deposited, Deposit ID, Location`; `2/26/2023`; `$81.50`, `($2.14)`, `$79.36`; Deposit ID like `3Z4617` | Rows with one Deposit ID add up to one transfer, dated Deposit Date, money out of the clearing account (sign flipped); a refund-only transfer is money in. No Deposit Date or no Deposited: left out and listed | header, sample rows and "group by Deposit ID": https://community.squareup.com/t5/Orders-Menu-Items-Catalog/Is-there-any-way-to-get-a-Report-that-lists-daily-sales-fees/m-p/755132 ; export path (Banking, View all transfers, Export): https://squareup.com/help/us/en/article/3813-match-deposits-to-sales |
+| Shopify payouts list (`shopify_payouts`) | `Payout Date, Status, Charges, Refunds, Adjustments, Reserved Funds, Fees, Retried Amount, Total` (aliases `Total (Net)`, `Net`) | One line per payout from the total, sign flipped (money out of the clearing account); Scheduled, Pending, Failed, Canceled left out and listed; Withdrawn kept | columns: https://report.woodard.com/articles/shopify-how-to-gross-up-sales-using-zero-dollar-checks-pacawr ; payouts export with charges, refunds, adjustments, fees and net per date: https://community.shopify.com/t/payout-changes/384466 ; statuses: https://help.shopify.com/en/manual/payments/shopify-payments/payouts/view-details |
+
+Not documented by Shopify: the exact header case and status words of the payouts list. Matching is case-insensitive with aliases; a file with other status words keeps every row.
+
+Venmo fees (not settled, no guess): the public Venmo CSVs with this header (https://github.com/jbms/beancount-import/blob/master/examples/data/venmo/transactions.csv , https://github.com/egh/ledger-autosync/blob/master/fixtures/venmo.csv) have no non-zero Amount (fee). Venmo says the Instant Transfer fee is deducted from the transfer amount (https://help.venmo.com/cs/articles/instant-bank-transfer-faq-vhel302 , https://venmo.com/resources/our-fees) but not how the CSV columns relate. Amount (total) stays as is; when any Amount (fee) is non-zero the tool shows a note with the count and total, and the reconcile badge flags a mismatch.
+
+Encodings: files are read as bytes. UTF-16 LE/BE (with BOM, or LE without BOM) and Windows-1252 (Excel "CSV" on Windows: smart quotes, euro sign) are decoded; UTF-8 with or without BOM as before. Binary files are still refused. The repo stores the UTF-16 and Windows-1252 fixtures as UTF-8 text (`samples/adversarial/square-encodings.csv`, `etsy-encodings.csv`); `verify-v14.mjs` encodes them before reading.
+
+| Fixture | Preset | Rows out | Net |
+|---------|--------|----------|-----|
+| `samples/square-transfers.csv` | square_transfers | 3 | -1254.49 (3Z4617 -147.63, 3Z4689 -1141.86, refund-only 3Z4700 +35.00) |
+| `samples/shopify-payouts-list.csv` | shopify_payouts | 3 | -1616.06 (2 left out) |
+
+Skipped v1.4 presets: none.

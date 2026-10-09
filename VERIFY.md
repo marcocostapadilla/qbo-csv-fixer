@@ -92,7 +92,7 @@ Rules:
 - A row below the header with an unreadable or missing date or amount is listed in the "Left out N row(s) that could not be read" note with its row number and raw values. Any left-out row makes the reconcile badge **INCOMPLETE** (never PASS), even when the balances would otherwise match (asserted).
 - Free watermark (v1.3.1): filename only. The filename gets `_qbo-csv-fixer-free`; descriptions are exported exactly as read (no suffix, no length cap) and there is no extra row (a blank-date 0.00 row can make QBO reject the file or import a $0 line). The chase-like free export equals `samples/chase-like-qbo-ready.csv` byte for byte (suite 10, `verify-watermark.mjs`).
 - Output name: any input extension is dropped (`not-a-csv.txt` -> `not-a-csv_qbo-csv-fixer-free.csv`).
-- `not-a-csv.png` is kept locally only: the GitHub push tool used for this repo sends text, so the PNG bytes are embedded in `verify-adversarial.mjs` instead.
+- `not-a-csv.png` is kept locally only: the GitHub push tool used for this repo sends text, so the PNG bytes are embedded in `verify-adversarial.mjs` and `verify-v14.mjs` instead.
 
 ## v1.2 header drift (suite `verify-drift.mjs`, fixtures `samples/drift/`)
 
@@ -114,3 +114,9 @@ Header names are compared after folding case, spacing, punctuation, BOM and abbr
 - Forced on (`unlocked: true` passed to the functions, the shipped hook is not changed): 6 files (chase, amex, citi, mercury, a duplicate chase name, an empty file) give 5 CSVs (`chase-checking_qbo-2.csv` for the duplicate) plus `batch-summary.csv`; the empty file is listed with its error, not zipped; files carry no watermark and equal the single-file export; QBO layout choice is honoured.
 - Profiles (forced on, in-memory storage): save, list sorted, load case-insensitive, overwrite by name, refuse empty names and unknown presets, odd names like `__proto__` stored safely, delete, corrupt storage reads as empty.
 - `index.html` ships all 7 Pro controls with `disabled` and the note "Unlimited version coming soon".
+
+## v1.4 encodings and processor edge cases (suite 11, `verify-v14.mjs`)
+
+- Files are read as bytes and decoded: UTF-8 (BOM or not), UTF-16 LE/BE (BOM, or LE without BOM), else Windows-1252 (smart quotes, euro). PNG and random bytes are still refused.
+- Square transfers and Shopify payouts list presets (sources in VERIFY-presets-v13.md).
+- Adversarial fixtures in `samples/adversarial/` (the UTF-16 and Windows-1252 ones are stored as UTF-8 text and encoded by the test): Square as UTF-16 LE (refund with returned fee, dispute fee, empty Net Total, Total footer), Etsy as Windows-1252 (euro, pending row, row of only `--`), Shopify with BOM (chargeback, negative fee on a refund, empty money cells, footer), Venmo with fees (note shown), Square transfers edge cases (chargeback, no Deposit Date, no Deposited).
