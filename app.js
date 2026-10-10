@@ -58,7 +58,7 @@ function fillPresetSelects() {
   fillSelect(els.processorPreset, PRESETS, fromUrl || 'generic_bank');
   if (fromUrl) {
     state.presetLocked = true;
-    setDetectNote(`Preset selected from link: ${PRESETS[fromUrl].label}.`);
+    setDetectNote(`Preset selected from link: ${PRESETS[fromUrl].label}. Drop that file below.`);
   }
   fillSelect(els.qboPreset, QBO_PRESETS, 'date_desc_amount');
   updateProcessorHint();
@@ -87,7 +87,7 @@ function loadText(name, text, { autoDetect = true } = {}) {
       setDetectNote(detectionNote(det));
     } else if (det.id !== current && det.confidence !== 'low') {
       setDetectNote(
-        `This file looks like ${PRESETS[det.id].label} (${det.confidence} confidence). Switch the preset if the preview looks wrong.`
+        `This file looks like ${PRESETS[det.id].label}, not the bank picked from the link. If the preview looks wrong, pick ${PRESETS[det.id].label} in the list.`
       );
     } else {
       setDetectNote('');
@@ -104,7 +104,7 @@ function readFile(file) {
     // v1.4: raw bytes, decoded here, so UTF-16 and Windows-1252 files are read correctly
     loadText(file.name, decodeBytes(reader.result).text);
   };
-  reader.onerror = () => showError('Could not read that file in the browser.');
+  reader.onerror = () => showError('Your browser could not open that file. Check that it finished downloading and is not open in another program, then try again.');
   reader.readAsArrayBuffer(file);
 }
 
@@ -128,7 +128,7 @@ function reprocess() {
       hideResults();
       return;
     }
-    showError(r.transactions.length ? '' : 'No rows could be read from this file. The note below lists each row and why.');
+    showError(r.transactions.length ? '' : 'No rows could be converted, so there is nothing to download. The note below lists each row and why; fix them in the file or check that the right bank is picked.');
     renderResults(state.result, els.qboPreset.value || 'date_desc_amount');
   } catch (err) {
     console.error(err);

@@ -17,7 +17,7 @@ for (const id of [
 }
 
 const AMBIGUOUS_TEXT =
-  'Every date in this file could be read as US month/day or as EU day/month, so the file alone cannot tell which one your bank used. Pick the one that matches your statement before you download.';
+  'Every date in this file could be read as US month/day or as EU day/month, so the file alone cannot tell which one your bank used. Pick the one that matches your statement before you download; a wrong pick swaps day and month in QuickBooks.';
 const CONFLICT_TEXT =
   'Some dates in this file only work as month/day and others only as day/month, so the file mixes formats. Pick the format most rows use, then check every date in the preview against your statement before you download.';
 
@@ -73,7 +73,7 @@ function renderDateWarning(r) {
 }
 
 const DECIMAL_AMBIGUOUS =
-  'Amounts like 1,250 or 1.250 could use a comma or a dot as the decimal separator, and nothing in this file proves which. Pick the one your bank uses before you download.';
+  'Amounts like 1,250 or 1.250 could use a comma or a dot as the decimal separator, and nothing in this file proves which. Pick the one your bank uses before you download; a wrong pick turns 1,250 into 1.25.';
 const DECIMAL_CONFLICT =
   'Some amounts in this file only make sense with a dot decimal (12.50) and others only with a comma decimal (12,50). Pick the one most rows use, then check every amount in the preview.';
 
@@ -97,7 +97,9 @@ function renderBadges(r) {
   const badgeClass = BADGE_CLASS[rec.status] || 'na';
   const deltaLine =
     rec.status !== 'INCOMPLETE' && rec.delta != null
-      ? `Δ ${fmtMoney(rec.delta)} (expected close ${fmtMoney(rec.expectedClosing)})`
+      ? rec.status === 'FAIL'
+        ? `Δ ${fmtMoney(rec.delta)}: opening plus these rows is ${fmtMoney(rec.expectedClosing)}, but the file's ending balance is ${fmtMoney(r.closing)}. Rows are missing or extra. Check for left-out rows, a date range that differs from the statement, or pending items before you upload.`
+        : `Opening balance plus these rows equals the ending balance (${fmtMoney(r.closing)}).`
       : rec.message;
   const meta = (label, value) =>
     `<div class="badge meta"><div class="label">${label}</div><div class="value">${value}</div></div>`;
@@ -105,7 +107,7 @@ function renderBadges(r) {
     `<div class="badge ${badgeClass}"><div class="label">Reconcile</div><div class="value">${rec.status}</div>` +
     `<div class="detail">${escapeHtml(deltaLine)}</div></div>` +
     meta('Opening', r.opening != null ? fmtMoney(r.opening) : 'n/a') +
-    meta('Net (txns)', fmtMoney(r.net)) +
+    meta('Net change', fmtMoney(r.net)) +
     meta('Ending', r.closing != null ? fmtMoney(r.closing) : 'n/a');
 }
 
@@ -114,7 +116,7 @@ function listRows(rows, fmt) {
   return rows.length > 8 ? `${list}; and ${rows.length - 8} more` : list;
 }
 
-/** One note for every row not in the export: unreadable rows first, then rows that did not settle. */
+/** One note for every row not in the export: unreadable rows first, then rows that moved no money. */
 function renderSkipNote(r, extra = []) {
   const parts = [];
   const lo = r.leftOutRows || [];
@@ -123,13 +125,13 @@ function renderSkipNote(r, extra = []) {
     parts.push(
       `Left out ${lo.length} row(s) that could not be read: ` +
         listRows(lo, (x) => `row ${x.sourceRow} (${x.reason}${raw(x) ? ': ' + raw(x) : ''})`) +
-        '. Fix them in the file or add them in QuickBooks by hand.'
+        '. They are not in the download, so totals will be short. Fix them in the file, or add them in QuickBooks by hand.'
     );
   }
   if (r.skippedRows && r.skippedRows.length) {
     parts.push(
-      `Left out ${r.skippedRows.length} row(s) that did not settle: ` +
-        listRows(r.skippedRows, (s) => `row ${s.sourceRow} (${s.reason})`) + '.'
+      `Left out ${r.skippedRows.length} row(s) that did not move money (pending, failed, cancelled or memo lines): ` +
+        listRows(r.skippedRows, (s) => `row ${s.sourceRow} (${s.reason})`) + '. That is expected; pending ones show up in a later export once they clear.'
     );
   }
   for (const n of [...(r.notes || []), ...extra]) parts.push(n); // preset notes (Venmo fees), QBO upload limits (v1.5)
@@ -168,8 +170,8 @@ export function renderResults(r, qboId) {
   els.tierNote.innerHTML = !n
     ? '<strong>No transactions could be read</strong>, so there is nothing to download. See the note above.'
     : allowed
-      ? `<strong>Free core:</strong> 1 file, up to ${FREE_ROW_LIMIT} rows, watermarked export (the filename gets <code>${WATERMARK_SUFFIX}</code>; nothing is added to descriptions). Unlimited version coming soon.`
-      : `<strong>Free tier limit:</strong> this file has ${n} transaction rows (limit ${FREE_ROW_LIMIT}). Unlimited version coming soon.`;
+      ? `<strong>Free version:</strong> 1 file at a time, up to ${FREE_ROW_LIMIT} rows, watermarked export (only the file name changes: it ends in <code>${WATERMARK_SUFFIX}</code>; descriptions are untouched). Unlimited version coming soon.`
+      : `<strong>Free tier limit:</strong> this file has ${n} rows and the free version converts up to ${FREE_ROW_LIMIT}. Download a shorter date range from your bank and convert each part. Unlimited version coming soon.`;
   setDownloadEnabled(canDownload(r));
   return allowed;
 }

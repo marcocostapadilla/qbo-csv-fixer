@@ -32,7 +32,7 @@ export function setupPro(ctx) {
   for (const e of Object.values(el)) if (e) e.disabled = !unlocked;
   const api = {
     multiDrop(n) {
-      if (n > 1 && !unlocked) say(`You dropped ${n} files. The free core reads the first one only. ${PRO_COMING_SOON}`);
+      if (n > 1 && !unlocked) say(`You dropped ${n} files. The free version reads the first one only. ${PRO_COMING_SOON}`);
     },
   };
   if (!unlocked || !el.batchBtn) return api;
