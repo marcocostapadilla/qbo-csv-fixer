@@ -192,7 +192,7 @@ export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) 
   const reconcile = reconcileBalances(opening, closing, net, leftOutRows.length);
   const fileError =
     !transactions.length && !leftOutRows.length && !skippedRows.length
-      ? { kind: 'no-rows', message: 'No transaction rows found in this file (only a header or summary lines). Check that you exported transactions, not an empty date range.' }
+      ? { kind: 'no-rows', message: 'No transaction rows found in this file, only headings or totals. Download it again and check that the date range you picked has transactions.' }
       : null;
 
   return Object.assign(emptyResult(preset), base, {

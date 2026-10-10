@@ -105,16 +105,16 @@ export function parseCsv(text, delimiter) {
  */
 export function rejectReason(text) {
   const s = String(text ?? '').replace(/^\uFEFF/, '');
-  if (!s.trim()) return 'This file is empty. Export the transactions from your bank as CSV and try again.';
+  if (!s.trim()) return 'This file is empty, so there is nothing to convert. Download the transactions from your bank again as a CSV file.';
   const sample = s.slice(0, 4096);
   let bad = 0;
   for (const ch of sample) {
     const c = ch.charCodeAt(0);
     if (c === 0 || c === 0xfffd || (c < 32 && c !== 9 && c !== 10 && c !== 13)) bad++;
   }
-  if (sample.startsWith('%PDF')) return 'This is a PDF, not a CSV. This tool reads CSV exports only (no PDF).';
+  if (sample.startsWith('%PDF')) return 'This is a PDF, and this tool reads CSV files only. In your bank\'s download screen, choose CSV instead of PDF.';
   if (bad > 0 && bad / sample.length > 0.01) {
-    return 'This file is not CSV text (it looks like a binary file such as an image, PDF or Excel workbook). Export a CSV from your bank and try again.';
+    return 'This file is not CSV text (it looks like an image, PDF or Excel workbook), so it cannot be read. Download a CSV from your bank, or in Excel use File > Save As > CSV.';
   }
   return null;
 }

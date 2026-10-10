@@ -87,8 +87,8 @@ export function mappingErrorMessage(missing, headers) {
   const shown = headers.filter((h) => String(h).trim() !== '');
   const list = shown.length ? shown.map((h) => '"' + String(h).trim() + '"').join(', ') : '(none found)';
   return (
-    `Could not find required column(s): ${names}. ` +
+    `Could not find required column(s): ${names}, so no rows were converted. ` +
     `Headers in this file: ${list}. ` +
-    'Pick the matching bank preset, or rename the headers to Date, Description and Amount (or Debit and Credit). Nothing was guessed.'
+    'Pick your bank in the list above, or rename the columns in the file to Date, Description and Amount (or Debit and Credit). Nothing was guessed.'
   );
 }
