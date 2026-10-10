@@ -32,4 +32,4 @@ the sign warning flags it.
 
 Before: the disclaimer lines under the table were listed as 9 and 3 "unreadable date" rows, badge INCOMPLETE.
 After: one-cell text lines with no amount are ignored and named in a note; amounts unchanged, badge N/A and PASS
-(Cash Balance ($) chains). Open gap: Fidelity's Description column says "No Description" for cash rows; the Action column has the text.
+(Cash Balance ($) chains). Since v1.5.13 rows with "No Description" use the Action text (VERIFY-v1513.md).
