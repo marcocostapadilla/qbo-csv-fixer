@@ -100,3 +100,8 @@ export function findCol(headers, aliases, taken) {
   }
   return -1;
 }
+
+/** v1.5.12: note for one-cell text lines below the header (bank disclaimers), ignored as rows. */
+export function textLineNote(lines) {
+  return `${lines.length} text line(s) with no date or amount were ignored (for example "${lines[0].slice(0, 60)}"). They are notes from the bank, not transactions.`;
+}

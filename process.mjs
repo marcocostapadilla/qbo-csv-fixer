@@ -7,7 +7,7 @@
 import { parseCsv, sniffDelimiter, rejectReason } from './parse.mjs';
 import { parseAmount, detectDecimal } from './money.mjs';
 import { parseDateParts, detectDateOrder, normalizeDate } from './dates.mjs';
-import { isBalanceLabel, isOpeningLabel, isClosingLabel, lastNonEmpty } from './headers.mjs';
+import { isBalanceLabel, isOpeningLabel, isClosingLabel, lastNonEmpty, textLineNote } from './headers.mjs';
 import { isHeaderRow, missingRequired, mappingErrorMessage } from './fields.mjs';
 import { PRESETS } from './presets.mjs';
 import { mapColumnsForPreset, buildDescription, signedAmountFromRow, statusSkipReason, describeMapping } from './mapping.mjs';
@@ -53,8 +53,7 @@ function scanHeader(rows, preset) {
       skippedSummary.push({ index: i, label: first, amount: amt });
       continue;
     }
-    // Header: first row with a date-like name plus a description- or money-like name
-    // (fuzzy: case, spacing, punctuation, BOM and synonyms do not matter; see fields.mjs).
+    // Header: first row with a date-like and a description- or money-like name (fuzzy, fields.mjs).
     if (headerRowIndex < 0 && isHeaderRow(row)) {
       headerRowIndex = i;
       headers = row.map((c) => String(c).trim());
@@ -69,9 +68,8 @@ function scanHeader(rows, preset) {
 
 /**
  * Full parse of a CSV text with a named processor preset.
- * opts.dateOrder: 'mdy' | 'dmy', used only when the file's A/B dates are ambiguous.
- * opts.decimal: '.' | ',', used only when the file's amounts do not prove the decimal separator.
- * Errors: fileError (empty, binary, no transaction rows) or mappingError (required columns missing).
+ * opts.dateOrder ('mdy'|'dmy') and opts.decimal ('.'|',') apply only when the file is ambiguous.
+ * Errors: fileError (empty, binary, no rows) or mappingError (required columns missing).
  */
 export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) {
   const preset = PRESETS[processorPresetId] || PRESETS.generic_bank;
@@ -108,8 +106,9 @@ export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) 
   // v1.3 preset hook: repair rows in place (Etsy deposit amount lives in Title)
   if (preset.fixRow) for (let i = headerRowIndex + 1; i < rows.length; i++) preset.fixRow(rows[i], headers);
 
-  // Candidate transaction rows: everything below the header (all rows when headerless).
+  // Candidate rows: everything below the header.
   const candidates = [];
+  const textLines = [];
   for (let i = headerRowIndex + 1; i < rows.length; i++) {
     const row = rows[i];
     const first = String(row[0] ?? '').trim();
@@ -121,6 +120,8 @@ export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) 
     }
     if (!parseDateParts(dateRaw)) {
       if (!dateRaw && moneyCells(row).every((c) => !c)) continue; // continuation / spacer line
+      // v1.5.12: one-cell text line, no amount (Fidelity disclaimer): noted, not a row
+      if (row.filter((c) => String(c ?? '').trim()).length === 1 && moneyCells(row).every((c) => !c)) { textLines.push(dateRaw || first); continue; }
       leaveOut(i, dateRaw ? 'unreadable date' : 'missing date', row);
       continue;
     }
@@ -188,9 +189,10 @@ export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) 
   // v1.5.9: running-balance column fills the balance(s) the file has no rows for
   const runningBalance = preset.groupTxns ? null : runningBalanceFor(opening, closing, cols, transactions, rows, headers, numOpts);
   if (runningBalance) ({ opening, closing } = runningBalance);
-  // v1.4 preset hooks: merge rows (Square transfers: one line per Deposit ID); file-level notes (Venmo fees)
+  // v1.4 preset hooks: merge rows (Square transfers); file-level notes (Venmo fees)
   if (preset.groupTxns) transactions = preset.groupTxns(transactions, rows, headers);
   const notes = preset.fileNotes ? preset.fileNotes(candidates.map((c) => c.row), headers, numOpts) : [];
+  if (textLines.length) notes.push(textLineNote(textLines));
   leftOutRows.sort((a, b) => a.sourceRow - b.sourceRow);
   const net = round2(transactions.reduce((s, t) => s + t.amount, 0));
   const reconcile = reconcileBalances(opening, closing, net, leftOutRows.length);

@@ -12,7 +12,7 @@ import { parseAmount } from './money.mjs';
 export const CHAIN_SHARE = 2 / 3; // share of row-to-row links that must chain
 export const MIN_LINKS = 2; // at least two chaining links (so 3+ exported rows), and a clear direction
 
-const BAL_KEY = /^(?:(?:running|current|ledger|account|book) ?)?balance(?: (?:usd|eur|gbp|cad|aud|amount))?$/;
+const BAL_KEY = /^(?:(?:running|current|ledger|account|book|cash|account running) ?)?balance(?: (?:usd|eur|gbp|cad|aud|amount))?$/
 
 /** Index of a running-balance column not already mapped, or -1. */
 export function findBalanceCol(headers, mappedCols = []) {
