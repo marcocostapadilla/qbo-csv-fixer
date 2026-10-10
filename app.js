@@ -3,6 +3,7 @@
  * Everything runs client-side; the file is read with FileReader and never uploaded.
  * Rendering lives in ui.mjs; parsing, mapping and detection in core.mjs and its modules.
  */
+import { groupPresets } from './groups.mjs';
 import {
   processCsv,
   rejectReason,
@@ -44,20 +45,28 @@ function presetFromUrl() {
   }
 }
 
-function fillSelect(select, presets, value) {
+function fillSelect(select, presets, value, grouped = false) {
   select.innerHTML = '';
-  for (const p of Object.values(presets)) {
+  const add = (parent, p) => {
     const opt = document.createElement('option');
     opt.value = p.id;
     opt.textContent = p.label;
-    select.appendChild(opt);
-  }
+    parent.appendChild(opt);
+  };
+  if (grouped) {
+    for (const [label, list] of groupPresets(presets)) {
+      const g = document.createElement('optgroup');
+      g.label = label;
+      list.forEach((p) => add(g, p));
+      select.appendChild(g);
+    }
+  } else Object.values(presets).forEach((p) => add(select, p));
   select.value = value;
 }
 
 function fillPresetSelects() {
   const fromUrl = presetFromUrl();
-  fillSelect(els.processorPreset, PRESETS, fromUrl || 'generic_bank');
+  fillSelect(els.processorPreset, PRESETS, fromUrl || 'generic_bank', true);
   if (fromUrl) {
     state.presetLocked = true;
     setDetectNote(`Preset selected from link: ${PRESETS[fromUrl].label}. Drop that file below.`);
