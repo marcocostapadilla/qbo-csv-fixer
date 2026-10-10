@@ -1,4 +1,4 @@
-# QBO CSV Fixer (v1.5.14)
+# QBO CSV Fixer (v1.5.15)
 
 Local browser tool: messy bank, card, PayPal, Stripe, Wise, Square, Shopify Payments, Etsy, Venmo and Toast CSV exports to a QuickBooks Online import CSV.
 
@@ -39,7 +39,7 @@ Then open http://127.0.0.1:8765/ in your browser.
 | `samples/chase-like-qbo-ready.csv` | Expected after (10 txns) |
 | `samples/ambiguous-dates.csv` | US M/D vs EU D/M ambiguity fixture |
 | `samples/<bank>.csv` | One small fake-merchant fixture per named preset |
-| `*-csv-to-quickbooks-online.html` | How-to page per preset (26 pages) |
+| `*-csv-to-quickbooks-online.html` | How-to page per preset (27 pages) |
 | `qbo-csv-fixer-vs-alternatives.html` | Comparison with Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT (facts as of 6 Oct 2026) |
 | `sitemap.xml`, `robots.txt` | SEO files |
 | `samples/drift/`, `samples/adversarial/`, `samples/real/` | Drift, adversarial and real public (MIT) fixtures |
@@ -51,7 +51,7 @@ Then open http://127.0.0.1:8765/ in your browser.
 1. Drag-drop / file picker; client-side CSV parse only.
 2. Opening/closing **reconcile badge** (PASS/FAIL) when balances exist (balance rows, or a running-balance column if 2/3 of rows chain; lost first/last rows are missed); otherwise a sign warning if money in and out look swapped.
 3. QBO Online presets: Date/Description/Amount and Date/Description/Debit/Credit.
-4. Named input presets with header auto-detect and a dropdown: major US banks and cards (Chase, Bank of America, Wells Fargo, Capital One and 360, Citi, Amex, Discover, U.S. Bank, PNC, Navy Federal, Apple Card, Ally, SoFi, TD Bank, USAA, Mercury), Revolut, Wise, Cash App, PayPal, Stripe, Square, Shopify, Etsy, Venmo, Toast, plus a generic bank layout. Full list with per-preset rules: `VERIFY-readme-detail.md`; sources: `VERIFY-presets*.md`.
+4. Named input presets with header auto-detect and a dropdown: major US banks and cards (Chase, Bank of America, Wells Fargo, Capital One and 360, Citi, Amex, Discover, U.S. Bank, PNC, Navy Federal, Apple Card, Ally, SoFi, TD Bank, USAA, Mercury), Fidelity, Revolut, Wise, Cash App, PayPal, Stripe, Square, Shopify, Etsy, Venmo, Toast, plus a generic bank layout. Full list with per-preset rules: `VERIFY-readme-detail.md`; sources: `VERIFY-presets*.md`.
 5. Date ambiguity warning: when every slash date could be US M/D or EU D/M, a warning and a US/EU toggle appear above the preview; the toggle re-parses dates and updates preview and export. A row with a component above 12 auto-picks the order. ISO dates are never ambiguous.
 6. Free version: 1 file, ≤100 rows, watermarked export: the filename gets `_qbo-csv-fixer-free`. Descriptions are exported unchanged (no suffix, no length cap), and there is no extra watermark row: a blank-date 0.00 row could make QBO reject the file or import a $0 line. Unlimited version coming soon.
 7. Sample files for every preset on `samples.html`, plus a "Try a sample for the selected bank" button.
