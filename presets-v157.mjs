@@ -44,7 +44,6 @@ export const V157_PRESETS = {
       status: ['status'],
     },
     skipStatus: ['pending'],
-    balancesFrom: runningBalances,
     detect: [{ all: ['date', 'description', 'type', 'amount', 'current balance', 'status'] }],
     signatures: [['date', 'description', 'type', 'amount', 'current balance', 'status']],
   },

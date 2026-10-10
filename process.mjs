@@ -13,6 +13,7 @@ import { PRESETS } from './presets.mjs';
 import { mapColumnsForPreset, buildDescription, signedAmountFromRow, statusSkipReason, describeMapping } from './mapping.mjs';
 import { isWellsFargoDataRow } from './detect.mjs';
 import { round2, reconcileBalances } from './reconcile.mjs';
+import { runningBalanceFor, noteRunningBalance } from './runbal.mjs';
 
 const SUMMARY_LABEL = /^(total|totals|subtotal|sub total|summary)\b/i;
 const MONEY_FIELDS = ['amount', 'debit', 'credit'];
@@ -184,19 +185,23 @@ export function processCsv(text, processorPresetId = 'generic_bank', opts = {}) 
 
   // v1.3 preset hook: balances from columns (Venmo Beginning/Ending Balance)
   if (preset.balancesFrom && opening == null && closing == null) ({ opening, closing } = preset.balancesFrom(rows.slice(headerRowIndex + 1), headers, numOpts));
+  // v1.5.9: running-balance column fills the balance(s) the file has no rows for
+  const runningBalance = preset.groupTxns ? null : runningBalanceFor(opening, closing, cols, transactions, rows, headers, numOpts);
+  if (runningBalance) ({ opening, closing } = runningBalance);
   // v1.4 preset hooks: merge rows (Square transfers: one line per Deposit ID); file-level notes (Venmo fees)
   if (preset.groupTxns) transactions = preset.groupTxns(transactions, rows, headers);
   const notes = preset.fileNotes ? preset.fileNotes(candidates.map((c) => c.row), headers, numOpts) : [];
   leftOutRows.sort((a, b) => a.sourceRow - b.sourceRow);
   const net = round2(transactions.reduce((s, t) => s + t.amount, 0));
   const reconcile = reconcileBalances(opening, closing, net, leftOutRows.length);
+  if (runningBalance) noteRunningBalance(reconcile);
   const fileError =
     !transactions.length && !leftOutRows.length && !skippedRows.length
       ? { kind: 'no-rows', message: 'No transaction rows found in this file, only headings or totals. Download it again and check that the date range you picked has transactions.' }
       : null;
 
   return Object.assign(emptyResult(preset), base, {
-    opening, closing, net, fileError, transactions, skippedRows, leftOutRows, dateInfo, decimalInfo, reconcile, notes,
+    opening, closing, runningBalance, net, fileError, transactions, skippedRows, leftOutRows, dateInfo, decimalInfo, reconcile, notes,
     headerRowIndex: head.headerless ? -1 : headerRowIndex,
   });
 }
