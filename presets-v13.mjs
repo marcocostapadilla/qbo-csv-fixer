@@ -51,7 +51,7 @@ function venmoFeeNote(rows, headers, numOpts) {
   if (!fees.length) return [];
   const total = Math.abs(fees.reduce((a, b) => a + b, 0)).toFixed(2);
   return [
-    `This file has fees in a separate column (Amount (fee): ${fees.length} row(s), $${total} in total). Amount (total) is exported as is, without adding or subtracting the fee. Check that your totals include them; the reconcile badge will flag a mismatch.`,
+    `Venmo lists fees in a separate column (Amount (fee): ${fees.length} row(s), $${total} in total). Amount (total) is exported as is, because Venmo does not say whether it already includes the fee. If the reconcile badge shows FAIL by about that amount, add the fees in QuickBooks.`,
   ];
 }
 

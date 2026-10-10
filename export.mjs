@@ -78,9 +78,9 @@ export const QBO_MAX_ROWS = 1000;
 export function qboLimitNotes(header, body) {
   const notes = [];
   const bytes = new TextEncoder().encode(toCsvString(header, body)).length;
-  if (body.length > QBO_MAX_ROWS) notes.push(`QuickBooks Online takes up to ${QBO_MAX_ROWS} lines per upload; this export has ${body.length}. Upload it in smaller date ranges.`);
-  if (bytes > QBO_MAX_BYTES) notes.push(`QuickBooks Online takes files of 350 KB or less; this export is ${Math.ceil(bytes / 1024)} KB. Upload it in smaller date ranges.`);
+  if (body.length > QBO_MAX_ROWS) notes.push(`QuickBooks Online accepts up to ${QBO_MAX_ROWS} lines per upload and this file has ${body.length}, so it would be rejected. Download shorter date ranges and convert each one.`);
+  if (bytes > QBO_MAX_BYTES) notes.push(`QuickBooks Online accepts files of 350 KB or less and this one is ${Math.ceil(bytes / 1024)} KB, so it would be rejected. Download shorter date ranges and convert each one.`);
   const ci = header.indexOf('Credit');
-  if (ci >= 0 && body.length && body.every((r) => !r[ci])) notes.push('This Debit/Credit file has money out only. QuickBooks can reject that; pick the Date / Description / Amount layout instead.');
+  if (ci >= 0 && body.length && body.every((r) => !r[ci])) notes.push('This Debit/Credit file has money out only, and QuickBooks can reject that. Pick Date / Description / Amount under QuickBooks columns instead.');
   return notes;
 }

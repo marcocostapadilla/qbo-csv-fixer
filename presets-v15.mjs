@@ -42,7 +42,7 @@ function toastFeeNote(rows, headers, numOpts) {
   if (!fees.length) return [];
   const total = Math.abs(fees.reduce((a, b) => a + b, 0)).toFixed(2);
   return [
-    `Card fees (V/MC/D Fees) in this file are not subtracted: ${fees.length} row(s), $${total} in total. Toast may take them from each deposit or once a month, so record them as they appear on your bank statement.`,
+    `Card fees (V/MC/D Fees) in this file are not subtracted: ${fees.length} row(s), $${total} in total. Toast may take them from each deposit or once a month, so add them in QuickBooks as they appear on your bank statement.`,
   ];
 }
 

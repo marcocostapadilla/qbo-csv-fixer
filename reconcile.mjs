@@ -20,7 +20,7 @@ export function reconcileBalances(opening, closing, net, leftOutCount = 0) {
       status: 'INCOMPLETE',
       expectedClosing: expected,
       delta: hasBal ? round2(closing - expected) : null,
-      message: `${leftOutCount} row(s) could not be read and were left out, so the totals are incomplete`,
+      message: `${leftOutCount} row(s) could not be read (listed below), so the balances cannot be checked. Fix those rows in the file, or add them in QuickBooks by hand.`,
     };
   }
   if (opening == null || closing == null) {
@@ -28,7 +28,7 @@ export function reconcileBalances(opening, closing, net, leftOutCount = 0) {
       status: 'N/A',
       expectedClosing: null,
       delta: null,
-      message: 'No beginning/ending balances found in file',
+      message: 'This file has no opening or ending balance, so nothing to check against. Compare the net with your statement.',
     };
   }
   const expected = round2(opening + net);
@@ -39,8 +39,8 @@ export function reconcileBalances(opening, closing, net, leftOutCount = 0) {
     expectedClosing: expected,
     delta,
     message: ok
-      ? 'Opening + transactions match ending balance'
-      : `Opening + transactions = ${fmtMoney(expected)}, ending = ${fmtMoney(closing)}, delta = ${fmtMoney(delta)}`,
+      ? 'Opening balance plus these rows equals the ending balance.'
+      : `Opening balance plus these rows is ${fmtMoney(expected)}, but the file's ending balance is ${fmtMoney(closing)} (off by ${fmtMoney(delta)}).`,
   };
 }
 
