@@ -2,6 +2,7 @@
  * QBO CSV Fixer - browser rendering helpers (badges, preview table, notes).
  * Pure DOM output; no network calls.
  */
+import { signCheck } from './signcheck.mjs';
 import { buildExportRows, fmtMoney, FREE_ROW_LIMIT, WATERMARK_SUFFIX } from './core.mjs';
 import { qboLimitNotes } from './export.mjs';
 import { tierAllows, canDownload } from './license.mjs';
@@ -11,7 +12,7 @@ for (const id of [
   'dropzone', 'fileInput', 'browseBtn', 'fileName', 'processorPreset', 'qboPreset', 'processorHint',
   'detectNote', 'mapNote', 'results', 'badgeRow', 'skipNote', 'dateWarning', 'dateWarningText',
   'dateOrderMdy', 'dateOrderDmy', 'decimalWarning', 'decimalWarningText', 'decimalDot', 'decimalComma', 'previewHead', 'previewBody', 'downloadBtn', 'tierNote',
-  'errorBanner', 'txnCount', 'resultsBank',
+  'errorBanner', 'txnCount', 'resultsBank', 'signWarning',
 ]) {
   els[id] = document.getElementById(id);
 }
@@ -165,6 +166,9 @@ export function renderResults(r, qboId) {
   els.txnCount.textContent = String(r.transactions.length);
   const o = els.processorPreset.selectedOptions[0];
   els.resultsBank.textContent = (!o || o.value === 'generic_bank' ? 'Bank not recognized, so the file was read with the general layout. Check the columns used and the signs in the preview below. If your bank is in the list in step 2 above, pick it.' : `Read as: ${o.textContent}. Wrong bank? Pick another in step 2 above.`) + ' Every row is previewed below the Download button.';
+  const sw = signCheck(o && o.value, r.transactions, r.reconcile.status);
+  els.signWarning.textContent = sw ? sw.message : '';
+  els.signWarning.classList.toggle('hidden', !sw);
   renderPreview(header, body);
 
   const n = r.transactions.length;

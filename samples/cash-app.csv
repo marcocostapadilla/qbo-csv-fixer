@@ -1,0 +1,8 @@
+Transaction ID,Date,Transaction Type,Currency,Amount,Fee,Net Amount,Asset Type,Asset Price,Asset Amount,Status,Notes,Name of sender/receiver,Account
+a1b2c3,2026-03-20 16:51:24 PDT,Cash Card Debit,USD,-$12.40,$0.00,-$12.40,,,,CARD CHARGED,NORTHWIND COFFEE,,Visa Debit 0000
+d4e5f6,2026-03-18 11:27:49 PDT,Received P2P,USD,$250.00,$0.00,$250.00,,,,PAYMENT DEPOSITED,Invoice 1043,Pat Doe,Your Cash
+g7h8i9,2026-03-15 09:12:32 PDT,Cash Out,USD,$100.00,-$1.75,$98.25,,,,COMPLETED,Instant deposit,,Your Cash
+j1k2l3,2026-03-12 14:28:23 PDT,Sent P2P,USD,-$40.00,$0.00,-$40.00,,,,PAYMENT SENT,Supplies,Sam Roe,Your Cash
+m4n5o6,2026-03-10 08:09:13 PST,Sent P2P,USD,-$75.00,$0.00,-$75.00,,,,FAILED,Supplies,Sam Roe,Your Cash
+p7q8r9,2026-03-06 19:55:54 PST,Cash Card Debit,USD,"-$1,020.00",$0.00,"-$1,020.00",,,,CARD CHARGED,CONTOSO OFFICE SUPPLY,,Visa Debit 0000
+s1t2u3,2026-03-03 04:22:49 PST,Boost Payment,USD,$2.10,$0.00,$2.10,,,,CARD REFUNDED,Cash Reward,,Visa Debit 0000
