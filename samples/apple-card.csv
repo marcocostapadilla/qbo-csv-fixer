@@ -1,0 +1,7 @@
+Transaction Date,Clearing Date,Description,Merchant,Category,Type,Amount (USD),Purchased By
+03/02/2026,03/03/2026,"NORTHWIND COFFEE 12 MAIN ST SPRINGFIELD 62701 IL USA",Northwind Coffee,Restaurants,Purchase,6.40,Pat Doe
+03/04/2026,03/05/2026,"CONTOSO OFFICE SUPPLY ONLINE SEATTLE 98101 WA USA",Contoso Office Supply,Shopping,Purchase,142.18,Pat Doe
+03/08/2026,03/08/2026,"ACH DEPOSIT INTERNET TRANSFER FROM ACCOUNT ENDING IN 0000",Ach Deposit Internet Transfer,Payment,Payment,-300.00,Pat Doe
+03/10/2026,03/11/2026,"CONTOSO OFFICE SUPPLY ONLINE SEATTLE 98101 WA USA",Contoso Office Supply,Shopping,Credit,-42.18,Pat Doe
+03/15/2026,03/16/2026,"LITWARE SOFTWARE 1 INTERNET WAY 94103 CA USA",Litware Software,Other,Purchase,29.99,Pat Doe
+03/21/2026,03/22/2026,DAILY CASH ADJUSTMENT,Daily Cash,Other,Daily Cash Adjustment,-1.25,Pat Doe
