@@ -1,11 +1,11 @@
-# QBO CSV Fixer (v1.5.8)
+# QBO CSV Fixer (v1.5.9)
 
 Local browser tool: messy bank, card, PayPal, Stripe, Wise, Square, Shopify Payments, Etsy, Venmo and Toast CSV exports to a QuickBooks Online import CSV.
 
 Live: https://marcocostapadilla.github.io/qbo-csv-fixer/
 **Files never leave your browser.** No backend, no PDF, no bank login.
 
-After a download: "Was this useful?" once per visit, one GoatCounter event.
+After a download: "Was this useful?" once per visit (1 GoatCounter event).
 
 ## Open locally
 
@@ -49,7 +49,7 @@ Then open http://127.0.0.1:8765/ in your browser.
 ## Features
 
 1. Drag-drop / file picker; client-side CSV parse only.
-2. Visible opening/closing **reconcile badge** (PASS/FAIL) when balances exist; without balances, a sign warning if money in and out look swapped.
+2. Opening/closing **reconcile badge** (PASS/FAIL) when balances exist (balance rows, or a running-balance column if 2/3 of rows chain; lost first/last rows are missed); otherwise a sign warning if money in and out look swapped.
 3. QBO Online presets: Date/Description/Amount and Date/Description/Debit/Credit.
 4. Named input presets with header auto-detect and a preset dropdown: Chase, Bank of America (checking and card), Navy Federal, Apple Card, Ally, Cash App, SoFi, Wells Fargo (headerless), American Express (sign flip), Capital One (Debit/Credit), Citi (Debit/Credit, Cleared only), U.S. Bank, PNC (Withdrawals/Deposits, pick from the list; not auto-detected), Discover (sign flip), Mercury (Sent only), Revolut (COMPLETED only, fee subtracted), PayPal, Stripe, Wise, Square (Net Total), Square transfers (one line per Deposit ID), Shopify Payments (payout transactions, Net), Shopify payouts list (one line per payout), Etsy (monthly statement, deposits read from Title), Venmo (statement, Beginning/Ending Balance reconcile, note when fees are non-zero), Toast (PaymentDetails, refunds as own lines), plus generic bank (Chase-like). Sources: VERIFY-presets*.md. TD Bank, Relay and Novo were not added: no public source shows their CSV header row.
 5. Date ambiguity warning: when every slash date could be US M/D or EU D/M, a warning and a US/EU toggle appear above the preview; the toggle re-parses dates and updates preview and export. A row with a component above 12 auto-picks the order. ISO dates are never ambiguous.

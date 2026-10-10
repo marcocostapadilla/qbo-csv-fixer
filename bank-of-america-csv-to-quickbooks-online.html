@@ -48,7 +48,7 @@
       <p>What the Bank of America preset does:</p>
       <ul>
         <li>Skips the summary block and the in-table Beginning balance row; none of them reach the export.</li>
-        <li>Uses the Beginning and Ending balance from the summary for the reconcile badge: opening + transactions must equal ending, or you see FAIL with the exact difference.</li>
+        <li>Uses the Beginning and Ending balance from the summary for the reconcile badge: opening + transactions must equal ending, or you see FAIL with the exact difference. If the summary block was cut off, the ending balance comes from the newest Running Bal. value instead (a missing last row cannot be caught that way).</li>
         <li>Removes thousands separators, drops Running Bal., writes dates as MM/DD/YYYY.</li>
       </ul>
       <p>Want to try it first? Download the <a href="samples/bank-of-america.csv" download>Bank of America sample CSV</a> (fake merchants) and drop it on the tool.</p>

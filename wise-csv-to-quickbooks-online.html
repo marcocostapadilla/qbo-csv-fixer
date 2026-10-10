@@ -48,6 +48,7 @@
         <li>Reads DD-MM-YYYY correctly and writes MM/DD/YYYY. If any day is above 12 the order is detected; if not, you get a visible US/EU toggle that defaults to D/M for Wise.</li>
         <li>Keeps the signed Amount and builds the description from Description plus Payment Reference.</li>
         <li>Drops the exchange, payer/payee and card columns.</li>
+        <li>Checks the rows against the Running Balance column: PASS when every row adds up, FAIL with the difference when a row in the middle is missing. A missing first or last row cannot be caught, because those set the opening and ending balances.</li>
       </ul>
       <p>Want to try it first? Download the <a href="samples/wise.csv" download>Wise sample CSV</a> (fake merchants) and drop it on the tool.</p>
     </section>

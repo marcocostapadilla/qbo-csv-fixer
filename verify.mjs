@@ -23,6 +23,7 @@
  * 16. verify-v156.mjs: sign-sanity warning, Ally, Cash App.
  * 17. verify-v157.mjs: SoFi preset, Ally / Cash App / SoFi guides.
  * 18. verify-v158.mjs: usefulness prompt.
+ * 19. verify-v159.mjs: running-balance check.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -43,6 +44,7 @@ import { run as runV155 } from './verify-v155.mjs';
 import { run as runV156 } from './verify-v156.mjs';
 import { run as runV157 } from './verify-v157.mjs';
 import { run as runV158 } from './verify-v158.mjs';
+import { run as runV159 } from './verify-v159.mjs';
 
 runV11();
 runPresets();
@@ -62,6 +64,7 @@ runV155();
 runV156();
 runV157();
 runV158();
+runV159();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
