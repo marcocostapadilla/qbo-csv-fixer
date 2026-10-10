@@ -11,7 +11,7 @@ for (const id of [
   'dropzone', 'fileInput', 'browseBtn', 'fileName', 'processorPreset', 'qboPreset', 'processorHint',
   'detectNote', 'mapNote', 'results', 'badgeRow', 'skipNote', 'dateWarning', 'dateWarningText',
   'dateOrderMdy', 'dateOrderDmy', 'decimalWarning', 'decimalWarningText', 'decimalDot', 'decimalComma', 'previewHead', 'previewBody', 'downloadBtn', 'tierNote',
-  'errorBanner', 'txnCount',
+  'errorBanner', 'txnCount', 'resultsBank',
 ]) {
   els[id] = document.getElementById(id);
 }
@@ -163,6 +163,8 @@ export function renderResults(r, qboId) {
   renderBadges(r);
   renderSkipNote(r, qboLimitNotes(header, body));
   els.txnCount.textContent = String(r.transactions.length);
+  const o = els.processorPreset.selectedOptions[0];
+  els.resultsBank.textContent = (!o || o.value === 'generic_bank' ? 'Bank not recognized, so the file was read with the general layout. Check the columns used and the signs in the preview below. If your bank is in the list in step 2 above, pick it.' : `Read as: ${o.textContent}. Wrong bank? Pick another in step 2 above.`) + ' Every row is previewed below the Download button.';
   renderPreview(header, body);
 
   const n = r.transactions.length;
