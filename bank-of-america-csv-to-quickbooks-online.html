@@ -67,10 +67,14 @@
     </section>
 
     <section class="card howto">
-      <h2>Good to know</h2>
+      <h2>Bank of America credit card files</h2>
+      <p>Card downloads use a different layout: <code>Posted Date, Reference Number, Payee, Address, Amount</code>, with no summary block and no balances. The tool recognizes it as <strong>Bank of America (credit card)</strong>, or <a href="index.html?preset=bofa_card">open the tool with the card preset</a>.</p>
       <ul>
-        <li>This preset targets checking and savings downloads. Bank of America card downloads use a different layout; check the preview if you use it for a card file.</li>
+        <li>Amount is already signed: charges are negative (money out), payments and refunds positive (money in). It is exported as is.</li>
+        <li>Payee becomes the description; Reference Number and Address are dropped.</li>
+        <li>No balances in the file, so the reconcile badge shows N/A. Compare the net with your card statement.</li>
       </ul>
+      <p style="margin:0">Try the <a href="samples/bank-of-america-card.csv" download>card sample CSV</a> (fake merchants).</p>
     </section>
 
     <section class="card howto">
