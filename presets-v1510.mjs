@@ -21,6 +21,7 @@ export const V1510_PRESETS = {
     label: 'Capital One 360 (checking or savings)',
     hint: 'Capital One 360 export (Account Number, Transaction Description, Transaction Date, Transaction Type, Transaction Amount, Balance). Amounts are unsigned; Transaction Type Debit becomes money out, Credit money in. The Balance column feeds the reconcile badge.',
     defaultDateOrder: 'mdy',
+    sample: 'samples/capital-one-360.csv',
     columns: {
       date: ['transaction date'],
       description: ['transaction description'],
