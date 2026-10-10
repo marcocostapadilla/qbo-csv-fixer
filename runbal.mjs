@@ -3,14 +3,14 @@
  * running-balance column, when the file has no Beginning/Ending balance rows.
  * Opening = oldest row's balance minus its amount; closing = newest row's balance.
  * Row order is read from the balance chain, both directions. The column is trusted only when
- * at least 2 of every 3 row-to-row links chain in one direction (more than in the other); otherwise no balances
+ * at least 2 of every 3 row-to-row links chain in one direction (more than in the other), with 3+ rows (v1.5.11); otherwise no balances
  * (badge N/A), never a guessed PASS. A missing first or last row cannot be caught this way.
  */
 import { headerKey } from './headers.mjs';
 import { parseAmount } from './money.mjs';
 
 export const CHAIN_SHARE = 2 / 3; // share of row-to-row links that must chain
-export const MIN_LINKS = 1; // at least one chaining link (so 2+ rows), and a clear direction
+export const MIN_LINKS = 2; // at least two chaining links (so 3+ exported rows), and a clear direction
 
 const BAL_KEY = /^(?:(?:running|current|ledger|account|book) ?)?balance(?: (?:usd|eur|gbp|cad|aud|amount))?$/;
 

@@ -1,4 +1,4 @@
-# QBO CSV Fixer (v1.5.10)
+# QBO CSV Fixer (v1.5.11)
 
 Local browser tool: messy bank, card, PayPal, Stripe, Wise, Square, Shopify Payments, Etsy, Venmo and Toast CSV exports to a QuickBooks Online import CSV.
 
@@ -51,7 +51,7 @@ Then open http://127.0.0.1:8765/ in your browser.
 1. Drag-drop / file picker; client-side CSV parse only.
 2. Opening/closing **reconcile badge** (PASS/FAIL) when balances exist (balance rows, or a running-balance column if 2/3 of rows chain; lost first/last rows are missed); otherwise a sign warning if money in and out look swapped.
 3. QBO Online presets: Date/Description/Amount and Date/Description/Debit/Credit.
-4. Named input presets with header auto-detect and a preset dropdown: Chase, Bank of America (checking and card), Navy Federal, Apple Card, Ally, Cash App, SoFi, Wells Fargo (headerless), American Express (sign flip), Capital One (Debit/Credit), Capital One 360 (sign from Type), Citi (Debit/Credit, Cleared only), U.S. Bank, PNC (Withdrawals/Deposits, pick from the list; not auto-detected), Discover (sign flip), Mercury (Sent only), Revolut (COMPLETED only, fee subtracted), PayPal, Stripe, Wise, Square (Net Total), Square transfers (one line per Deposit ID), Shopify Payments (payout transactions, Net), Shopify payouts list (one line per payout), Etsy (monthly statement, deposits read from Title), Venmo (statement, Beginning/Ending Balance reconcile, note when fees are non-zero), Toast (PaymentDetails, refunds as own lines), plus generic bank (Chase-like). Sources: VERIFY-presets*.md. No TD Bank, Relay or Novo: no public header row.
+4. Named input presets with header auto-detect and a dropdown: major US banks and cards (Chase, Bank of America, Wells Fargo, Capital One and 360, Citi, Amex, Discover, U.S. Bank, PNC, Navy Federal, Apple Card, Ally, SoFi, Mercury), Revolut, Wise, Cash App, PayPal, Stripe, Square, Shopify, Etsy, Venmo, Toast, plus a generic bank layout. Full list with per-preset rules: `VERIFY-readme-detail.md`; sources: `VERIFY-presets*.md`.
 5. Date ambiguity warning: when every slash date could be US M/D or EU D/M, a warning and a US/EU toggle appear above the preview; the toggle re-parses dates and updates preview and export. A row with a component above 12 auto-picks the order. ISO dates are never ambiguous.
 6. Free version: 1 file, ≤100 rows, watermarked export: the filename gets `_qbo-csv-fixer-free`. Descriptions are exported unchanged (no suffix, no length cap), and there is no extra watermark row: a blank-date 0.00 row could make QBO reject the file or import a $0 line. Unlimited version coming soon.
 7. Sample files for every preset on `samples.html`, plus a "Try a sample for the selected bank" button.
@@ -90,14 +90,13 @@ Make no other claims about chat output (unproven on the 6 Oct 2026 eval).
 - Multi-currency files (PayPal, Revolut, Wise) are not split by currency; use one file and one QBO account per currency.
 - Revolut: personal statement layout only (Business exports differ); localized (e.g. German) headers are not recognized.
 - Wise: whether fees are inside Amount depends on the statement options chosen at Wise; not verified against a real export.
-- PNC is not auto-detected (generic headers); U.S. Bank date format is unconfirmed by sources; Mercury all-account exports show internal transfers twice. No TD Bank, Relay or Novo preset (no public header row).
-- No unlock flow: the license hook (v1.3) is off (`LICENSE_ENABLED = false` in `license.mjs`), so `isProUnlocked()` returns false, batch zip and profiles stay unusable and no request is made. `verifyLicense()` posts `product_id` + `license_key` to the vendor's verify endpoint (URL only in `license.mjs`); `LICENSE_PRODUCT_ID` is a placeholder. **Browser CORS on that endpoint is unverified**: test from the live page before turning the flag on. No key entry UI yet.
+- Preset-specific limits (PNC not auto-detected, U.S. Bank date format, Mercury, processor fee handling, Venmo fees, Square/Shopify/Etsy/Toast have no balances): see `VERIFY-readme-detail.md`.
+- No unlock flow: the license hook is off (`LICENSE_ENABLED = false` in `license.mjs`), so Pro features stay disabled. Details: `VERIFY-readme-detail.md`.
 - Batch zip (when enabled) auto-detects each file's preset and uses default date/decimal choices; ambiguous files are flagged in the summary's Check column, not asked about. No multi-file combine into one CSV.
 - Only English month names are read; dates like `13. Januar 2026` are listed as left out.
 - CR/DR markers are read as CR = money in, DR = money out. A card statement that uses CR for payments still reads correctly; any preset that means the opposite must say so.
 - robots.txt sits at the project subpath; crawlers only read robots.txt at the host root, so it is informational. Submit sitemap.xml in Search Console instead.
 - No Excel `.xlsx` (CSV only).
-- Processors: Venmo Amount (fee) is not subtracted (unconfirmed whether Amount (total) includes it; an on-screen note and the reconcile badge show it). Square cash sales are included. Shopify payouts list status words are not documented by Shopify. Square, Shopify, Etsy and Toast files have no balances, so their badge is N/A. Toast card fees are not subtracted (a note shows them); renamed Toast columns break detection. No Clover preset: no public export header.
 - Intuit asks to "Remove numbers from cells in the Description column"; descriptions are kept as read. Not tested by a live QuickBooks upload.
 
 ## Brand lock
