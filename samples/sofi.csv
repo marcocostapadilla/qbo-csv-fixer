@@ -1,0 +1,8 @@
+Date,Description,Type,Amount,Current balance,Status
+2026-03-22,NORTHWIND COFFEE,Debit Card,-6.40,,Pending
+2026-03-20,CONTOSO LTD PAYROLL,Direct Deposit,2150.00,3311.14,Posted
+2026-03-18,"FABRIKAM MARKET, SPRINGFIELD",Debit Card,-84.12,1161.14,Posted
+2026-03-15,Zelle Payment to Pat Doe,Direct Payment,-40.00,1245.26,Posted
+2026-03-10,LITWARE ELECTRIC,Withdrawal,-118.60,1285.26,Posted
+2026-03-05,To Savings - 0000,Withdrawal,-500.00,1403.86,Posted
+2026-03-01,Interest earned,Interest Earned,0.86,1903.86,Posted
