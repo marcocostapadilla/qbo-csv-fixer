@@ -89,6 +89,6 @@ export function mappingErrorMessage(missing, headers) {
   return (
     `Could not find required column(s): ${names}, so no rows were converted. ` +
     `Headers in this file: ${list}. ` +
-    'Pick your bank in the list above, or rename the columns in the file to Date, Description and Amount (or Debit and Credit). Nothing was guessed.'
+    'Pick your bank under "Bank or app the file came from" below, or rename the columns in the file to Date, Description and Amount (or Debit and Credit). Nothing was guessed.'
   );
 }

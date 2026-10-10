@@ -17,3 +17,13 @@ Each file was run through `core.mjs` in Node (auto-detected preset). "Truth" is 
 | dimenoste etsy_payments.csv | none stated, local | etsy | 7 | 0 | N/A | 2.15 | Euro amounts, BOM. |
 | beckharrisdesign Etsy statements (10 months) | none stated, local | etsy | 0 to 35 | 0 | N/A | all 10 match | Feb 2026 is header-only: "No transaction rows found" message. |
 | Acehaidrey/acelife Toast PaymentDetails (5 months) | none stated, local | toast | 1212 to 1414 | 10 to 23 listed | N/A | all 5 match | Over the 100-row free cap and the 1,000-line QuickBooks limit: both notes show. |
+
+## Bank files added in v1.5.3 (all local only: the repos state no license)
+
+| File (source) | Preset | Rows | Left out | Badge | Net = truth | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| github.com/mjohnnywest/Project_4_data_acquisition statements/may_c1_transactions.csv (Capital One) | capital_one | 27 | 0 | N/A | 224.05 | ISO dates, Debit/Credit. |
+| github.com/MattFox1388/BudgetMobileClient resources/disc.csv (Discover) | discover | 18 | 0 | N/A | -523.20 | Charges positive in file, exported negative. |
+| github.com/amkchari/ExpenseManager statements/discover-new-2024.csv (Discover) | discover | 3 | 0 | N/A | 906.00 | Payments negative in file, exported positive. |
+| github.com/ryokather/FinanceTracker sampleTransactions/account1_julyTrans.csv (Bank of America card) | generic bank | 9 | 0 | N/A | -86.22 | BofA card layout (Posted Date, Reference Number, Payee, Address, Amount) is not the BofA checking preset; the general layout reads it correctly. |
+| same repo, account1_aprilTrans.csv | generic bank | 6 | 0 | N/A | 81.67 | As above; CRLF line ends. |

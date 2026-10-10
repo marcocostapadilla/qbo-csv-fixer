@@ -14,6 +14,7 @@ import {
   PRESETS,
   QBO_PRESETS,
   WATERMARK_SUFFIX,
+  FREE_ROW_LIMIT,
 } from './core.mjs';
 import { els, showError, setDetectNote, renderResults, hideResults } from './ui.mjs';
 import { isProUnlocked, limitsFor, canDownload } from './license.mjs';
@@ -87,7 +88,7 @@ function loadText(name, text, { autoDetect = true } = {}) {
       setDetectNote(detectionNote(det));
     } else if (det.id !== current && det.confidence !== 'low') {
       setDetectNote(
-        `This file looks like ${PRESETS[det.id].label}, not the bank picked from the link. If the preview looks wrong, pick ${PRESETS[det.id].label} in the list.`
+        `This file looks like ${PRESETS[det.id].label}, not ${PRESETS[current].label} (the bank picked now). If the preview looks wrong, pick ${PRESETS[det.id].label} in the list.`
       );
     } else {
       setDetectNote('');
@@ -128,11 +129,12 @@ function reprocess() {
       hideResults();
       return;
     }
-    showError(r.transactions.length ? '' : 'No rows could be converted, so there is nothing to download. The note below lists each row and why; fix them in the file or check that the right bank is picked.');
-    renderResults(state.result, els.qboPreset.value || 'date_desc_amount');
+    const allowed = renderResults(state.result, els.qboPreset.value || 'date_desc_amount');
+    showError(!r.transactions.length ? 'No rows could be converted, so there is nothing to download. The note below lists each row and why; fix them in the file or check that the right bank is picked.'
+      : allowed ? '' : `This file has ${r.transactions.length} rows and the free version converts up to ${FREE_ROW_LIMIT}, so Download is off. Download a shorter date range from your bank and convert each part.`);
   } catch (err) {
     console.error(err);
-    showError('Parse error: ' + (err && err.message ? err.message : String(err)));
+    showError('Something went wrong reading this file (' + (err && err.message ? err.message : String(err)) + '). Try exporting it again, or pick another bank in the list.');
     hideResults();
   }
 }
