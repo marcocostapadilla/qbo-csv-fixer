@@ -22,6 +22,7 @@
  * 15. verify-v155.mjs: Navy Federal, Apple Card, Amex extended layout, real fixtures.
  * 16. verify-v156.mjs: sign-sanity warning, Ally, Cash App.
  * 17. verify-v157.mjs: SoFi preset, Ally / Cash App / SoFi guides.
+ * 18. verify-v158.mjs: usefulness prompt.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -41,6 +42,7 @@ import { run as runV154 } from './verify-v154.mjs';
 import { run as runV155 } from './verify-v155.mjs';
 import { run as runV156 } from './verify-v156.mjs';
 import { run as runV157 } from './verify-v157.mjs';
+import { run as runV158 } from './verify-v158.mjs';
 
 runV11();
 runPresets();
@@ -59,6 +61,7 @@ runV154();
 runV155();
 runV156();
 runV157();
+runV158();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
