@@ -1,0 +1,11 @@
+Posting Date,Transaction Date,Amount,Credit Debit Indicator,type,Type Group,Reference,Instructed Currency,Currency Exchange Rate,Instructed Amount,Description,Category,Check Serial Number,Card Ending,Rewards Total,Rewards Type
+04/10/2026,04/10/2026,5.28,Debit,POS,POS,,,,,Kroger,Groceries,,,,
+04/06/2026,04/06/2026,1651.91,Debit,Transfer,Transfer,,,,,Transfer To Mortgage,Mortgages,,,,
+04/06/2026,04/06/2026,4,Debit,Transfer,Transfer,,,,,Transfer To Credit Card -7032,Transfers,,,,
+04/06/2026,04/04/2026,34.6,Debit,POS,POS,,,,,Domino's Pizza,Restaurants/Dining,,,,
+04/06/2026,04/05/2026,30.63,Debit,POS,POS,,,,,Kroger,Groceries,,,,
+04/06/2026,04/04/2026,9.99,Debit,POS,POS,,,,,DEBIT-DC 7325 CLOUDARY HOLDINGS HONG KONG,Online Services,,,,
+04/06/2026,04/04/2026,0.1,Debit,Debit,Debit,,,,,Intl Transaction Fee Visa Cloudary Holdings Hong Kong HK,Service Charges/Fees,,,,
+04/03/2026,04/03/2026,1768.17,Credit,ACH Credit,ACH Credit,,,,,Salary/Regular Income from State Check,Paychecks/Salary,2100002,,,
+04/01/2026,04/01/2026,6,Debit,Transfer,Transfer,,,,,Transfer To Credit Card -7032,Transfers,,,,
+03/31/2026,03/31/2026,0.01,Credit,Credit,Credit,,,,,Dividend,Investment Income,,,,
