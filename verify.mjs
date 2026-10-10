@@ -24,6 +24,7 @@
  * 17. verify-v157.mjs: SoFi preset, Ally / Cash App / SoFi guides.
  * 18. verify-v158.mjs: usefulness prompt.
  * 19. verify-v159.mjs: running-balance check.
+ * 20. verify-v1510.mjs: robustness fixes.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -45,6 +46,7 @@ import { run as runV156 } from './verify-v156.mjs';
 import { run as runV157 } from './verify-v157.mjs';
 import { run as runV158 } from './verify-v158.mjs';
 import { run as runV159 } from './verify-v159.mjs';
+import { run as runV1510 } from './verify-v1510.mjs';
 
 runV11();
 runPresets();
@@ -65,6 +67,7 @@ runV156();
 runV157();
 runV158();
 runV159();
+runV1510();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
