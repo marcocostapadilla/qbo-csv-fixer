@@ -7,7 +7,7 @@
 export const SIGN_KIND = {
   amex: 'card', capital_one: 'card', citi: 'card', discover: 'card', bofa_card: 'card', apple_card: 'card',
   generic_bank: 'bank', date_desc_amount: 'bank', date_desc_debit_credit: 'bank', chase: 'bank', bofa: 'bank',
-  wells_fargo: 'bank', us_bank: 'bank', pnc: 'bank', mercury: 'bank', revolut: 'bank', wise: 'bank', navy_federal: 'bank', ally: 'bank', cash_app: 'bank', sofi: 'bank',
+  wells_fargo: 'bank', us_bank: 'bank', pnc: 'bank', mercury: 'bank', revolut: 'bank', wise: 'bank', navy_federal: 'bank', ally: 'bank', cash_app: 'bank', sofi: 'bank', capital_one_360: 'bank',
 };
 
 /** Words that mean money came IN. Card: payments, refunds, rewards. Bank: deposits, pay, interest. */
