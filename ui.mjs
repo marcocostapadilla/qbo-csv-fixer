@@ -187,3 +187,17 @@ export function hideResults() {
   els.results.classList.add('hidden');
   setDownloadEnabled(false);
 }
+
+/**
+ * v1.5.4: bring step 3 into view after a file loads, only when its heading is off screen.
+ * Smooth unless the user asked for reduced motion. Focus moves to the heading (tabindex -1) only when asked.
+ */
+export function revealResults({ focus = true } = {}) {
+  const h = document.getElementById('resultsHeading');
+  if (!h || els.results.classList.contains('hidden')) return;
+  const box = h.getBoundingClientRect();
+  if (box.top >= 0 && box.bottom <= window.innerHeight) return;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  h.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  if (focus) h.focus({ preventScroll: true });
+}
