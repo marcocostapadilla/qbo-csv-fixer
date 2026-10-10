@@ -2,6 +2,7 @@
  * QBO CSV Fixer - browser rendering helpers (badges, preview table, notes).
  * Pure DOM output; no network calls.
  */
+import { TYPE_NOTE } from './typenote.mjs';
 import { skippedText } from './skipnote.mjs';
 import { signCheck } from './signcheck.mjs';
 import { buildExportRows, fmtMoney, FREE_ROW_LIMIT, WATERMARK_SUFFIX } from './core.mjs';
@@ -135,7 +136,7 @@ function renderSkipNote(r, extra = []) {
     );
   }
   if (r.skippedRows && r.skippedRows.length) parts.push(skippedText(r.skippedRows, listRows));
-  for (const n of [...(r.notes || []), ...extra]) parts.push(n); // preset notes (Venmo fees), QBO upload limits (v1.5)
+  for (const n of [...(r.notes || []).filter((x) => !x.startsWith(TYPE_NOTE)), ...extra]) parts.push(n); // preset notes (Venmo fees), QBO upload limits (v1.5)
   setText(els.skipNote, parts.join(' '));
 }
 
@@ -168,8 +169,9 @@ export function renderResults(r, qboId) {
   const o = els.processorPreset.selectedOptions[0];
   els.resultsBank.textContent = (!o || o.value === 'generic_bank' ? 'Bank not recognized, so the file was read with the general layout. Check the columns used and the signs in the preview below. If your bank is in the list in step 2 above, pick it.' : `Read as: ${o.textContent}. Wrong bank? Pick another in step 2 above.`) + ' Every row is previewed below the Download button.';
   const sw = signCheck(o && o.value, r.transactions, r.reconcile.status);
-  els.signWarning.textContent = sw ? sw.message : '';
-  els.signWarning.classList.toggle('hidden', !sw);
+  const tn = (r.notes || []).find((n) => n.startsWith(TYPE_NOTE)); // v1.5.16: unread DR/CR column, shown first
+  els.signWarning.textContent = tn || (sw ? sw.message : '');
+  els.signWarning.classList.toggle('hidden', !(sw || tn));
   renderPreview(header, body);
 
   const n = r.transactions.length;

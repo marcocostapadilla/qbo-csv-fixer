@@ -13,6 +13,8 @@
  *  - defaultDateOrder: used only when A/B dates are ambiguous and the user has not chosen.
  *  - slug: how-to page (<slug>-csv-to-quickbooks-online.html). sample: fixture under samples/.
  */
+import { unsignedTypeNote } from './typenote.mjs';
+
 export const BANK_PRESETS = {
   generic_bank: {
     id: 'generic_bank',
@@ -21,6 +23,7 @@ export const BANK_PRESETS = {
     defaultDateOrder: 'mdy',
     sample: 'samples/chase-like-messy.csv',
     columns: 'synonyms',
+    fileNotes: unsignedTypeNote,
   },
   chase: {
     id: 'chase',

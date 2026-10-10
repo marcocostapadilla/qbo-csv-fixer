@@ -54,7 +54,7 @@ export function run() {
   assert(pass.reconcile.status === 'PASS' && !check('bofa', pass), 'a PASS file (Bank of America sample) shows no warning');
   assert(Object.values(SIGN_MESSAGES).every((m) => m.split('. ').length === 2 && !m.includes('\u2014') && m.includes('pick your bank in step 2 above')), 'messages: 2 sentences, point to the bank list, no em dash');
   const html = readFileSync(join(ROOT, 'index.html'), 'utf8'), ui = readFileSync(join(ROOT, 'ui.mjs'), 'utf8');
-  assert(/<p id="resultsBank"[^>]*><\/p>\s*<p id="signWarning" class="date-warning hidden" role="alert">/.test(html) && ui.includes("els.signWarning.classList.toggle('hidden', !sw)") && !/downloadBtn[^\n]*sw/.test(ui), 'UI: warning sits under "Read as:" at the top of step 3 and never blocks the download');
+  assert(/<p id="resultsBank"[^>]*><\/p>\s*<p id="signWarning" class="date-warning hidden" role="alert">/.test(html) && ui.includes("els.signWarning.classList.toggle('hidden', !(sw || tn))") && !/downloadBtn[^\n]*sw/.test(ui), 'UI: warning sits under "Read as:" at the top of step 3 and never blocks the download');
 
   console.log('');
   console.log('=== v1.5.6 Ally and Cash App ===');
