@@ -556,3 +556,5 @@ footer {
 /* v1.5.5: 44px tap targets on phones */
 button, .btn, label.field select, .date-toggle label { min-height: 44px; }
 footer a, .guide-links a, .samples a, .breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; }
+.useful { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-left: 0.75rem; }
+.useful button { min-width: 64px; }

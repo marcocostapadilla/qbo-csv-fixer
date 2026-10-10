@@ -22,6 +22,7 @@ import { showDetectNoteFor } from './detect.mjs';
 import { setupPro } from './pro-ui.mjs';
 import { PRO_SUFFIX } from './batch.mjs';
 import { decodeBytes } from './encoding.mjs';
+import { setupUseful, offerUseful } from './useful.mjs';
 
 let pro = { multiDrop() {} };
 
@@ -148,6 +149,7 @@ function downloadExport() {
   const wm = limitsFor(isProUnlocked()).watermark; // always true until a license check exists; filename only
   const csv = toCsvString(header, body);
   saveBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), exportFileName(state.fileName, wm ? WATERMARK_SUFFIX : PRO_SUFFIX));
+  offerUseful();
 }
 
 export function saveBlob(blob, name) {
@@ -244,6 +246,7 @@ function init() {
     });
   }
   els.downloadBtn.addEventListener('click', downloadExport);
+  setupUseful('index');
   pro = setupPro({
     getSettings: () => ({ preset: els.processorPreset.value, qbo: els.qboPreset.value, dateOrder: state.dateOrder, decimal: state.decimal }),
     applySettings,
