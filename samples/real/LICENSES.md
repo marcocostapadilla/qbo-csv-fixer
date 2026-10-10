@@ -9,6 +9,7 @@ Copied from public repositories under the MIT License, trimmed as noted. Used on
 | `beanhub-mercury.csv` | https://github.com/LaunchPlatform/beanhub-extract/blob/master/tests/extractors/fixtures/mercury.csv | card holder name replaced with CARD HOLDER |
 | `minance-apple-card.csv` | https://github.com/ydeng11/Minance/blob/main/services/api/test/fixtures/testCsv/apple_credit.csv | card holder name replaced with CARD HOLDER |
 | `minance-amex.csv` | https://github.com/ydeng11/Minance/blob/main/services/api/test/fixtures/testCsv/amex_credit.csv | none |
+| `minance-cash-app.csv` | https://github.com/ydeng11/Minance/blob/main/services/api/test/fixtures/testCsv/cash_app_debit.csv | one sender name replaced with PERSON |
 | `imid12-navy-federal.csv` | https://github.com/imid12/ImanHaamid_Solo_ITAI2376/blob/main/Docs/Historical%20Spending%20-%20transactions.csv (Apache-2.0) | first 10 rows only; line ends LF |
 | `schola-square.csv` | https://github.com/socrtwo/Schola/blob/main/samples/transactions-sample.csv | first 8 rows only; line ends LF |
 

@@ -1,4 +1,4 @@
-# QBO CSV Fixer (v1.5.5)
+# QBO CSV Fixer (v1.5.6)
 
 Local browser tool: messy bank, card, PayPal, Stripe, Wise, Square, Shopify Payments, Etsy, Venmo and Toast CSV exports to a QuickBooks Online import CSV.
 
@@ -29,7 +29,7 @@ Then open http://127.0.0.1:8765/ in your browser.
 | `headers.mjs`, `fields.mjs` | Fuzzy header keys, synonyms, header-row detection, required-column errors |
 | `presets.mjs`, `presets-*.mjs` | Input preset registry and data (aliases, detection rules, signatures) |
 | `mapping.mjs`, `detect.mjs` | Column mapping per preset; preset auto-detect with confidence |
-| `process.mjs`, `reconcile.mjs`, `export.mjs` | Pipeline and left-out rows; reconcile badge; QBO export, watermark, formula guard |
+| `process.mjs`, `reconcile.mjs`, `export.mjs` | Pipeline and left-out rows; reconcile badge; QBO export, watermark, formula guard; `signcheck.mjs` sign warning |
 | `license.mjs` | License hook, off: `LICENSE_ENABLED = false`, `verifyLicense()` (wired, mocked in tests), `isProUnlocked()` false; free limits |
 | `zip.mjs`, `batch.mjs`, `profiles.mjs`, `pro-ui.mjs` | Inert Pro features: STORE zip writer with CRC-32, multi-file batch to zip, saved profiles in localStorage, disabled UI wiring |
 | `styles.css` | Bookkeeper-friendly styles (tool + how-to pages) |
@@ -47,9 +47,9 @@ Then open http://127.0.0.1:8765/ in your browser.
 ## Features
 
 1. Drag-drop / file picker; client-side CSV parse only.
-2. Visible opening/closing **reconcile badge** (PASS/FAIL) when balances exist.
+2. Visible opening/closing **reconcile badge** (PASS/FAIL) when balances exist; without balances, a sign warning if money in and out look swapped.
 3. QBO Online presets: Date/Description/Amount and Date/Description/Debit/Credit.
-4. Named input presets with header auto-detect and a preset dropdown: Chase, Bank of America (checking and card), Navy Federal, Apple Card, Wells Fargo (headerless), American Express (sign flip), Capital One (Debit/Credit), Citi (Debit/Credit, Cleared only), U.S. Bank, PNC (Withdrawals/Deposits, pick from the list; not auto-detected), Discover (sign flip), Mercury (Sent only), Revolut (COMPLETED only, fee subtracted), PayPal, Stripe, Wise, Square (Net Total), Square transfers (one line per Deposit ID), Shopify Payments (payout transactions, Net), Shopify payouts list (one line per payout), Etsy (monthly statement, deposits read from Title), Venmo (statement, Beginning/Ending Balance reconcile, note when fees are non-zero), Toast (PaymentDetails, refunds as own lines), plus generic bank (Chase-like). Sources: VERIFY-presets*.md. TD Bank, Relay and Novo were not added: no public source shows their CSV header row.
+4. Named input presets with header auto-detect and a preset dropdown: Chase, Bank of America (checking and card), Navy Federal, Apple Card, Ally, Cash App, Wells Fargo (headerless), American Express (sign flip), Capital One (Debit/Credit), Citi (Debit/Credit, Cleared only), U.S. Bank, PNC (Withdrawals/Deposits, pick from the list; not auto-detected), Discover (sign flip), Mercury (Sent only), Revolut (COMPLETED only, fee subtracted), PayPal, Stripe, Wise, Square (Net Total), Square transfers (one line per Deposit ID), Shopify Payments (payout transactions, Net), Shopify payouts list (one line per payout), Etsy (monthly statement, deposits read from Title), Venmo (statement, Beginning/Ending Balance reconcile, note when fees are non-zero), Toast (PaymentDetails, refunds as own lines), plus generic bank (Chase-like). Sources: VERIFY-presets*.md. TD Bank, Relay and Novo were not added: no public source shows their CSV header row.
 5. Date ambiguity warning: when every slash date could be US M/D or EU D/M, a warning and a US/EU toggle appear above the preview; the toggle re-parses dates and updates preview and export. A row with a component above 12 auto-picks the order. ISO dates are never ambiguous.
 6. Free version: 1 file, ≤100 rows, watermarked export: the filename gets `_qbo-csv-fixer-free`. Descriptions are exported unchanged (no suffix, no length cap), and there is no extra watermark row: a blank-date 0.00 row could make QBO reject the file or import a $0 line. Unlimited version coming soon.
 7. Sample files for every preset on `samples.html`, plus a "Try a sample for the selected bank" button.
