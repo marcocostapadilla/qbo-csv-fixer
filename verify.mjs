@@ -27,6 +27,7 @@
  * 20. verify-v1510.mjs: robustness fixes.
  * 21. verify-v1511.mjs: running balance needs 3 rows.
  * 22. verify-v1512.mjs: robustness batch.
+ * 23. verify-v1513.mjs: Action column as description fallback.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -51,6 +52,7 @@ import { run as runV159 } from './verify-v159.mjs';
 import { run as runV1510 } from './verify-v1510.mjs';
 import { run as runV1511 } from './verify-v1511.mjs';
 import { run as runV1512 } from './verify-v1512.mjs';
+import { run as runV1513 } from './verify-v1513.mjs';
 
 runV11();
 runPresets();
@@ -74,6 +76,7 @@ runV159();
 runV1510();
 runV1511();
 runV1512();
+runV1513();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);

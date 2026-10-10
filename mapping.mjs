@@ -22,6 +22,7 @@ export function baseCols(extra) {
       status: NO_COL,
       balanceImpact: NO_COL,
       checkNumber: NO_COL,
+      action: NO_COL,
       descExtras: [],
       viaSynonyms: [],
     },
@@ -77,7 +78,18 @@ function fillFromSynonyms(headers, cols, preset) {
   return cols;
 }
 
+/**
+ * v1.5.13: an Action column (Fidelity) is the description fallback for rows whose Description is
+ * empty or a placeholder (see buildDescription). Files without an Action column are unchanged.
+ */
 export function mapColumnsForPreset(headers, presetId) {
+  const cols = mapColumnsBase(headers, presetId);
+  const a = findCol(headers, ['action']);
+  if (a >= 0 && a !== cols.description && !(cols.descExtras || []).includes(a)) cols.action = a;
+  return cols;
+}
+
+function mapColumnsBase(headers, presetId) {
   const preset = PRESETS[presetId] || PRESETS.generic_bank;
 
   if (preset.columns === 'synonyms' || !preset.columns) {
@@ -94,6 +106,9 @@ export function mapColumnsForPreset(headers, presetId) {
   return fillFromSynonyms(headers, mapByAliases(headers, preset.columns), preset);
 }
 
+/** Description cells that say nothing; replaced by Action when the file has one (v1.5.13). */
+export const PLACEHOLDER_DESC = /^(?:no description|n\/a|-+)$/i;
+
 export function buildDescription(row, cols) {
   if (cols.descExtras && cols.descExtras.length > 1) {
     const parts = [];
@@ -104,6 +119,7 @@ export function buildDescription(row, cols) {
     if (parts.length) return parts.join(' | ');
   }
   let d = cols.description >= 0 ? String(row[cols.description] ?? '').trim() : '';
+  if (cols.action >= 0 && (!d || PLACEHOLDER_DESC.test(d))) d = String(row[cols.action] ?? '').trim() || d;
   if (cols.checkNumber >= 0) {
     const chk = String(row[cols.checkNumber] ?? '').trim();
     if (chk && !d.includes(chk)) d = d ? `${d} (check ${chk})` : `CHECK ${chk}`;
@@ -176,7 +192,7 @@ export function describeMapping(headers, cols) {
   const name = (i) => (i >= 0 ? (cols.byPosition ? `column ${i + 1}` : headers[i] || `column ${i + 1}`) : null);
   return {
     date: name(cols.date),
-    description: cols.descExtras && cols.descExtras.length > 1 ? cols.descExtras.map(name).join(' + ') : name(cols.description),
+    description: cols.descExtras && cols.descExtras.length > 1 ? cols.descExtras.map(name).join(' + ') : name(cols.description) + (cols.action >= 0 && cols.description >= 0 ? ` (${name(cols.action)} when empty)` : ''),
     amount: name(cols.amount),
     debit: name(cols.debit),
     credit: name(cols.credit),
