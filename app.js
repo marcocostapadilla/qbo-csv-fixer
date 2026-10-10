@@ -16,7 +16,7 @@ import {
   WATERMARK_SUFFIX,
   FREE_ROW_LIMIT,
 } from './core.mjs';
-import { els, showError, setDetectNote, renderResults, hideResults } from './ui.mjs';
+import { els, showError, setDetectNote, renderResults, hideResults, revealResults } from './ui.mjs';
 import { isProUnlocked, limitsFor, canDownload } from './license.mjs';
 import { showDetectNoteFor } from './detect.mjs';
 import { setupPro } from './pro-ui.mjs';
@@ -94,7 +94,7 @@ function loadText(name, text, { autoDetect = true } = {}) {
       setDetectNote('');
     }
   }
-  reprocess();
+  reprocess({ reveal: true });
 }
 
 function readFile(file) {
@@ -109,7 +109,7 @@ function readFile(file) {
   reader.readAsArrayBuffer(file);
 }
 
-function reprocess() {
+function reprocess({ reveal = false, focus = true } = {}) {
   if (!state.fileName && !state.rawText) {
     hideResults();
     return;
@@ -132,6 +132,7 @@ function reprocess() {
     const allowed = renderResults(state.result, els.qboPreset.value || 'date_desc_amount');
     showError(!r.transactions.length ? 'No rows could be converted, so there is nothing to download. The note below lists each row and why; fix them in the file or check that the right bank is picked.'
       : allowed ? '' : `This file has ${r.transactions.length} rows and the free version converts up to ${FREE_ROW_LIMIT}, so Download is off. Download a shorter date range from your bank and convert each part.`);
+    if (reveal && r.transactions.length && allowed) revealResults({ focus }); // no scroll when the message is the banner at the top
   } catch (err) {
     console.error(err);
     showError('Something went wrong reading this file (' + (err && err.message ? err.message : String(err)) + '). Try exporting it again, or pick another bank in the list.');
@@ -221,7 +222,7 @@ function init() {
     state.presetLocked = true;
     setDetectNote('');
     updateProcessorHint();
-    reprocess();
+    reprocess({ reveal: true, focus: false }); // keep focus on the list
   });
   els.qboPreset.addEventListener('change', () => {
     const r = state.result;

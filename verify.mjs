@@ -18,6 +18,7 @@
  *     adversarial Square / Shopify / Etsy / Venmo fixtures.
  * 12. verify-v15.mjs: Etsy pending rows, QuickBooks Online upload rules, Toast preset.
  * 13. verify-v151.mjs: real public samples, plain-language messages, samples.html.
+ * 14. verify-v154.mjs: Bank of America card preset, detection regression, scroll to results.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -33,6 +34,7 @@ import { run as runWatermark } from './verify-watermark.mjs';
 import { run as runV14 } from './verify-v14.mjs';
 import { run as runV15 } from './verify-v15.mjs';
 import { run as runV151 } from './verify-v151.mjs';
+import { run as runV154 } from './verify-v154.mjs';
 
 runV11();
 runPresets();
@@ -47,6 +49,7 @@ runWatermark();
 runV14();
 runV15();
 runV151();
+runV154();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
