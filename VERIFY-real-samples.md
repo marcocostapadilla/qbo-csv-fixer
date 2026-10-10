@@ -27,3 +27,17 @@ Each file was run through `core.mjs` in Node (auto-detected preset). "Truth" is 
 | github.com/amkchari/ExpenseManager statements/discover-new-2024.csv (Discover) | discover | 3 | 0 | N/A | 906.00 | Payments negative in file, exported positive. |
 | github.com/ryokather/FinanceTracker sampleTransactions/account1_julyTrans.csv (Bank of America card) | generic bank | 9 | 0 | N/A | -86.22 | BofA card layout (Posted Date, Reference Number, Payee, Address, Amount) is not the BofA checking preset; the general layout reads it correctly. |
 | same repo, account1_aprilTrans.csv | generic bank | 6 | 0 | N/A | 81.67 | As above; CRLF line ends. |
+
+## v1.5.5 sweep (signed net vs independent sum after the fixes)
+
+| File (source) | License | Detected | Rows | Left out | Badge | Net = truth |
+| --- | --- | --- | --- | --- | --- | --- |
+| imid12 Navy Federal transactions | Apache-2.0, 10 rows in repo | navy_federal | 108 | 0 | N/A | 20.48 (was 25894.88, all signs +) |
+| channerlbok/Home-Expense-Visualizer Navy Federal | none, local | navy_federal | 3358 | 0 | N/A | 50329.56 |
+| ydeng11/Minance apple_credit.csv | MIT, in repo | apple_card | 8 | 0 | N/A | -239.99 (was +239.99) |
+| ydeng11/Minance amex_credit.csv | MIT, in repo | amex | 8 | 0 | N/A | -221.31 (was +221.31) |
+| ydeng11/Minance chase_credit, citi_credit, discover_credit | MIT, local | chase, citi, discover | 8 each | 0 | N/A | -218.44, -9.48, -407.48 |
+| ydeng11/Minance cash_app_debit.csv (Cash App) | MIT, local | general layout | 8 | 0 | N/A | -308.85 (signs right; candidate preset) |
+| davydog187/finances ally_spending.csv (Ally) | none, local | general layout | 528 | 0 | N/A | 12214.84 |
+| EliRibble/budgery ally.csv (Ally) | none, local | general layout | 5 | 0 | N/A | -946.11 |
+| dcapps4140/Keyword-Categorization transactions.csv (Ally) | none, local | general layout | 105 | 0 | N/A | -2041.91 |
