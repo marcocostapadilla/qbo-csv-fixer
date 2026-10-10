@@ -46,6 +46,6 @@ export function run() {
   assert(idx.includes('href="samples.html"') && !idx.includes('download>'), 'index.html links samples.html; the download list moved out');
   const sp = readFileSync(join(ROOT, 'samples.html'), 'utf8');
   const links = [...sp.matchAll(/href="(samples\/[^"]+)"/g)].map((m) => m[1]);
-  assert(links.length === 33 && links.every((l) => existsSync(join(ROOT, l))), `samples.html: 33 sample links, every file exists (got ${links.length})`);
+  assert(links.length === 34 && links.every((l) => existsSync(join(ROOT, l))), `samples.html: 34 sample links, every file exists (got ${links.length})`);
   assert(sp.includes('data-goatcounter="https://qbofixer.goatcounter.com/count"') && readFileSync(join(ROOT, 'sitemap.xml'), 'utf8').includes('/samples.html</loc>'), 'samples.html has GoatCounter and is in the sitemap');
 }
