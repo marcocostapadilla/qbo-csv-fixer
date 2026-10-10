@@ -2,6 +2,7 @@
  * QBO CSV Fixer - browser rendering helpers (badges, preview table, notes).
  * Pure DOM output; no network calls.
  */
+import { skippedText } from './skipnote.mjs';
 import { signCheck } from './signcheck.mjs';
 import { buildExportRows, fmtMoney, FREE_ROW_LIMIT, WATERMARK_SUFFIX } from './core.mjs';
 import { qboLimitNotes } from './export.mjs';
@@ -133,12 +134,7 @@ function renderSkipNote(r, extra = []) {
         '. They are not in the download, so totals will be short. Fix them in the file, or add them in QuickBooks by hand.'
     );
   }
-  if (r.skippedRows && r.skippedRows.length) {
-    parts.push(
-      `Left out ${r.skippedRows.length} row(s) that did not move money (pending, failed, cancelled or memo lines): ` +
-        listRows(r.skippedRows, (s) => `row ${s.sourceRow} (${s.reason})`) + '. That is expected; pending ones show up in a later export once they clear.'
-    );
-  }
+  if (r.skippedRows && r.skippedRows.length) parts.push(skippedText(r.skippedRows, listRows));
   for (const n of [...(r.notes || []), ...extra]) parts.push(n); // preset notes (Venmo fees), QBO upload limits (v1.5)
   setText(els.skipNote, parts.join(' '));
 }
