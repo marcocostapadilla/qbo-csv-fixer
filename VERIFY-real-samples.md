@@ -52,3 +52,13 @@ Each file was run through `core.mjs` in Node (auto-detected preset). "Truth" is 
 | reubano/csv2ofx schwab-checking.csv (Schwab) | MIT, local | general layout | 4 | 0 | N/A | -215.27 (Withdrawal/Deposit merged right) |
 | cooperbraun13 bank_data.csv (SoFi) | none, local | general layout | 205 | 0 | N/A | 304.54 |
 | Xapamma sofi_savings.csv, diegosol127 SoFi checking | none, local | general layout | 63 / 2 | 0 | N/A | -4969.2 / 50 |
+
+## v1.5.7 sweep
+
+| File (source) | License | Detected | Rows | Left out | Badge | Net = truth | Sign warning |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| SoFi x3 (cooperbraun13, Xapamma, diegosol127) | none, local | sofi (was general) | 205 / 63 / 2 | 0 | PASS | 304.54 / -4969.20 / 50.00 | none |
+| velicanu/expenses usbank.csv (US Bank card) | none, local | us_bank | 2 | 0 | N/A | 32.89 | none |
+| daquino/usbank-es-loader sample.csv (US Bank) | EPL-1.0, local | us_bank | 9 | 0 | N/A | -28.71 | none |
+| adjutorium/Diurnum Capital One excerpt | GPL-3.0, local | capital_one | 6 | 0 | N/A | 11162.86 | none |
+| harshalsahetiya94-oss wise.csv (Wise, EUR, synthetic test file) | MIT, local | wise | 4 | 0 | N/A | 678.60 (dates DD-MM, warning shown) | none |
