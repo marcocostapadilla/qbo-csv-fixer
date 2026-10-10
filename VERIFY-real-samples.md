@@ -41,3 +41,14 @@ Each file was run through `core.mjs` in Node (auto-detected preset). "Truth" is 
 | davydog187/finances ally_spending.csv (Ally) | none, local | general layout | 528 | 0 | N/A | 12214.84 |
 | EliRibble/budgery ally.csv (Ally) | none, local | general layout | 5 | 0 | N/A | -946.11 |
 | dcapps4140/Keyword-Categorization transactions.csv (Ally) | none, local | general layout | 105 | 0 | N/A | -2041.91 |
+
+## v1.5.6 sweep
+
+| File (source) | License | Detected | Rows | Left out | Badge | Net = truth |
+| --- | --- | --- | --- | --- | --- | --- |
+| Pjrich1313 Cash App transactions_2023.csv | none, local | cash_app (was general, 0 rows: all 37 dates unreadable) | 37 | 0 | N/A | -1.39 (Net Amount) |
+| ydeng11/Minance cash_app_debit.csv | MIT, in repo | cash_app | 8 | 0 | N/A | -308.85 |
+| Ally x3 (davydog187, budgery, dcapps4140) | none, local | ally (was general) | 528 / 5 / 105 | 0 | N/A | 12214.84 / -946.11 / -2041.91 |
+| reubano/csv2ofx schwab-checking.csv (Schwab) | MIT, local | general layout | 4 | 0 | N/A | -215.27 (Withdrawal/Deposit merged right) |
+| cooperbraun13 bank_data.csv (SoFi) | none, local | general layout | 205 | 0 | N/A | 304.54 |
+| Xapamma sofi_savings.csv, diegosol127 SoFi checking | none, local | general layout | 63 / 2 | 0 | N/A | -4969.2 / 50 |
