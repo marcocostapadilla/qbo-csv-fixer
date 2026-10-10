@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ally Bank CSV to QuickBooks Online: drop the Time column, fix the spaced headers and ISO dates</title>
+  <meta name="description" content="Ally Bank CSV exports have spaces after each comma in the header, a Time column and YYYY-MM-DD dates. Get a QuickBooks Online upload file, locally in your browser." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/ally-csv-to-quickbooks-online.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / How-to guides / Ally Bank</p>
+    <header class="app-header">
+      <h1>Ally Bank CSV to QuickBooks Online</h1>
+      <p class="subhead">Plain steps to get your Ally Bank CSV export into QuickBooks Online through Banking &gt; Upload from file. The fixing happens in your browser; the file is not uploaded anywhere.</p>
+      <p class="cta"><a class="btn primary" href="index.html?preset=ally">Open the tool with the Ally Bank preset</a></p>
+    </header>
+
+    <section class="card howto">
+      <h2>1. Download the CSV from Ally Bank</h2>
+      <ol>
+        <li>Sign in at ally.com on a computer and select the account (checking, savings or money market).</li>
+        <li>Scroll to <strong>Transaction History</strong> and select the download icon.</li>
+        <li>Pick the date range, choose <strong>CSV</strong> and save the file. Ally downloads one account at a time.</li>
+      </ol>
+      <p class="hint">Steps from the Ally Bank help center ("Can I download my account activity?") and export guides by Tiller and ScanCompte. Menus can change.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>2. What is messy about the Ally Bank file</h2>
+      <ul>
+        <li>The header is <code>Date, Time, Amount, Type, Description</code> with a space after every comma, which some importers do not match.</li>
+        <li>Dates are <strong>YYYY-MM-DD</strong>; QuickBooks Online wants one US or EU format such as MM/DD/YYYY.</li>
+        <li>The extra Time and Type columns break the 3-column layout QuickBooks Online expects.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>3. How QBO CSV Fixer fixes it</h2>
+      <ol>
+        <li>Open <a href="index.html?preset=ally">QBO CSV Fixer with the Ally Bank preset</a> and drop your CSV on the page. The preset is also auto-detected from the file layout.</li>
+        <li>Check the preview, the reconcile badge and, if shown, the date format warning.</li>
+        <li>Download the QuickBooks-ready CSV.</li>
+      </ol>
+      <p>What the Ally Bank preset does:</p>
+      <ul>
+        <li>Matches the spaced headers and uses Date, Description and Amount (already signed: withdrawals negative, deposits positive).</li>
+        <li>Writes dates as MM/DD/YYYY; drops Time and Type.</li>
+        <li>No balances in the file, so the reconcile badge shows N/A. A sign warning appears if the money in and out look swapped.</li>
+      </ul>
+      <p>Want to try it first? Download the <a href="samples/ally.csv" download>Ally Bank sample CSV</a> (fake names) and drop it on the tool.</p>
+    </section>
+
+    <section class="card howto">
+      <h2>4. Upload to QuickBooks Online</h2>
+      <ol>
+        <li>In QuickBooks Online, open <strong>Banking</strong> (in newer menus: Transactions, then Bank transactions).</li>
+        <li>Select the account, open the <strong>Link account</strong> drop-down and choose <strong>Upload from file</strong>.</li>
+        <li>Drag in the CSV you downloaded from QBO CSV Fixer and pick the QuickBooks account it belongs to.</li>
+        <li>Map the columns: Date to Date, Description to Description, and Amount as one column with positive and negative values (or Debit and Credit as two columns if you exported the 4-column layout). Choose the MM/dd/yyyy date format.</li>
+        <li>The free export is marked only in its file name, which ends with _qbo-csv-fixer-free. Nothing is added to the descriptions, and there is no extra watermark row to remove.</li>
+        <li>Select the transactions to import, then Continue and Done. They land in <strong>For review</strong> to categorize or match.</li>
+      </ol>
+    </section>
+
+    <section class="card howto">
+      <h2>Good to know</h2>
+      <ul>
+        <li>Each Ally account is a separate file, so upload each one to its own QuickBooks account.</li>
+        <li>Compare the net change with your Ally statement before you upload.</li>
+      </ul>
+    </section>
+
+    <section class="card howto">
+      <h2>Scope</h2>
+      <p style="margin:0">CSV only. No PDF statements, no bank login, no server: the file is read and converted by JavaScript in your browser. Free version: 1 file, up to 100 rows, watermarked export. Unlimited version coming soon.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a> · <a href="samples.html">Sample CSVs</a></p>
+      <p>All guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="citi-csv-to-quickbooks-online.html">Citi</a> · <a href="us-bank-csv-to-quickbooks-online.html">U.S. Bank</a> · <a href="pnc-csv-to-quickbooks-online.html">PNC</a> · <a href="discover-csv-to-quickbooks-online.html">Discover</a> · <a href="mercury-csv-to-quickbooks-online.html">Mercury</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a> · <a href="square-csv-to-quickbooks-online.html">Square</a> · <a href="shopify-csv-to-quickbooks-online.html">Shopify Payments</a> · <a href="etsy-csv-to-quickbooks-online.html">Etsy</a> · <a href="venmo-csv-to-quickbooks-online.html">Venmo</a> · <a href="toast-csv-to-quickbooks-online.html">Toast</a> · <a href="navy-federal-csv-to-quickbooks-online.html">Navy Federal</a> · <a href="apple-card-csv-to-quickbooks-online.html">Apple Card</a> · <a href="ally-csv-to-quickbooks-online.html">Ally Bank</a> · <a href="cash-app-csv-to-quickbooks-online.html">Cash App</a> · <a href="sofi-csv-to-quickbooks-online.html">SoFi</a></p>
+      <p>Compare: <a href="qbo-csv-fixer-vs-alternatives.html">QBO CSV Fixer vs Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
