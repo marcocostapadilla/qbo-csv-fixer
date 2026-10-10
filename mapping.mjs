@@ -192,7 +192,8 @@ export function describeMapping(headers, cols) {
   const name = (i) => (i >= 0 ? (cols.byPosition ? `column ${i + 1}` : headers[i] || `column ${i + 1}`) : null);
   return {
     date: name(cols.date),
-    description: cols.descExtras && cols.descExtras.length > 1 ? cols.descExtras.map(name).join(' + ') : name(cols.description) + (cols.action >= 0 && cols.description >= 0 ? ` (${name(cols.action)} when empty)` : ''),
+    description: cols.descExtras && cols.descExtras.length > 1 ? cols.descExtras.map(name).join(' + ') : name(cols.description),
+    descriptionFallback: cols.action >= 0 && cols.description >= 0 ? name(cols.action) : null,
     amount: name(cols.amount),
     debit: name(cols.debit),
     credit: name(cols.credit),

@@ -51,7 +51,8 @@ export function mappingNote(m) {
   const add = (label, field) => {
     if (!m[field]) return;
     const syn = m.viaSynonyms.includes(field) ? ' (matched by synonym)' : '';
-    parts.push(`${label} = "${m[field]}"${syn}`);
+    const fb = field === 'description' && m.descriptionFallback ? ` ("${m.descriptionFallback}" when empty)` : '';
+    parts.push(`${label} = "${m[field]}"${fb}${syn}`);
   };
   add('Date', 'date');
   add('Description', 'description');
@@ -120,7 +121,7 @@ function listRows(rows, fmt) {
   return rows.length > 8 ? `${list}; and ${rows.length - 8} more` : list;
 }
 
-/** One note for every row not in the export: unreadable rows first, then rows that moved no money. */
+/** One note for every row not in the export. */
 function renderSkipNote(r, extra = []) {
   const parts = [];
   const lo = r.leftOutRows || [];
@@ -157,7 +158,7 @@ function renderPreview(header, body) {
     .join('');
 }
 
-/** Render one processed file. Returns true when the free tier allows the download. */
+/** Render one file; true when the free tier allows the download. */
 export function renderResults(r, qboId) {
   els.results.classList.remove('hidden');
   renderDateWarning(r);
@@ -167,6 +168,7 @@ export function renderResults(r, qboId) {
   renderBadges(r);
   renderSkipNote(r, qboLimitNotes(header, body));
   els.txnCount.textContent = String(r.transactions.length);
+  document.getElementById('balLines').hidden = !((r.opening != null || r.closing != null) && !r.runningBalance); // v1.5.14
   const o = els.processorPreset.selectedOptions[0];
   els.resultsBank.textContent = (!o || o.value === 'generic_bank' ? 'Bank not recognized, so the file was read with the general layout. Check the columns used and the signs in the preview below. If your bank is in the list in step 2 above, pick it.' : `Read as: ${o.textContent}. Wrong bank? Pick another in step 2 above.`) + ' Every row is previewed below the Download button.';
   const sw = signCheck(o && o.value, r.transactions, r.reconcile.status);
@@ -185,13 +187,13 @@ export function renderResults(r, qboId) {
   return allowed;
 }
 
-/** Download button state: the disabled attribute plus aria-disabled (styled in styles.css). */
+/** Download button state: disabled plus aria-disabled. */
 export function setDownloadEnabled(on) {
   els.downloadBtn.disabled = !on;
   els.downloadBtn.setAttribute('aria-disabled', String(!on));
 }
 
-/** Rejected or unreadable file: hide results and disable Download so it cannot be forced. */
+/** Rejected file: hide results, disable Download. */
 export function hideResults() {
   els.results.classList.add('hidden');
   setDownloadEnabled(false);
@@ -199,7 +201,7 @@ export function hideResults() {
 
 /**
  * v1.5.4: bring step 3 into view after a file loads, only when its heading is off screen.
- * Smooth unless the user asked for reduced motion. Focus moves to the heading (tabindex -1) only when asked.
+ * Smooth unless reduced motion; focus moves to the heading only when asked.
  */
 export function revealResults({ focus = true } = {}) {
   const h = document.getElementById('resultsHeading');
