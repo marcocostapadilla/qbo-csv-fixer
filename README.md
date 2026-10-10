@@ -1,4 +1,4 @@
-# QBO CSV Fixer (v1.5.15)
+# QBO CSV Fixer (v1.5.16)
 
 Local browser tool: messy bank, card, PayPal, Stripe, Wise, Square, Shopify Payments, Etsy, Venmo and Toast CSV exports to a QuickBooks Online import CSV.
 
@@ -97,6 +97,7 @@ Make no other claims about chat output (unproven on the 6 Oct 2026 eval).
 - CR/DR markers are read as CR = money in, DR = money out. A card statement that uses CR for payments still reads correctly; any preset that means the opposite must say so.
 - robots.txt sits at the project subpath; crawlers only read robots.txt at the host root, so it is informational. Submit sitemap.xml in Search Console instead.
 - No Excel `.xlsx` (CSV only).
+- General layout: an unsigned Amount with a separate DR/CR (or Debit/Credit) column is not re-signed; a warning says so and how to fix the file.
 - Intuit asks to "Remove numbers from cells in the Description column"; descriptions are kept as read. Not tested by a live QuickBooks upload.
 
 ## Brand lock

@@ -30,6 +30,7 @@
  * 23. verify-v1513.mjs: Action column as description fallback.
  * 24. verify-v1514.mjs: first-time clarity fixes.
  * 25. verify-v1515.mjs: Fidelity preset, left-out notes, grouped bank list.
+ * 26. verify-v1516.mjs: clearer unrecognized-bank path.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -57,6 +58,7 @@ import { run as runV1512 } from './verify-v1512.mjs';
 import { run as runV1513 } from './verify-v1513.mjs';
 import { run as runV1514 } from './verify-v1514.mjs';
 import { run as runV1515 } from './verify-v1515.mjs';
+import { run as runV1516 } from './verify-v1516.mjs';
 
 runV11();
 runPresets();
@@ -83,6 +85,7 @@ runV1512();
 runV1513();
 runV1514();
 runV1515();
+runV1516();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
