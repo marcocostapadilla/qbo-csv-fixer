@@ -1,0 +1,16 @@
+
+
+Run Date,Action,Symbol,Description,Type,Price ($),Quantity,Commission ($),Fees ($),Accrued Interest ($),Amount ($),Cash Balance ($),Settlement Date
+03/27/2026,"DIRECT DEPOSIT ACME PAYROLL (Cash)",,"No Description",Cash,,,,,,2150.00,6587.36,
+03/24/2026,"DEBIT CARD PURCHASE MAPLE STREET GROCERS (Cash)",,"No Description",Cash,,,,,,-86.14,4437.36,
+03/20/2026,"YOU BOUGHT CONTOSO INDEX FUND (CIFX) (Cash)",CIFX,"CONTOSO INDEX FUND",Cash,52.10,10,,,,-521.00,4523.50,03/23/2026
+03/18/2026,"DIVIDEND RECEIVED CONTOSO INDEX FUND (Cash)",CIFX,"CONTOSO INDEX FUND",Cash,,,,,,14.62,5044.50,
+03/15/2026,"BILL PAYMENT CITY WATER UTIL (Cash)",,"No Description",Cash,,,,,,-64.33,5029.88,
+03/12/2026,"INTEREST EARNED FDIC INSURED DEPOSIT (Cash)",,"No Description",Cash,,,,,,1.21,5094.21,
+
+
+
+"The data and information in this spreadsheet is provided to you solely for your use and is not for distribution."
+"Brokerage services are provided by a fictitious broker for this sample file."
+
+"Date downloaded 03/28/2026 9:15 am"

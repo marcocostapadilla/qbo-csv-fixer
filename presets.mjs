@@ -14,15 +14,16 @@ import { V156_PRESETS } from './presets-v156.mjs';
 import { V157_PRESETS } from './presets-v157.mjs';
 import { V1510_PRESETS } from './presets-v1510.mjs';
 import { V1512_PRESETS } from './presets-v1512.mjs';
+import { V1515_PRESETS } from './presets-v1515.mjs';
 
 /** Every input preset, in dropdown order. */
-export const PRESETS = Object.assign({}, BANK_PRESETS, V12_PRESETS, PROCESSOR_PRESETS, V13_PRESETS, V14_PRESETS, V15_PRESETS, V154_PRESETS, V155_PRESETS, V156_PRESETS, V157_PRESETS, V1510_PRESETS, V1512_PRESETS);
+export const PRESETS = Object.assign({}, BANK_PRESETS, V12_PRESETS, PROCESSOR_PRESETS, V13_PRESETS, V14_PRESETS, V15_PRESETS, V154_PRESETS, V155_PRESETS, V156_PRESETS, V157_PRESETS, V1510_PRESETS, V1512_PRESETS, V1515_PRESETS);
 
 /**
  * Order in which header rules are tried. Bank of America runs first so its summary block
  * wins; its header rule excludes Wise headers, which share "Running Balance".
  */
-export const DETECT_ORDER = ['bofa', 'bofa_card', 'navy_federal', 'apple_card', 'ally', 'cash_app', 'sofi', 'revolut', 'wise', 'mercury', 'td_bank', 'usaa', 'capital_one_360', 'capital_one', 'citi', 'amex', 'us_bank', 'discover', 'toast', 'square_transfers', 'shopify_payouts', 'square', 'shopify', 'etsy', 'venmo', 'paypal', 'stripe', 'chase'];
+export const DETECT_ORDER = ['bofa', 'bofa_card', 'navy_federal', 'apple_card', 'ally', 'cash_app', 'sofi', 'revolut', 'wise', 'mercury', 'td_bank', 'usaa', 'fidelity', 'capital_one_360', 'capital_one', 'citi', 'amex', 'us_bank', 'discover', 'toast', 'square_transfers', 'shopify_payouts', 'square', 'shopify', 'etsy', 'venmo', 'paypal', 'stripe', 'chase'];
 
 export const QBO_PRESETS = {
   date_desc_amount: {
