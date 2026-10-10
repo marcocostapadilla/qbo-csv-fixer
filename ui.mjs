@@ -102,11 +102,14 @@ function renderBadges(r) {
         ? `Δ ${fmtMoney(rec.delta)}: opening plus these rows is ${fmtMoney(rec.expectedClosing)}, but the file's ending balance is ${fmtMoney(r.closing)}. Rows are missing or extra. Check for left-out rows, a date range that differs from the statement, or pending items before you upload.`
         : `Opening balance plus these rows equals the ending balance (${fmtMoney(r.closing)}).`
       : rec.message;
+  // v1.5.9: balances read from a running-balance column
+  const rbNote = r.runningBalance && (rec.status === 'PASS' || rec.status === 'FAIL')
+    ? ' Opening and ending come from the running balance column, so a missing first or last row would not show here.' : '';
   const meta = (label, value) =>
     `<div class="badge meta"><div class="label">${label}</div><div class="value">${value}</div></div>`;
   els.badgeRow.innerHTML =
     `<div class="badge ${badgeClass}"><div class="label">Reconcile</div><div class="value">${rec.status}</div>` +
-    `<div class="detail">${escapeHtml(deltaLine)}</div></div>` +
+    `<div class="detail">${escapeHtml(deltaLine + rbNote)}</div></div>` +
     meta('Opening', r.opening != null ? fmtMoney(r.opening) : 'n/a') +
     meta('Net change', fmtMoney(r.net)) +
     meta('Ending', r.closing != null ? fmtMoney(r.closing) : 'n/a');

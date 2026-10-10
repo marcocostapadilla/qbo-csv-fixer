@@ -6,7 +6,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { processCsv, detectPreset } from './core.mjs';
 import { decodeBytes } from './encoding.mjs';
 import { findBalanceCol, chainBalances, CHAIN_SHARE, MIN_LINKS } from './runbal.mjs';
-import { assert, readSample } from './verify-lib.mjs';
+import { join } from 'node:path';
+import { assert, readSample, ROOT } from './verify-lib.mjs';
 
 const SCHWAB = '"Date","Status","Type","CheckNumber","Description","Withdrawal","Deposit","RunningBalance"\n'
   + '"08/17/2022","Posted","DEPOSIT","","Deposit Mobile Banking","","$20.00","$878.47"\n'
@@ -63,6 +64,8 @@ export function run159() {
   assert(run(bad).reconcile.status === 'N/A' && run(bad).runningBalance === null, 'balance column that does not chain: N/A');
   const plain = run(readSample('chase-like-qbo-ready.csv'));
   assert(plain.runningBalance === null && plain.reconcile.status === 'N/A', 'file without a balance column: unchanged (N/A)');
+  const ui = readFileSync(join(ROOT, 'ui.mjs'), 'utf8');
+  assert(ui.includes('r.runningBalance &&') && ui.includes('so a missing first or last row would not show here.'), 'badge detail on screen names the running balance column and the first/last row limit');
   assert(chainBalances([{ amt: 5, bal: 5 }]) === null, 'one row: nothing to chain, N/A');
   assert(chainBalances([{ amt: 10, bal: 110 }, { amt: 5, bal: 115 }, { amt: 1, bal: 999 }, { amt: 2, bal: 3 }]) === null, '1 of 3 links chain: below 2/3, N/A');
 }
