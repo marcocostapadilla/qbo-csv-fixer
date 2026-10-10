@@ -17,6 +17,7 @@
  * 11. verify-v14.mjs: Square transfers, Shopify payouts list, Venmo fee note, file encodings,
  *     adversarial Square / Shopify / Etsy / Venmo fixtures.
  * 12. verify-v15.mjs: Etsy pending rows, QuickBooks Online upload rules, Toast preset.
+ * 13. verify-v151.mjs: real public samples, plain-language messages, samples.html.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -31,6 +32,7 @@ import { run as runV13Presets } from './verify-presets-v13.mjs';
 import { run as runWatermark } from './verify-watermark.mjs';
 import { run as runV14 } from './verify-v14.mjs';
 import { run as runV15 } from './verify-v15.mjs';
+import { run as runV151 } from './verify-v151.mjs';
 
 runV11();
 runPresets();
@@ -44,6 +46,7 @@ runV13Presets();
 runWatermark();
 runV14();
 runV15();
+runV151();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
