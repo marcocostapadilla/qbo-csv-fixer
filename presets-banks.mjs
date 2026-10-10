@@ -79,7 +79,7 @@ export const BANK_PRESETS = {
   amex: {
     id: 'amex',
     label: 'American Express',
-    hint: 'Date, Description, Card Member, Account #, Amount. Amex writes charges as positive and payments/credits as negative, so every sign is flipped for QBO (charges become money out).',
+    hint: 'Date, Description, Card Member, Account #, Amount (or the extended layout with Address, City/State, Zip Code, Reference). Amex writes charges as positive and payments/credits as negative, so every sign is flipped for QBO (charges become money out).',
     defaultDateOrder: 'mdy',
     invertAmount: true,
     slug: 'amex',
@@ -89,8 +89,8 @@ export const BANK_PRESETS = {
       description: ['description', 'appears on your statement as'],
       amount: ['amount'],
     },
-    detect: [{ all: ['card member', 'amount'] }],
-    signatures: [['date', 'description', 'card member', 'account #', 'amount']],
+    detect: [{ all: ['card member', 'amount'] }, { all: ['date', 'description', 'amount', 'city/state', 'zip code', 'reference'] }],
+    signatures: [['date', 'description', 'card member', 'account #', 'amount'], ['date', 'description', 'amount', 'address', 'city/state', 'zip code', 'country', 'reference', 'category']],
   },
   capital_one: {
     id: 'capital_one',

@@ -1,0 +1,8 @@
+Posting Date,Transaction Date,Amount,Credit Debit Indicator,type,Type Group,Reference,Instructed Currency,Currency Exchange Rate,Instructed Amount,Description,Category,Check Serial Number,Card Ending
+03/02/2026,03/01/2026,4.85,Debit,POS,POS,,,,,NORTHWIND COFFEE,Restaurants/Dining,,
+03/03/2026,03/03/2026,2450.00,Credit,ACH,ACH,,,,,PAYROLL CONTOSO LTD,Income,,
+03/05/2026,03/04/2026,63.12,Debit,POS,POS,,,,,"FABRIKAM MARKET, SPRINGFIELD",Groceries,,
+03/09/2026,03/09/2026,1200.00,Debit,Transfer,Transfer,,,,,Transfer To Mortgage,Mortgages,,
+03/12/2026,03/11/2026,18.40,Credit,POS,POS,,,,,REFUND LITWARE BOOKS,Shopping,,
+03/16/2026,03/16/2026,150.00,Debit,Check,Check,,,,,Check 1043,Other Expenses,1043,
+03/20/2026,03/19/2026,"1,025.50",Debit,POS,POS,,,,,TAILSPIN AIR,Travel,,
