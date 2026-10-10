@@ -21,7 +21,7 @@ const drop = (t, n) => t.trim().split('\n').filter((_, i) => i !== n).join('\n')
 export function run159() {
   console.log('');
   console.log('=== v1.5.9 running-balance check ===');
-  assert(CHAIN_SHARE === 2 / 3 && MIN_LINKS === 1, 'threshold: 2 of 3 row-to-row links must chain, in one clear direction');
+  assert(CHAIN_SHARE === 2 / 3 && MIN_LINKS === 2, 'threshold: 2 of 3 row-to-row links must chain, in one clear direction, 3+ rows (v1.5.11)');
   const keys = ['Balance', 'Running Balance', 'RunningBalance', 'Running Bal.', 'Current balance', 'Ledger Balance', 'Balance (USD)'];
   assert(keys.every((h) => findBalanceCol(['Date', 'Amount', h], [0, 1]) === 2), `fuzzy headers found: ${keys.join(', ')}`);
   assert(['Available Balance', 'Beginning Balance', 'Ending Balance', 'Balance Impact', 'Pending Balance'].every((h) => findBalanceCol(['Date', 'Amount', h], [0, 1]) === -1), 'not a running balance: Available, Beginning, Ending, Balance Impact, Pending');
