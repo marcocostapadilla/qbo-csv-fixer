@@ -104,7 +104,7 @@ export function parseCsv(text, delimiter) {
 /**
  * Reject input that is not CSV text at all. Returns null when fine, else a message.
  * Binary files (PNG, PDF, XLSX) read as text carry NUL bytes, replacement characters or
- * many control characters.
+ * many control characters. OFX/QFX/QBO text and .xlsx (zip) files get their own message (v1.5.22).
  */
 export function rejectReason(text) {
   const s = String(text ?? '').replace(/^\uFEFF/, '');
@@ -115,6 +115,9 @@ export function rejectReason(text) {
     const c = ch.charCodeAt(0);
     if (c === 0 || c === 0xfffd || (c < 32 && c !== 9 && c !== 10 && c !== 13)) bad++;
   }
+  // v1.5.22: say which wrong file it is, and what to do instead
+  if (/^\s*OFXHEADER:|<\?OFX\b|^\s*<OFX>/i.test(sample)) return 'This is an OFX, QFX or QBO (Web Connect) file, not a CSV. QuickBooks Online imports these directly: Banking > Upload from file. You do not need to convert it here.';
+  if (sample.startsWith('PK\u0003\u0004')) return 'This looks like an Excel workbook (.xlsx), and this tool reads CSV files only. Download a CSV from your bank, or open the file in Excel and use File > Save As > CSV.';
   if (sample.startsWith('%PDF')) return 'This is a PDF, and this tool reads CSV files only. In your bank\'s download screen, choose CSV instead of PDF.';
   if (bad > 0 && bad / sample.length > 0.01) {
     return 'This file is not CSV text (it looks like an image, PDF or Excel workbook), so it cannot be read. Download a CSV from your bank, or in Excel use File > Save As > CSV.';

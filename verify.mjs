@@ -64,6 +64,7 @@ import { run as runV1516 } from './verify-v1516.mjs';
 import { run as runV1517 } from './verify-v1517.mjs';
 import { run as runV1518 } from './verify-v1518.mjs';
 import { run as runV1521 } from './verify-v1521.mjs';
+import { run as runV1522 } from './verify-v1522.mjs';
 
 runV11();
 runPresets();
@@ -94,6 +95,7 @@ runV1516();
 runV1517();
 runV1518();
 runV1521();
+runV1522();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
