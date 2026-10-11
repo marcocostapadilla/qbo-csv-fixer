@@ -77,7 +77,7 @@ export function run() {
     const det = detectPresetScored(readSample('drift/renamed-generic.csv'));
     const note = detectionNote(det);
     console.log('  ' + note);
-    assert(det.candidates.length >= 1 && /Closest matches: /.test(note), 'low-confidence note lists closest matches');
+    assert(det.candidates.length >= 1 && /Closest match: /.test(note), 'low-confidence note lists closest matches');
   }
 
   console.log('');

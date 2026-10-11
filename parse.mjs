@@ -34,6 +34,9 @@ export function sniffDelimiter(text) {
   const s = String(text ?? '').replace(/^\uFEFF/, '');
   const lines = delimiterCounts(s);
   if (!lines.length) return ',';
+  // v1.5.17: a delimiter on every line beats a comma missing from some (semicolon files with 3,410.22)
+  const all = (d) => lines.every((c) => c[d] > 0);
+  if (!all(',')) for (const d of DELIMITERS.slice(1)) if (all(d)) return d;
   let best = ',';
   let bestScore = -1;
   for (const d of DELIMITERS) {

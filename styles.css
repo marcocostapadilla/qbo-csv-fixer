@@ -558,3 +558,8 @@ button, .btn, label.field select, .date-toggle label { min-height: 44px; }
 footer a, .guide-links a, .samples a, .breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; }
 .useful { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-left: 0.75rem; }
 .useful button { min-width: 64px; }
+
+.use-general {
+  margin: -0.5rem 0 1rem;
+  min-height: 44px;
+}

@@ -1,7 +1,6 @@
 /**
  * QBO CSV Fixer - browser UI (ES module). Serve via http.server for local demo.
  * Everything runs client-side; the file is read with FileReader and never uploaded.
- * Rendering lives in ui.mjs; parsing, mapping and detection in core.mjs and its modules.
  */
 import { groupPresets } from './groups.mjs';
 import {
@@ -24,6 +23,8 @@ import { setupPro } from './pro-ui.mjs';
 import { PRO_SUFFIX } from './batch.mjs';
 import { decodeBytes } from './encoding.mjs';
 import { setupUseful, offerUseful } from './useful.mjs';
+import { presetMismatch } from './wrongpreset.mjs';
+import { setupWrong, showWrong } from './wrongui.mjs';
 
 let pro = { multiDrop() {} };
 
@@ -80,7 +81,7 @@ function updateProcessorHint() {
   els.processorHint.textContent = p ? p.hint : '';
 }
 
-/** New file text arrived: reset the date choice and (unless locked) auto-detect the preset. */
+/** New file: reset date choice, auto-detect unless locked. */
 function loadText(name, text, { autoDetect = true } = {}) {
   state.fileName = name;
   state.rawText = text;
@@ -112,7 +113,7 @@ function readFile(file) {
   const reader = new FileReader();
   reader.onload = () => {
     els.fileName.textContent = file.name;
-    // v1.4: raw bytes, decoded here, so UTF-16 and Windows-1252 files are read correctly
+    // v1.4: decode raw bytes (UTF-16, Windows-1252)
     loadText(file.name, decodeBytes(reader.result).text);
   };
   reader.onerror = () => showError('Your browser could not open that file. Check that it finished downloading and is not open in another program, then try again.');
@@ -131,9 +132,17 @@ function reprocess({ reveal = false, focus = true } = {}) {
       decimal: state.decimal || undefined,
     });
     const r = state.result;
+    const wrong = presetMismatch(r, processorId); // v1.5.17: say so, never keep an old result
+    showWrong(!!wrong);
+    if (wrong) {
+      setDetectNote('');
+      showError(wrong);
+      hideResults();
+      return;
+    }
     const fatal = r.fileError || r.mappingError;
     if (fatal) {
-      // Empty / binary / no rows, or required columns missing: say why; never guess.
+      // say why; never guess
       if (!showDetectNoteFor(r)) setDetectNote('');
       showError(fatal.message);
       hideResults();
@@ -202,7 +211,7 @@ function setupDropzone() {
 }
 
 function setupSampleButton() {
-  // Load the sample that matches the selected preset (needs http, not file://)
+  // sample for the selected preset (http only)
   const loadSampleBtn = document.getElementById('loadSampleBtn');
   if (!loadSampleBtn) return;
   loadSampleBtn.addEventListener('click', async (e) => {
@@ -229,6 +238,7 @@ function init() {
   fillPresetSelects();
   setupDropzone();
   setupSampleButton();
+  setupWrong(els.processorPreset, () => { state.presetLocked = true; updateProcessorHint(); reprocess({ reveal: true }); });
   els.processorPreset.addEventListener('change', () => {
     state.presetLocked = true;
     setDetectNote('');
