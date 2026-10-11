@@ -43,5 +43,5 @@ export function run() {
   const idx = readFileSync(join(ROOT, 'index.html'), 'utf8');
   assert(idx.includes('<h2 id="resultsHeading" tabindex="-1">'), 'results heading can take focus (tabindex -1)');
   assert(/prefers-reduced-motion: reduce/.test(ui) && /behavior: reduce \? 'auto' : 'smooth'/.test(ui) && /box\.top >= 0 && box\.bottom <= window\.innerHeight\) return/.test(ui), 'smooth unless reduced motion; no scroll when already visible');
-  assert(/if \(reveal && r\.transactions\.length && allowed\) revealResults/.test(app) && /reprocess\(\{ reveal: true, focus: false \}\)/.test(app), 'no scroll when the message is the top banner; preset change scrolls but keeps focus on the list');
+  assert(/if \(reveal && r\.transactions\.length\) revealResults/.test(app) && /reprocess\(\{ reveal: true, focus: false \}\)/.test(app), 'no scroll when the only message is the top banner (v1.5.23: the free limit now shows in step 3); preset change scrolls but keeps focus on the list');
 }
