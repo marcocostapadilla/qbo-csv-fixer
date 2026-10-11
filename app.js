@@ -133,13 +133,14 @@ function reprocess({ reveal = false, focus = true } = {}) {
     });
     const r = state.result;
     const wrong = presetMismatch(r, processorId); // v1.5.17: say so, never keep an old result
-    showWrong(!!wrong);
     if (wrong) {
       setDetectNote('');
       showError(wrong);
       hideResults();
+      showWrong(true); // after the banner is shown, so it can scroll into view
       return;
     }
+    showWrong(false);
     const fatal = r.fileError || r.mappingError;
     if (fatal) {
       // say why; never guess
