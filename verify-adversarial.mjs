@@ -42,7 +42,7 @@ export function run() {
   check('unparseable-amounts.csv', 'generic_bank', { amounts: [-12.5, 300, 45, -10] });
   check('text-month-dates.csv', 'generic_bank', { amounts: BASE, dates: ['01/13/2026', '01/13/2026', '01/15/2026'] });
   const qc = check('quoted-commas.csv', 'generic_bank', { amounts: [-78.4, -15, 22, 1250] });
-  assert(qc.transactions[2].description === 'MULTI\nLINE MEMO' && qc.transactions[1].description === 'ACME "TOOLS", INC, SPRINGFIELD', 'quoted commas, doubled quotes and embedded newline kept');
+  assert(buildExportRows(qc.transactions, 'date_desc_amount').body[2][1] === 'MULTI LINE MEMO' && qc.transactions[2].description === 'MULTI\nLINE MEMO' && qc.transactions[1].description === 'ACME "TOOLS", INC, SPRINGFIELD', 'quoted commas and doubled quotes kept; the embedded newline is read, then flattened to one space on export (v1.5.18)');
   const xss = check('xss-description.csv', 'generic_bank', { amounts: [-1, 2] });
   assert(xss.transactions[1].description === '<script>window.__xss=2</script>', 'HTML kept as plain text in data (UI escapes it)');
   check('leak-marker.csv', 'generic_bank', { amounts: [-4.5, 1200] });

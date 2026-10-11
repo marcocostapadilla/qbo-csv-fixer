@@ -19,7 +19,7 @@ export const BANK_PRESETS = {
   generic_bank: {
     id: 'generic_bank',
     label: 'General layout (any bank)',
-    hint: 'Beginning/Ending balance rows, Debit/Credit with parentheses negatives, mixed dates',
+    hint: 'For any bank that is not in the list. Reads a date column, a description column, and either one signed amount column or separate money out and money in columns (Debit / Credit, Withdrawals / Deposits). If the file has opening and ending balance rows or a running balance column, they feed the balance check.',
     defaultDateOrder: 'mdy',
     sample: 'samples/chase-like-messy.csv',
     columns: 'synonyms',

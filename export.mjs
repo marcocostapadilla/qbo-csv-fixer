@@ -2,8 +2,9 @@
  * QBO CSV Fixer - QBO export rows, CSV writer, free-tier limits.
  *
  * Free watermark: filename only (WATERMARK_SUFFIX). No extra row (a blank-date 0.00 row can make
- * QBO reject the file or import a $0 line) and no description suffix: descriptions are exported
- * exactly as read, so QBO bank rules keyed on exact descriptions keep matching.
+ * QBO reject the file or import a $0 line) and no description suffix: descriptions keep their text,
+ * so QBO bank rules keyed on descriptions keep matching. v1.5.18: line breaks, tabs and runs of
+ * whitespace inside a text cell become one space (trimmed), so each row is one clean line for QBO.
  *
  * Formula injection: text cells that start with = + - @ tab or CR get a leading apostrophe so
  * Excel / Sheets show them as text. Amount, Debit and Credit cells are never touched.
@@ -19,7 +20,12 @@ export function safeText(v) {
   return /^[=+\-@\t\r]/.test(s) ? "'" + s : s;
 }
 
-/** Build export rows for a QBO preset */
+/** v1.5.18: CR, LF, CRLF, tabs and whitespace runs become one space; trimmed. Text cells only. */
+export function flatText(v) {
+  return String(v ?? '').replace(/\s+/g, ' ').trim();
+}
+
+/** Build export rows for a QBO preset (the preview shows these same cells) */
 export function buildExportRows(transactions, qboPresetId) {
   if (qboPresetId === 'date_desc_debit_credit') {
     const header = ['Date', 'Description', 'Debit', 'Credit'];
@@ -27,13 +33,13 @@ export function buildExportRows(transactions, qboPresetId) {
       const debit = t.amount < 0 ? Math.abs(t.amount).toFixed(2) : '';
       const credit = t.amount > 0 ? t.amount.toFixed(2) : '';
       // v1.5: Intuit asks for cells that only contain zero to be left blank
-      return [t.date, t.description, debit, credit];
+      return [t.date, flatText(t.description), debit, credit];
     });
     return { header, body };
   }
   // default Date / Description / Amount
   const header = ['Date', 'Description', 'Amount'];
-  const body = transactions.map((t) => [t.date, t.description, t.amount === 0 ? '' : t.amount.toFixed(2)]);
+  const body = transactions.map((t) => [t.date, flatText(t.description), t.amount === 0 ? '' : t.amount.toFixed(2)]);
   return { header, body };
 }
 
