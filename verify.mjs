@@ -32,6 +32,7 @@
  * 25. verify-v1515.mjs: Fidelity preset, left-out notes, grouped bank list.
  * 26. verify-v1516.mjs: clearer unrecognized-bank path.
  * 27. verify-v1517.mjs: wrong-preset message, closest-match wording, encoding pass.
+ * 28. verify-v1518.mjs: flatten line breaks on export, general-layout hint.
  */
 import { stats } from './verify-lib.mjs';
 import { run as runV11 } from './verify-v11.mjs';
@@ -61,6 +62,7 @@ import { run as runV1514 } from './verify-v1514.mjs';
 import { run as runV1515 } from './verify-v1515.mjs';
 import { run as runV1516 } from './verify-v1516.mjs';
 import { run as runV1517 } from './verify-v1517.mjs';
+import { run as runV1518 } from './verify-v1518.mjs';
 
 runV11();
 runPresets();
@@ -89,6 +91,7 @@ runV1514();
 runV1515();
 runV1516();
 runV1517();
+runV1518();
 
 console.log('');
 console.log(`SUMMARY: ${stats.passed} passed, ${stats.failed} failed.`);
