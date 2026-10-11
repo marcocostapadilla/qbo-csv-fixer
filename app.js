@@ -25,6 +25,7 @@ import { decodeBytes } from './encoding.mjs';
 import { setupUseful, offerUseful } from './useful.mjs';
 import { presetMismatch } from './wrongpreset.mjs';
 import { setupWrong, showWrong } from './wrongui.mjs';
+import { setupSampleButton } from './samplebtn.mjs';
 
 let pro = { multiDrop() {} };
 
@@ -150,9 +151,9 @@ function reprocess({ reveal = false, focus = true } = {}) {
       return;
     }
     const allowed = renderResults(state.result, els.qboPreset.value || 'date_desc_amount');
-    showError(!r.transactions.length ? 'No rows could be converted, so there is nothing to download. The note below lists each row and why; fix them in the file or check that the right bank is picked.'
-      : allowed ? '' : `This file has ${r.transactions.length} rows and the free version converts up to ${FREE_ROW_LIMIT}, so Download is off. Download a shorter date range from your bank and convert each part.`);
-    if (reveal && r.transactions.length && allowed) revealResults({ focus }); // no scroll when the message is the banner at the top
+    // v1.5.23: the free-limit text lives only in the note next to Download (ui.mjs), so step 3 is shown for it
+    showError(!r.transactions.length ? 'No rows could be converted, so there is nothing to download. The note below lists each row and why; fix them in the file or check that the right bank is picked.' : '');
+    if (reveal && r.transactions.length) revealResults({ focus }); // no scroll when the message is the banner at the top
   } catch (err) {
     console.error(err);
     showError('Something went wrong reading this file (' + (err && err.message ? err.message : String(err)) + '). Try exporting it again, or pick another bank in the list.');
@@ -211,34 +212,10 @@ function setupDropzone() {
   });
 }
 
-function setupSampleButton() {
-  // sample for the selected preset (http only)
-  const loadSampleBtn = document.getElementById('loadSampleBtn');
-  if (!loadSampleBtn) return;
-  loadSampleBtn.addEventListener('click', async (e) => {
-    e.stopPropagation();
-    const preset = PRESETS[els.processorPreset.value] || PRESETS.generic_bank;
-    const path = preset.sample || 'samples/chase-like-messy.csv';
-    const name = path.split('/').pop();
-    try {
-      const res = await fetch(path);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const text = await res.text();
-      els.fileName.textContent = name + ' (sample)';
-      setDetectNote('');
-      loadText(name, text, { autoDetect: false });
-    } catch (err) {
-      showError(
-        `Could not load ${path} via fetch. Open this page through a local server (see README), or drop the sample file yourself.`
-      );
-    }
-  });
-}
-
 function init() {
   fillPresetSelects();
   setupDropzone();
-  setupSampleButton();
+  setupSampleButton(loadText);
   setupWrong(els.processorPreset, () => { state.presetLocked = true; updateProcessorHint(); reprocess({ reveal: true }); });
   els.processorPreset.addEventListener('change', () => {
     state.presetLocked = true;
