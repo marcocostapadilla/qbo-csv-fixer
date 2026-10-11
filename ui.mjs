@@ -8,6 +8,8 @@ import { signCheck } from './signcheck.mjs';
 import { buildExportRows, fmtMoney, FREE_ROW_LIMIT, WATERMARK_SUFFIX } from './core.mjs';
 import { qboLimitNotes } from './export.mjs';
 import { tierAllows, canDownload } from './license.mjs';
+import { renderDateWarning, renderDecimalWarning } from './warnings.mjs';
+import { bankLine } from './bankline.mjs';
 
 export const els = {};
 for (const id of [
@@ -18,11 +20,6 @@ for (const id of [
 ]) {
   els[id] = document.getElementById(id);
 }
-
-const AMBIGUOUS_TEXT =
-  'Every date in this file could be read as US month/day or as EU day/month, so the file alone cannot tell which one your bank used. Pick the one that matches your statement before you download; a wrong pick swaps day and month in QuickBooks.';
-const CONFLICT_TEXT =
-  'Some dates in this file only work as month/day and others only as day/month, so the file mixes formats. Pick the format most rows use, then check every date in the preview against your statement before you download.';
 
 export function escapeHtml(s) {
   return String(s)
@@ -62,36 +59,6 @@ export function mappingNote(m) {
   add('Debit', 'debit');
   add('Credit', 'credit');
   return parts.length ? `Columns used: ${parts.join(', ')}.` : '';
-}
-
-function renderDateWarning(r) {
-  const info = r.dateInfo || {};
-  if (!info.ambiguous) {
-    els.dateWarning.classList.add('hidden');
-    return;
-  }
-  els.dateWarningText.textContent = info.conflict ? CONFLICT_TEXT : AMBIGUOUS_TEXT;
-  els.dateOrderMdy.checked = info.used === 'mdy';
-  els.dateOrderDmy.checked = info.used === 'dmy';
-  els.dateWarning.classList.remove('hidden');
-}
-
-const DECIMAL_AMBIGUOUS =
-  'Amounts like 1,250 or 1.250 could use a comma or a dot as the decimal separator, and nothing in this file proves which. Pick the one your bank uses before you download; a wrong pick turns 1,250 into 1.25.';
-const DECIMAL_CONFLICT =
-  'Some amounts in this file only make sense with a dot decimal (12.50) and others only with a comma decimal (12,50). Pick the one most rows use, then check every amount in the preview.';
-
-function renderDecimalWarning(r) {
-  const info = r.decimalInfo || {};
-  if (!els.decimalWarning) return;
-  if (!info.ambiguous) {
-    els.decimalWarning.classList.add('hidden');
-    return;
-  }
-  els.decimalWarningText.textContent = info.conflict ? DECIMAL_CONFLICT : DECIMAL_AMBIGUOUS;
-  els.decimalDot.checked = info.used === '.';
-  els.decimalComma.checked = info.used === ',';
-  els.decimalWarning.classList.remove('hidden');
 }
 
 const BADGE_CLASS = { PASS: 'pass', FAIL: 'fail', INCOMPLETE: 'incomplete' };
@@ -158,8 +125,8 @@ function renderPreview(header, body) {
 /** Render one file; true when the free tier allows the download. */
 export function renderResults(r, qboId) {
   els.results.classList.remove('hidden');
-  renderDateWarning(r);
-  renderDecimalWarning(r);
+  renderDateWarning(els, r);
+  renderDecimalWarning(els, r);
   setText(els.mapNote, mappingNote(r.mapping));
   const { header, body } = buildExportRows(r.transactions, qboId);
   renderBadges(r);
@@ -167,8 +134,7 @@ export function renderResults(r, qboId) {
   els.txnCount.textContent = String(r.transactions.length);
   document.getElementById('balLines').hidden = !((r.opening != null || r.closing != null) && !r.runningBalance); // v1.5.14
   const o = els.processorPreset.selectedOptions[0];
-  const near = (els.detectNote.textContent.match(/Closest match: .+?\.(?= Check the preview)/) || [''])[0]; // v1.5.18
-  els.resultsBank.textContent = (!o || o.value === 'generic_bank' ? `Bank not recognized, so the file was read with the general layout. ${near ? near + ' ' : ''}Check the columns used and the signs in the preview below. If your bank is in the list in step 2 above, pick it.` : `Read as: ${o.textContent}. Wrong bank? Pick another in step 2 above.`) + ' Every row is previewed below the Download button.';
+  els.resultsBank.textContent = bankLine(o, els.detectNote.textContent, els.fileName.textContent); // v1.5.21: bankline.mjs
   const sw = signCheck(o && o.value, r.transactions, r.reconcile.status);
   const tn = (r.notes || []).find((n) => n.startsWith(TYPE_NOTE)); // v1.5.16: unread DR/CR column, shown first
   els.signWarning.textContent = tn || (sw ? sw.message : '');
