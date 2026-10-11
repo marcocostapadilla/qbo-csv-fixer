@@ -20,5 +20,8 @@ export function setupWrong(select, onPick) {
 }
 
 export function showWrong(on) {
-  if (btn) btn.classList.toggle('hidden', !on);
+  if (!btn) return;
+  btn.classList.toggle('hidden', !on);
+  // v1.5.17 walk: on a phone the list sits far below the banner; bring the message into view (focus stays put)
+  if (on && btn.previousElementSibling) btn.previousElementSibling.scrollIntoView({ block: 'start' });
 }
