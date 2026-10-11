@@ -17,6 +17,10 @@ Regression (147 repo and local real files): row counts, nets, signs, dates and b
 Old: "Beginning/Ending balance rows, Debit/Credit with parentheses negatives, mixed dates"
 New: "For any bank that is not in the list. Reads a date column, a description column, and either one signed amount column or separate money out and money in columns (Debit / Credit, Withdrawals / Deposits). If the file has opening and ending balance rows or a running balance column, they feed the balance check."
 
+## Walk fixes (live, 360 and 1280 px)
+- After a drop the page scrolls to step 3, past the closest-match note in step 2. Step 3 now repeats it. Old: "Bank not recognized, so the file was read with the general layout. Check the columns used ..." New: "Bank not recognized, so the file was read with the general layout. Closest match: Bank of America (checking) or SoFi (checking or savings). Check the columns used ..."
+- At 1280 px, clicking "Use the general layout" left focus on <body> (the button hides itself and step 3 was already on screen). Focus now goes to the step 3 heading.
+
 ## Official-format sweep (credit unions and small-business banks)
 What each bank's own help pages say about a CSV transaction export, as of 2026-10-11. "Not documented" means the official page names no columns.
 
