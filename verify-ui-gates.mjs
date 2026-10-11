@@ -20,7 +20,7 @@ export function run() {
   const ho = processCsv(headerOnly);
   const hoNote = detectionNote(detectPresetScored(headerOnly));
   assert(ho.fileError && ho.fileError.kind === 'no-rows', `header-only file is a file error (got ${ho.fileError && ho.fileError.kind})`);
-  assert(/Closest matches/.test(hoNote) && showDetectNoteFor(ho) === false, 'header-only: the closest-matches note exists but is hidden next to the error');
+  assert(/Closest match:/.test(hoNote) && showDetectNoteFor(ho) === false, 'header-only: the closest-matches note exists but is hidden next to the error');
   assert(canDownload(ho) === false && canDownload(ho, true) === false, 'header-only: Download disabled (free and unlocked)');
 
   const empty = processCsv('');
