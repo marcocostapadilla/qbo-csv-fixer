@@ -51,7 +51,7 @@ export function run() {
   console.log('=== v1.5.5 360 px first-visit fixes ===');
   const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
   const css = readFileSync(join(ROOT, 'styles.css'), 'utf8');
-  const ui = readFileSync(join(ROOT, 'ui.mjs'), 'utf8');
+  const ui = readFileSync(join(ROOT, 'ui.mjs'), 'utf8') + readFileSync(join(ROOT, 'bankline.mjs'), 'utf8'); // v1.5.21: step 3 line lives in bankline.mjs
   assert(html.indexOf('id="downloadBtn"') < html.indexOf('class="table-wrap"') && html.indexOf('id="tierNote"') < html.indexOf('class="table-wrap"'), 'index: Download button and free-version note sit above the preview table');
   assert(/<h2 id="resultsHeading"[^>]*>3\. Check, then download<\/h2>\s*<p id="resultsBank"/.test(html) && ui.includes('Bank not recognized, so the file was read with the general layout') && ui.includes('Wrong bank? Pick another in step 2 above.'), 'step 3 says which bank was used (or that none was recognized) right under its heading');
   assert(/button, \.btn, label\.field select, \.date-toggle label \{ min-height: 44px; \}/.test(css) && /footer a, \.guide-links a, \.samples a, \.breadcrumb a \{[^}]*min-height: 44px/.test(css), 'styles: buttons, selects, date choices and list links are at least 44 px tall');

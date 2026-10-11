@@ -34,7 +34,8 @@ export function run() {
 
   assert(ui.includes('</code>; nothing is added to descriptions') && !ui.includes('descriptions are untouched'), 'v1.5.19: free-version note says nothing is added to descriptions');
   const wu = readFileSync(join(ROOT, 'wrongui.mjs'), 'utf8');
-  assert(ui.includes("const near = (els.detectNote.textContent.match(/Closest match: .+?\\.(?= Check the preview)/) || [''])[0];") && ui.includes("${near ? near + ' ' : ''}Check the columns"), 'walk: step 3 repeats the closest-match names (the page scrolls there, past step 2)');
+  const bl = readFileSync(join(ROOT, 'bankline.mjs'), 'utf8'); // v1.5.21: moved out of ui.mjs
+  assert(bl.includes("const near = (String(detectText || '').match(/Closest match: .+?\\.(?= Check the preview)/) || [''])[0];") && bl.includes("${near ? near + ' ' : ''}Check the columns"), 'walk: step 3 repeats the closest-match names (the page scrolls there, past step 2)');
   assert(wu.includes("(h || select).focus({ preventScroll: true })"), 'walk: after the general-layout button, focus lands on the step 3 heading, not <body>');
   console.log('');
   console.log('=== v1.5.18 general-layout hint ===');
