@@ -32,7 +32,7 @@ export function run() {
   const ui = readFileSync(join(ROOT, 'ui.mjs'), 'utf8');
   assert(/const \{ header, body \} = buildExportRows\(r\.transactions, qboId\);/.test(ui), 'the preview is drawn from the export rows, so it matches the download');
 
-  assert(ui.includes(': nothing is added to descriptions') && !ui.includes('descriptions are untouched'), 'v1.5.19: free-version note says nothing is added to descriptions');
+  assert(ui.includes('</code>; nothing is added to descriptions') && !ui.includes('descriptions are untouched'), 'v1.5.19: free-version note says nothing is added to descriptions');
   const wu = readFileSync(join(ROOT, 'wrongui.mjs'), 'utf8');
   assert(ui.includes("const near = (els.detectNote.textContent.match(/Closest match: .+?\\.(?= Check the preview)/) || [''])[0];") && ui.includes("${near ? near + ' ' : ''}Check the columns"), 'walk: step 3 repeats the closest-match names (the page scrolls there, past step 2)');
   assert(wu.includes("(h || select).focus({ preventScroll: true })"), 'walk: after the general-layout button, focus lands on the step 3 heading, not <body>');

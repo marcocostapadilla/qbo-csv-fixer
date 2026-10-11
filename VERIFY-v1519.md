@@ -8,3 +8,5 @@ Regression (147 repo and local real files):
 - Detection, rows, nets, signs, dates and badges: identical to v1.5.18.
 
 Copy: the free-version note's "descriptions are untouched" is now "nothing is added to descriptions" (line breaks are flattened, so "untouched" was no longer exact).
+
+v1.5.20: the v1.5.19 edit left two colons in a row ("ends in _qbo-csv-fixer-free: nothing is added to descriptions"). The separator is a semicolon again: "ends in _qbo-csv-fixer-free; nothing is added to descriptions".
