@@ -55,5 +55,5 @@ export function run() {
   const wu = readFileSync(join(ROOT, 'wrongui.mjs'), 'utf8');
   assert(app.includes('const wrong = presetMismatch(r, processorId);') && /if \(wrong\) \{\s*setDetectNote\(''\);\s*showError\(wrong\);\s*hideResults\(\);\s*showWrong\(true\);[^\n]*\n\s*return;/.test(app), 'UI: wrong preset shows the message and hides the old result');
   assert(wu.includes("btn.type = 'button'") && wu.includes("select.value = 'generic_bank'") && wu.includes("insertAdjacentElement('afterend'"), 'UI: one real button switches the select to the general layout');
-  assert(wu.includes("scrollIntoView({ block: 'start' })") && !/\.focus\(/.test(wu), 'UI: the message scrolls into view on a phone; focus is not moved');
+  assert(wu.includes("scrollIntoView({ block: 'start' })") && !/\.focus\(/.test(wu.slice(wu.indexOf('export function showWrong'))), 'UI: the message scrolls into view on a phone; focus is not moved');
 }

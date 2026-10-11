@@ -46,7 +46,7 @@ export function setDetectNote(msg) {
   setText(els.detectNote, msg);
 }
 
-/** "Columns used: Date = "Trans. Date", ..." so every mapping is visible, never silent. */
+/** "Columns used: ..." so every mapping is visible. */
 export function mappingNote(m) {
   if (!m) return '';
   const parts = [];
@@ -167,7 +167,8 @@ export function renderResults(r, qboId) {
   els.txnCount.textContent = String(r.transactions.length);
   document.getElementById('balLines').hidden = !((r.opening != null || r.closing != null) && !r.runningBalance); // v1.5.14
   const o = els.processorPreset.selectedOptions[0];
-  els.resultsBank.textContent = (!o || o.value === 'generic_bank' ? 'Bank not recognized, so the file was read with the general layout. Check the columns used and the signs in the preview below. If your bank is in the list in step 2 above, pick it.' : `Read as: ${o.textContent}. Wrong bank? Pick another in step 2 above.`) + ' Every row is previewed below the Download button.';
+  const near = (els.detectNote.textContent.match(/Closest match: .+?\.(?= Check the preview)/) || [''])[0]; // v1.5.18
+  els.resultsBank.textContent = (!o || o.value === 'generic_bank' ? `Bank not recognized, so the file was read with the general layout. ${near ? near + ' ' : ''}Check the columns used and the signs in the preview below. If your bank is in the list in step 2 above, pick it.` : `Read as: ${o.textContent}. Wrong bank? Pick another in step 2 above.`) + ' Every row is previewed below the Download button.';
   const sw = signCheck(o && o.value, r.transactions, r.reconcile.status);
   const tn = (r.notes || []).find((n) => n.startsWith(TYPE_NOTE)); // v1.5.16: unread DR/CR column, shown first
   els.signWarning.textContent = tn || (sw ? sw.message : '');
@@ -199,7 +200,6 @@ export function hideResults() {
 
 /**
  * v1.5.4: bring step 3 into view after a file loads, only when its heading is off screen.
- * Smooth unless reduced motion; focus moves to the heading only when asked.
  */
 export function revealResults({ focus = true } = {}) {
   const h = document.getElementById('resultsHeading');

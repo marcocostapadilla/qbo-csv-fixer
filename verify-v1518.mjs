@@ -31,6 +31,9 @@ export function run() {
   const ui = readFileSync(join(ROOT, 'ui.mjs'), 'utf8');
   assert(/const \{ header, body \} = buildExportRows\(r\.transactions, qboId\);/.test(ui), 'the preview is drawn from the export rows, so it matches the download');
 
+  const wu = readFileSync(join(ROOT, 'wrongui.mjs'), 'utf8');
+  assert(ui.includes("const near = (els.detectNote.textContent.match(/Closest match: .+?\\.(?= Check the preview)/) || [''])[0];") && ui.includes("${near ? near + ' ' : ''}Check the columns"), 'walk: step 3 repeats the closest-match names (the page scrolls there, past step 2)');
+  assert(wu.includes("(h || select).focus({ preventScroll: true })"), 'walk: after the general-layout button, focus lands on the step 3 heading, not <body>');
   console.log('');
   console.log('=== v1.5.18 general-layout hint ===');
   assert(PRESETS.generic_bank.hint === 'For any bank that is not in the list. Reads a date column, a description column, and either one signed amount column or separate money out and money in columns (Debit / Credit, Withdrawals / Deposits). If the file has opening and ending balance rows or a running balance column, they feed the balance check.', 'hint describes the any-bank fallback in plain words');

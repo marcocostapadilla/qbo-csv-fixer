@@ -15,6 +15,9 @@ export function setupWrong(select, onPick) {
   btn.addEventListener('click', () => {
     select.value = 'generic_bank';
     onPick();
+    // v1.5.18 walk: the clicked button is now hidden; keep focus on the page (step 3 heading), not <body>
+    const h = document.getElementById('resultsHeading');
+    if (document.activeElement === btn || document.activeElement === document.body) (h || select).focus({ preventScroll: true });
   });
   banner.insertAdjacentElement('afterend', btn);
 }
