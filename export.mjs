@@ -3,8 +3,8 @@
  *
  * Free watermark: filename only (WATERMARK_SUFFIX). No extra row (a blank-date 0.00 row can make
  * QBO reject the file or import a $0 line) and no description suffix: descriptions keep their text,
- * so QBO bank rules keyed on descriptions keep matching. v1.5.18: line breaks, tabs and runs of
- * whitespace inside a text cell become one space (trimmed), so each row is one clean line for QBO.
+ * so QBO bank rules keyed on descriptions keep matching. v1.5.19: line breaks and tabs inside a
+ * text cell become one space (ends trimmed), so each row is one line for QBO.
  *
  * Formula injection: text cells that start with = + - @ tab or CR get a leading apostrophe so
  * Excel / Sheets show them as text. Amount, Debit and Credit cells are never touched.
@@ -20,9 +20,9 @@ export function safeText(v) {
   return /^[=+\-@\t\r]/.test(s) ? "'" + s : s;
 }
 
-/** v1.5.18: CR, LF, CRLF, tabs and whitespace runs become one space; trimmed. Text cells only. */
+/** v1.5.19: each run of CR / LF / tab (with the spaces right around it) becomes one space; ends trimmed. Inner double spaces stay. */
 export function flatText(v) {
-  return String(v ?? '').replace(/\s+/g, ' ').trim();
+  return String(v ?? '').replace(/ *[\r\n\t][\r\n\t ]*/g, ' ').trim();
 }
 
 /** Build export rows for a QBO preset (the preview shows these same cells) */

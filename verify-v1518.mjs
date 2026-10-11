@@ -14,7 +14,8 @@ export function run() {
   console.log('');
   console.log('=== v1.5.18 flatten line breaks on export ===');
   assert(flatText('A\r\nB\nC\rD\tE') === 'A B C D E', 'CRLF, LF, CR and tab each become one space');
-  assert(flatText('  NORTHWIND   COFFEE \n\n  TO GO  ') === 'NORTHWIND COFFEE TO GO', 'runs of whitespace collapse to one space, trimmed');
+  assert(flatText('  NORTHWIND   COFFEE \n\n  TO GO  ') === 'NORTHWIND   COFFEE TO GO', 'v1.5.19: spaces around a line break fold into the one space; inner double spaces stay; ends trimmed');
+  assert(flatText('MULTI\n  LINE') === 'MULTI LINE' && flatText('POS  DEBIT  1234') === 'POS  DEBIT  1234', 'v1.5.19: MULTI\\n  LINE -> MULTI LINE; a cell with no line break keeps its double spaces');
   for (const id of ['date_desc_amount', 'date_desc_debit_credit']) {
     const { header, body } = buildExportRows(T('LINE ONE\r\nLINE\tTWO'), id);
     const csv = toCsvString(header, body);
@@ -31,6 +32,7 @@ export function run() {
   const ui = readFileSync(join(ROOT, 'ui.mjs'), 'utf8');
   assert(/const \{ header, body \} = buildExportRows\(r\.transactions, qboId\);/.test(ui), 'the preview is drawn from the export rows, so it matches the download');
 
+  assert(ui.includes(': nothing is added to descriptions') && !ui.includes('descriptions are untouched'), 'v1.5.19: free-version note says nothing is added to descriptions');
   const wu = readFileSync(join(ROOT, 'wrongui.mjs'), 'utf8');
   assert(ui.includes("const near = (els.detectNote.textContent.match(/Closest match: .+?\\.(?= Check the preview)/) || [''])[0];") && ui.includes("${near ? near + ' ' : ''}Check the columns"), 'walk: step 3 repeats the closest-match names (the page scrolls there, past step 2)');
   assert(wu.includes("(h || select).focus({ preventScroll: true })"), 'walk: after the general-layout button, focus lands on the step 3 heading, not <body>');

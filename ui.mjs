@@ -180,7 +180,7 @@ export function renderResults(r, qboId) {
   els.tierNote.innerHTML = !n
     ? '<strong>No transactions could be read</strong>, so there is nothing to download. See the note above.'
     : allowed
-      ? `<strong>Free version:</strong> 1 file at a time, up to ${FREE_ROW_LIMIT} rows, watermarked export (only the file name changes: it ends in <code>${WATERMARK_SUFFIX}</code>; descriptions are untouched). Unlimited version coming soon.`
+      ? `<strong>Free version:</strong> 1 file at a time, up to ${FREE_ROW_LIMIT} rows, watermarked export (only the file name changes: it ends in <code>${WATERMARK_SUFFIX}</code>: nothing is added to descriptions). Unlimited version coming soon.`
       : `<strong>Free tier limit:</strong> this file has ${n} rows and the free version converts up to ${FREE_ROW_LIMIT}. Download a shorter date range from your bank and convert each part. Unlimited version coming soon.`;
   setDownloadEnabled(canDownload(r));
   return allowed;
