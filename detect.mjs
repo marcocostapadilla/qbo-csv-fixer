@@ -129,8 +129,8 @@ export function detectionNote(det) {
   const label = (id) => (PRESETS[id] ? PRESETS[id].label : id);
   if (det.confidence === 'high') return `Recognized as ${label(det.id)}.`;
   if (det.confidence !== 'low') return `Looks like ${label(det.id)}. If the preview looks wrong, pick your bank in the list.`;
-  const sugg = det.candidates.map((c) => `${label(c.id)} (${Math.round(c.score * 100)}% header match)`);
+  const sugg = det.candidates.slice(0, 2).map((c) => label(c.id)); // v1.5.17: names only; the score stays internal
   return sugg.length
-    ? `Could not tell which bank this file is from, so a general layout is used. Closest matches: ${sugg.join(', ')}. If one is your bank, pick it in the list and check the preview.`
+    ? `Could not tell which bank this file is from, so the general layout is used. Closest match: ${sugg.join(' or ')}. Check the preview against your statement before you pick it.`
     : 'Could not tell which bank this file is from, so a general layout is used. If your bank or app is in the list, pick it and check the preview.';
 }

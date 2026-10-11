@@ -18,7 +18,7 @@ import { unsignedTypeNote } from './typenote.mjs';
 export const BANK_PRESETS = {
   generic_bank: {
     id: 'generic_bank',
-    label: 'Generic bank (Chase-like)',
+    label: 'General layout (any bank)',
     hint: 'Beginning/Ending balance rows, Debit/Credit with parentheses negatives, mixed dates',
     defaultDateOrder: 'mdy',
     sample: 'samples/chase-like-messy.csv',
