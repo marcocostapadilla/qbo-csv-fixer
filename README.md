@@ -1,4 +1,4 @@
-# QBO CSV Fixer (v1.5.18)
+# QBO CSV Fixer (v1.5.19)
 
 Local browser tool: messy bank, card, PayPal, Stripe, Wise, Square, Shopify Payments, Etsy, Venmo and Toast CSV exports to a QuickBooks Online import CSV.
 
