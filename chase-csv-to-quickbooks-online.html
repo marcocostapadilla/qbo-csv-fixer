@@ -35,7 +35,7 @@
         <li>Checking and credit card files have different headers. Checking: <code>Details, Posting Date, Description, Amount, Type, Balance, Check or Slip #</code>. Card: <code>Transaction Date, Post Date, Description, Category, Type, Amount</code> (some files add <code>Memo</code>).</li>
         <li>Most of those columns (Details, Type, Balance, Category, Check or Slip #) mean nothing to the QuickBooks Online importer and get in the way of column mapping.</li>
         <li>Amount is already signed (money out negative), which is what QuickBooks wants, but the file still needs trimming to Date, Description, Amount.</li>
-        <li>If your file was edited by hand or comes from another bank with <em>Beginning balance</em> / <em>Ending balance</em> rows and Debit/Credit columns with parentheses, use the <em>Generic bank (Chase-like)</em> preset instead. It strips those rows and checks the balance math.</li>
+        <li>If your file was edited by hand or comes from another bank with <em>Beginning balance</em> / <em>Ending balance</em> rows and Debit/Credit columns with parentheses, use the <em>General layout (any bank)</em> preset instead. It strips those rows and checks the balance math.</li>
       </ul>
     </section>
 
