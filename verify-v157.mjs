@@ -40,7 +40,7 @@ export function run() {
     assert(ref.includes(`href="${g}-csv-to-quickbooks-online.html"`), `shared footer links the ${g} guide`);
   }
   const pages = readdirSync(ROOT).filter((f) => f.endsWith('.html') && footer(readFileSync(join(ROOT, f), 'utf8')));
-  assert(pages.length === 29 && pages.every((f) => footer(readFileSync(join(ROOT, f), 'utf8')) === ref), `the same 'All guides' footer on all ${pages.length} pages that carry it (27 guides, comparison, samples)`);
+  assert(pages.length === 30 && pages.every((f) => footer(readFileSync(join(ROOT, f), 'utf8')) === ref), `the same 'All guides' footer on all ${pages.length} pages that carry it (27 guides, comparison, samples, sign fix demo)`);
   const idx = readFileSync(join(ROOT, 'index.html'), 'utf8');
   const sm = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
   assert(['navy-federal', 'apple-card', ...GUIDES].every((g) => idx.includes(`href="${g}-csv-to-quickbooks-online.html"`) && sm.includes(`/${g}-csv-to-quickbooks-online.html</loc>`)), 'index guide list and sitemap include Navy Federal, Apple Card, Ally, Cash App, SoFi');

@@ -12,5 +12,5 @@ export function run() {
   assert(ui.includes('this file has ${n} rows and the free version converts up to ${FREE_ROW_LIMIT}, so Download is off. Download a shorter date range from your bank and convert each part. Unlimited version coming soon.'), 'the note next to Download keeps every part: row count, limit, Download off, what to do, unlimited version');
   assert(/if \(reveal && r\.transactions\.length\) revealResults/.test(app), 'over-limit files scroll to step 3, where the note is');
   assert(app.length < 10000 && ui.length < 10000, `app.js (${app.length}) and ui.mjs (${ui.length}) are under 10,000 bytes`);
-  assert(app.includes("import { setupSampleButton } from './samplebtn.mjs';") && app.includes('setupSampleButton(loadText);'), 'sample button moved to samplebtn.mjs');
+  assert(/import { setupSampleButton(, loadDemoFromUrl)? } from '.\/samplebtn.mjs';/.test(app) && app.includes('setupSampleButton(loadText);'), 'sample button moved to samplebtn.mjs');
 }
