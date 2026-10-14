@@ -25,7 +25,7 @@ import { decodeBytes } from './encoding.mjs';
 import { setupUseful, offerUseful } from './useful.mjs';
 import { presetMismatch } from './wrongpreset.mjs';
 import { setupWrong, showWrong } from './wrongui.mjs';
-import { setupSampleButton } from './samplebtn.mjs';
+import { setupSampleButton, loadDemoFromUrl } from './samplebtn.mjs';
 
 let pro = { multiDrop() {} };
 
@@ -216,6 +216,7 @@ function init() {
   fillPresetSelects();
   setupDropzone();
   setupSampleButton(loadText);
+  loadDemoFromUrl(loadText);
   setupWrong(els.processorPreset, () => { state.presetLocked = true; updateProcessorHint(); reprocess({ reveal: true }); });
   els.processorPreset.addEventListener('change', () => {
     state.presetLocked = true;
