@@ -25,3 +25,19 @@ export function setupSampleButton(loadText) {
     }
   });
 }
+
+/** v1.5.24: ?demo=sign-fix-before or ?demo=sign-fix-after loads that example file (sign-fix-demo.html). */
+export const DEMOS = ['sign-fix-before', 'sign-fix-after'];
+export async function loadDemoFromUrl(loadText) {
+  let d = null;
+  try { d = new URLSearchParams(window.location.search).get('demo'); } catch { return; }
+  if (!DEMOS.includes(d)) return;
+  try {
+    const res = await fetch(`samples/demo/${d}.csv`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    els.fileName.textContent = `${d}.csv (example file)`;
+    loadText(`${d}.csv`, await res.text());
+  } catch {
+    showError(`Could not load the example file samples/demo/${d}.csv. Download it from the demo page and drop it here.`);
+  }
+}

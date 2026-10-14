@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wrong signs, before and after: QBO CSV Fixer demo</title>
+  <meta name="description" content="An example bank file whose amounts lost their signs fails the balance check. The same rows with Debit and Credit columns pass. Both run in QBO CSV Fixer." />
+  <link rel="canonical" href="https://marcocostapadilla.github.io/qbo-csv-fixer/sign-fix-demo.html" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">QBO CSV Fixer</a> / Sign fix demo</p>
+    <header class="app-header">
+      <h1>Wrong signs, before and after</h1>
+      <p class="subhead">Two example files (made-up names) with the same five transactions, opening balance $1500.00 and ending balance $2087.45. The numbers below are what the tool shows for each file.</p>
+    </header>
+
+    <section class="card howto" id="signDemo">
+      <h2>Before: every amount is a plus number</h2>
+      <p>This file has one Amount column with no minus signs, so rent and bills read as money in.</p>
+      <div class="table-wrap"><table id="demoBefore"><thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody><tr><td>03/02/2026</td><td>PAYROLL ACME INC</td><td class="num">2400.00</td></tr><tr><td>03/03/2026</td><td>RENT MARCH</td><td class="num">1650.00</td></tr><tr><td>03/05/2026</td><td>GROCERY MART</td><td class="num">86.40</td></tr><tr><td>03/09/2026</td><td>REFUND OUTDOOR STORE</td><td class="num">42.10</td></tr><tr><td>03/12/2026</td><td>ELECTRIC COMPANY</td><td class="num">118.25</td></tr></tbody></table></div>
+      <p><strong>Net change $4296.75. Reconcile: FAIL.</strong> Opening $1500.00 plus these rows is $5796.75, but the file's ending balance is $2087.45 (off by -$3709.30).</p>
+      <p><a href="index.html?demo=sign-fix-before">Open the before file in the tool</a> or <a href="samples/demo/sign-fix-before.csv" download>download it</a>.</p>
+
+      <h2>After: money out and money in kept apart</h2>
+      <p>The same rows exported with separate Debit and Credit columns. The tool reads Debit as money out and Credit as money in.</p>
+      <div class="table-wrap"><table id="demoAfter"><thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody><tr><td>03/02/2026</td><td>PAYROLL ACME INC</td><td class="num">2400.00</td></tr><tr><td>03/03/2026</td><td>RENT MARCH</td><td class="num neg">-1650.00</td></tr><tr><td>03/05/2026</td><td>GROCERY MART</td><td class="num neg">-86.40</td></tr><tr><td>03/09/2026</td><td>REFUND OUTDOOR STORE</td><td class="num">42.10</td></tr><tr><td>03/12/2026</td><td>ELECTRIC COMPANY</td><td class="num neg">-118.25</td></tr></tbody></table></div>
+      <p><strong>Net change $587.45. Reconcile: PASS.</strong> Opening balance plus these rows equals the ending balance ($2087.45).</p>
+      <p><a href="index.html?demo=sign-fix-after">Open the after file in the tool</a> or <a href="samples/demo/sign-fix-after.csv" download>download it</a>.</p>
+
+      <p class="hint">The tool never flips signs on its own. It reads signs the way your bank writes them: Debit and Credit columns, or a bank preset such as Navy Federal, Apple Card or American Express. When the file has opening and ending balances, a wrong sign shows up as a FAIL with the gap, as above. Without balances, a file where every amount is a plus number gets a sign warning. If your bank's file looks like the "before" file, export it again with Debit and Credit columns, or pick your bank in the list.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Back to QBO CSV Fixer</a></p>
+      <p>All guides: <a href="chase-csv-to-quickbooks-online.html">Chase</a> · <a href="bank-of-america-csv-to-quickbooks-online.html">Bank of America</a> · <a href="wells-fargo-csv-to-quickbooks-online.html">Wells Fargo</a> · <a href="amex-csv-to-quickbooks-online.html">American Express</a> · <a href="capital-one-csv-to-quickbooks-online.html">Capital One</a> · <a href="citi-csv-to-quickbooks-online.html">Citi</a> · <a href="us-bank-csv-to-quickbooks-online.html">U.S. Bank</a> · <a href="pnc-csv-to-quickbooks-online.html">PNC</a> · <a href="discover-csv-to-quickbooks-online.html">Discover</a> · <a href="mercury-csv-to-quickbooks-online.html">Mercury</a> · <a href="revolut-csv-to-quickbooks-online.html">Revolut</a> · <a href="paypal-csv-to-quickbooks-online.html">PayPal</a> · <a href="stripe-csv-to-quickbooks-online.html">Stripe</a> · <a href="wise-csv-to-quickbooks-online.html">Wise</a> · <a href="square-csv-to-quickbooks-online.html">Square</a> · <a href="shopify-csv-to-quickbooks-online.html">Shopify Payments</a> · <a href="etsy-csv-to-quickbooks-online.html">Etsy</a> · <a href="venmo-csv-to-quickbooks-online.html">Venmo</a> · <a href="toast-csv-to-quickbooks-online.html">Toast</a> · <a href="navy-federal-csv-to-quickbooks-online.html">Navy Federal</a> · <a href="apple-card-csv-to-quickbooks-online.html">Apple Card</a> · <a href="ally-csv-to-quickbooks-online.html">Ally Bank</a> · <a href="cash-app-csv-to-quickbooks-online.html">Cash App</a> · <a href="sofi-csv-to-quickbooks-online.html">SoFi</a> · <a href="td-bank-csv-to-quickbooks-online.html">TD Bank</a> · <a href="usaa-csv-to-quickbooks-online.html">USAA</a> · <a href="fidelity-csv-to-quickbooks-online.html">Fidelity</a></p>
+      <p>Compare: <a href="qbo-csv-fixer-vs-alternatives.html">QBO CSV Fixer vs Bank CSV Tamer, StatementVision, DocuClipper and ChatGPT</a></p>
+    </footer>
+  </div>
+  <script data-goatcounter="https://qbofixer.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
